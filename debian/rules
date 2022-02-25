@@ -39,8 +39,6 @@ DEV_PACKAGE_NAME=linuxcnc-uspace-dev
 	dh $@ --parallel
 
 override_dh_auto_configure:
-	cp /usr/share/misc/config.guess src/
-	cp /usr/share/misc/config.sub src/
 	cd src && ./autogen.sh
 	cd src && PYTHON=/usr/bin/python3 ./configure \
 	    --prefix=/usr --sysconfdir=/etc \
