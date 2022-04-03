@@ -1,9 +1,16 @@
+linuxcnc (2.9.0~pre0+git20220402.2500863908-2) unstable; urgency=medium
+
+  * Team upload.
+  * Fixing build-depends - also binary packages need asciidoc to build
+    (Closes: #969416).
+
+ -- Steffen Moeller <meller@debian.org>  Sun, 03 Apr 2022 19:20:29 +0200
+
 linuxcnc (2.9.0~pre0+git20220402.2500863908-1) unstable; urgency=medium
 
   * Team upload.
 
   * First source-only upload to be built across architectures
-    (Closes: #969416).
     - Update of Classic Ladder to 0.8.10
     - Fixes for AppStream
   * Please do not yet use this version in production environments. This
