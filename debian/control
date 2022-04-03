@@ -35,13 +35,31 @@ Build-Depends:
     tclx,
     tk8.6-dev,
     yapps2
-Build-Depends-Indep: asciidoc (>= 8.5), dblatex (>= 0.2.12), docbook-xsl, 
-        dvipng, ghostscript, graphviz, groff, imagemagick, inkscape, 
-        python3-lxml, source-highlight, w3c-linkchecker, xsltproc, 
-        texlive-extra-utils, texlive-font-utils, texlive-fonts-recommended, 
-        texlive-lang-cyrillic, texlive-lang-french, texlive-lang-german, 
-        texlive-lang-polish, texlive-lang-spanish, texlive-latex-recommended, 
-        asciidoc-dblatex,texlive-xetex
+Build-Depends-Indep:
+    asciidoc (>= 8.5),
+    dblatex (>= 0.2.12),
+    docbook-xsl,
+    dvipng,
+    ghostscript,
+    graphviz,
+    groff,
+    imagemagick,
+    inkscape,
+    python3-lxml,
+    source-highlight,
+    w3c-linkchecker,
+    xsltproc,
+    texlive-extra-utils,
+    texlive-font-utils,
+    texlive-fonts-recommended,
+    texlive-lang-cyrillic,
+    texlive-lang-french,
+    texlive-lang-german,
+    texlive-lang-polish,
+    texlive-lang-spanish,
+    texlive-latex-recommended,
+    asciidoc-dblatex,
+    texlive-xetex
 Standards-Version: 4.6.0
 Vcs-Browser: https://github.com/LinuxCNC/linuxcnc
 Vcs-Git: https://github.com/LinuxCNC/linuxcnc.git
@@ -51,8 +69,8 @@ Package: linuxcnc-uspace-dev
 Architecture: any
 Conflicts: linuxcnc-sim-dev, linuxcnc-dev
 Depends: ${misc:Depends},
-         python3-serial,
          ${python3:Depends},
+         python3-serial,
          linuxcnc-uspace (= ${binary:Version}),
          udev,
          python3-yapps
@@ -108,9 +126,6 @@ Description: PC based motion controller for real-time Linux
 Package: linuxcnc-uspace
 Conflicts: linuxcnc-sim, linuxcnc
 Architecture: any
-Recommends: linuxcnc-doc-en | linuxcnc-doc,
-    librsvg2-dev,
-    hostmot2-firmware-all, linux-image-rt-amd64 [linux-amd64], linux-image-rt-686-pae [linux-i386]
 Depends:
     ${misc:Depends},
     ${python3:Depends},
@@ -120,17 +135,39 @@ Depends:
     mesa-utils,
     python3-tk,
     python3-numpy,
-    python3-cairo, python3-gi-cairo, python3-opengl, python3-configobj,
+    python3-cairo,
+    python3-gi-cairo,
+    python3-opengl,
+    python3-configobj,
     python3-xlib,
-    python3-pil,
-    python3-pil.imagetk,
-    python3-pyqt5,python3-pyqt5.qsci,python3-pyqt5.qtsvg,         python3-pyqt5.qtopengl, python3-opencv,python3-dbus,python3-espeak,         python3-dbus.mainloop.pyqt5,python3-pyqt5.qtwebkit,python3-xlib,         espeak-ng,python3-numpy,pyqt5-dev-tools,gstreamer1.0-tools,espeak,         sound-theme-freedesktop,
     libgtksourceview-3.0-dev,
-    tcl8.6, tk8.6, bwidget (>= 1.7), libtk-img (>=1.13),
+    tcl8.6,
+    tk8.6,
+    bwidget (>= 1.7),
+    libtk-img (>=1.13),
     tclreadline,
     tclx,
     procps, psmisc,
     udev
+Recommends:
+    linuxcnc-doc-en | linuxcnc-doc,
+    librsvg2-dev,
+    hostmot2-firmware-all, linux-image-rt-amd64 [linux-amd64], linux-image-rt-686-pae [linux-i386],
+    python3-pil,
+    python3-pil.imagetk,
+    python3-pyqt5,
+    python3-pyqt5.qsci,
+    python3-pyqt5.qtsvg,
+    python3-pyqt5.qtopengl,
+    python3-opencv,
+    python3-dbus,python3-espeak,
+    python3-dbus.mainloop.pyqt5,
+    python3-pyqt5.qtwebkit,
+    python3-xlib,
+    espeak-ng,python3-numpy,
+    pyqt5-dev-tools,
+    gstreamer1.0-tools,espeak,
+    sound-theme-freedesktop
 Suggests: mesaflash
 Description: motion controller for CNC machines and robots
  LinuxCNC is a fully-realised CNC machine controller that can interpret

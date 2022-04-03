@@ -91,7 +91,7 @@
 /* #undef HAVE_OPTRESET */
 
 /* If available, contains the Python version number currently in use. */
-#define HAVE_PYTHON "3.9"
+#define HAVE_PYTHON "3.10"
 
 /* Define to 1 if you have the 'readline' library (-lreadline) and required
    headers */
