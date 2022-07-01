@@ -35,12 +35,10 @@ required for Debian unstable.
    If the current source tree is not the regular release but git checkout also
    create the fitting tarball:
 
-   echo -n "I: Version: $VERSION -> "
    VERSION=$(git log --date=format:%Y%m%d --pretty=${VERSION}+git%cd.%h| head -n1)
    echo $VERSION
    foldername=$(basename $(pwd))
-   if [ -d debian/patches ]; then quilt pop -a && rm -rf .pc; fi
-   (cd .. && tar --exclude=.git* --exclude=.pc -cJvf "linuxcnc_${VERSION}.orig.tar.xz" "$foldername")
+   (cd .. && tar --exclude=.git -cJvf "linuxcnc_${VERSION}.orig.tar.xz" "$foldername")
    du -sh ../$foldername
 
 2. Prepare shell to work in temp directory

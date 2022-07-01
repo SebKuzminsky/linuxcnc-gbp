@@ -1,7 +1,7 @@
 #                                                     -*-makefile-gmake-*-
 #
 # Makefile.inc.  Generated from Makefile.inc.in by configure. 
-# on Sun Feb 20 19:38:43 CET 2022
+# on Sun Apr  3 16:15:50 CEST 2022
 #
 
 
@@ -96,13 +96,13 @@ GLIB_CFLAGS = -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/inclu
 GLIB_LIBS = -lglib-2.0
 
 # local flags for GTK3 include
-GTK_VERSION = 3.24.31
-GTK_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/x86_64-linux-gnu -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
+GTK_VERSION = 3.24.33
+GTK_CFLAGS = -pthread -I/usr/include/gtk-3.0 -I/usr/include/at-spi2-atk/2.0 -I/usr/include/at-spi-2.0 -I/usr/include/dbus-1.0 -I/usr/lib/x86_64-linux-gnu/dbus-1.0/include -I/usr/include/gtk-3.0 -I/usr/include/gio-unix-2.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/fribidi -I/usr/include/harfbuzz -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/x86_64-linux-gnu -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include
 GTK_LIBS = -lgtk-3 -lgdk-3 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -latk-1.0 -lcairo-gobject -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lgobject-2.0 -lglib-2.0
 
 # local flags for GTK2 include
 GTK2_VERSION = 2.24.33
-GTK2_CFLAGS = -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libpng16 -I/usr/include/x86_64-linux-gnu -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
+GTK2_CFLAGS = -pthread -I/usr/include/gtk-2.0 -I/usr/lib/x86_64-linux-gnu/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/x86_64-linux-gnu -I/usr/include/pango-1.0 -I/usr/include/harfbuzz -I/usr/include/pango-1.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/harfbuzz -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/uuid -I/usr/include/freetype2 -I/usr/include/libpng16
 GTK2_LIBS = -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lfontconfig -lfreetype
 HAVE_GNOMEPRINT = 
 
@@ -116,10 +116,10 @@ AR = /usr/bin/ar
 ARFLAGS = cr
 CXX = g++
 ifeq ($(BUILD_SYS),uspace)
-CPPFLAGS = -Wdate-time -D_FORTIFY_SOURCE=2
-CXXFLAGS = -g -O2 -ffile-prefix-map=/home/moeller/Github/linuxcnc=. -fstack-protector-strong -Wformat -Werror=format-security
-CFLAGS = -g -O2 -ffile-prefix-map=/home/moeller/Github/linuxcnc=. -fstack-protector-strong -Wformat -Werror=format-security -I/usr/include/tirpc 
-LDFLAGS = -Wl,-z,relro -Wl,-z,now
+CPPFLAGS = 
+CXXFLAGS = -g -O2
+CFLAGS = -g -O2 -I/usr/include/tirpc 
+LDFLAGS = 
 endif
 RANLIB = ranlib
 RANLIBFLAGS = 
@@ -233,13 +233,13 @@ XENOMAI_LDFLAGS=
 
 LIBTIRPC_CFLAGS=-I/usr/include/tirpc
 LIBTIRPC_LIBS=-ltirpc
-PYTHON_CPPFLAGS=-I/usr/include/python3.9
+PYTHON_CPPFLAGS=-I/usr/include/python3.10
 PYTHON_EXTRA_LIBS=-lcrypt -lpthread -ldl  -lutil -lm -lm
 PYTHON_EXTRA_LDFLAGS=-Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions
 PYTHON_LIBS=-lcrypt -lpthread -ldl  -lutil -lm -lm
 BOOST_PYTHON_LIB=-lboost_python39
-PYTHON_CPPFLAGS=-I/usr/include/python3.9
-PYTHON_LIBS=-L/usr/lib/x86_64-linux-gnu -lpython3.9
+PYTHON_CPPFLAGS=-I/usr/include/python3.10
+PYTHON_LIBS=-L/usr/lib/x86_64-linux-gnu -lpython3.10
 SITEPY=/usr/lib/python3/dist-packages
 YAPPS=/usr/bin/yapps2
 #### END CONFIG ####

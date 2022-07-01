@@ -36,7 +36,7 @@ else
     export REALTIME=/usr/lib/linuxcnc/realtime
     export SUDO=sudo
 fi
-export PYTHON_CPPFLAGS="-I/usr/include/python3.9"
+export PYTHON_CPPFLAGS="-I/usr/include/python3.10"
 export PYTHON_EXTRA_LIBS="-lcrypt -lpthread -ldl  -lutil -lm -lm"
 export PYTHON_EXTRA_LDFLAGS="-Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions"
 export PYTHON_LIBS="-lcrypt -lpthread -ldl  -lutil -lm -lm"
