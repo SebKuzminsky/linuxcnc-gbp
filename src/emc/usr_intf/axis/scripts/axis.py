@@ -1112,7 +1112,7 @@ def filter_program(program_filter, infilename, outfilename):
             t.update()
             r,w,x = select.select([p.stderr], [], [], 0.100)
             if r:
-                stderr_line = p.stderr.readline()
+                stderr_line = p.stderr.readline().decode()
                 m = progress_re.match(stderr_line)
                 if m:
                     progress.update(int(m.group(1)), 1)
@@ -1121,10 +1121,11 @@ def filter_program(program_filter, infilename, outfilename):
                     sys.stderr.write(stderr_line)
         # .. might be something left on stderr
         for line in p.stderr:
-            m = progress_re.match(line)
+            stderr_line = line.decode()
+            m = progress_re.match(stderr_line)
             if not m:
-                stderr_text.append(line)
-                sys.stderr.write(line)
+                stderr_text.append(stderr_line)
+                sys.stderr.write(stderr_line)
         return p.returncode, "".join(stderr_text)
     finally:
         progress.done()
@@ -1853,10 +1854,10 @@ def run_warn():
         machine_limit_min, machine_limit_max = soft_limits()
         for i in range(3): # Does not enforce angle limits
             if not(s.axis_mask & (1<<i)): continue
-            if o.canon.min_extents_notool[i] < machine_limit_min[i]:
+            if o.canon.min_extents_notool[i] + to_internal_linear_unit(o.last_tool_offset[i]) < machine_limit_min[i]:
                 warnings.append(_("Program exceeds machine minimum on axis %s")
                     % "XYZABCUVW"[i])
-            if o.canon.max_extents_notool[i] > machine_limit_max[i]:
+            if o.canon.max_extents_notool[i] + to_internal_linear_unit(o.last_tool_offset[i]) > machine_limit_max[i]:
                 warnings.append(_("Program exceeds machine maximum on axis %s")
                     % "XYZABCUVW"[i])
     if warnings:

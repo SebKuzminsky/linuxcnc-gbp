@@ -74,8 +74,8 @@ class ToolBarActions():
                 self.runfromLineWidget.setText('Run From Line: {}'.format(line))
 
         if action == 'estop':
-            STATUS.connect('state-estop', lambda w: widget.setChecked(True))
-            STATUS.connect('state-estop-reset', lambda w: widget.setChecked(False))
+            STATUS.connect('state-estop', lambda w: self.statusOfEstop(widget,True))
+            STATUS.connect('state-estop-reset', lambda w: self.statusOfEstop(widget,False))
             function = (self.actOnEstop)
         elif action == 'power':
             STATUS.connect('state-estop', lambda w: widget.setEnabled(False))
@@ -116,6 +116,13 @@ class ToolBarActions():
             STATUS.connect('interp-paused', lambda w: widget.setEnabled(homed_on_test()))
             STATUS.connect('file-loaded', lambda w, f: widget.setEnabled(homed_on_test()))
             function = (self.actOnRun)
+        elif action == 'step':
+            STATUS.connect('state-off', lambda w: widget.setEnabled(False))
+            STATUS.connect('state-estop', lambda w: widget.setEnabled(False))
+            STATUS.connect('interp-idle', lambda w: widget.setEnabled(homed_on_test()))
+            STATUS.connect('all-homed', lambda w: widget.setEnabled(True))
+            STATUS.connect('not-all-homed', lambda w, data: widget.setEnabled(False))
+            function = (self.actOnStep)
         elif action == 'pause':
             STATUS.connect('state-off', lambda w: widget.setEnabled(False))
             STATUS.connect('state-estop', lambda w: widget.setEnabled(False))
@@ -358,8 +365,25 @@ class ToolBarActions():
     #########################################################
     # Standard Actions
     #########################################################
+
+    # estop button checked status follows linuxcnc E stop state
+    # we kep the button state the same, while we request a linuxcnc state
+    # change
     def actOnEstop(self, widget, state):
-        ACTION.SET_ESTOP_STATE(state)
+            widget.blockSignals(True)
+            if STATUS.estop_is_clear():
+                widget.setChecked(False)
+            else:
+                widget.setChecked(True)
+            widget.blockSignals(False)
+            ACTION.SET_ESTOP_STATE(state)
+
+    # estop button checked status follows linuxcnc E stop state
+    def statusOfEstop(self, widget, state):
+        if STATUS.estop_is_clear():
+            widget.setChecked(False)
+        else:
+            widget.setChecked(True)
 
     def actOnPower(self, widget, state):
         ACTION.SET_MACHINE_STATE(state)
@@ -387,6 +411,9 @@ class ToolBarActions():
 
     def actOnRun(self, widget, state=None):
         ACTION.RUN()
+
+    def actOnStep(self, widget, state=None):
+        ACTION.STEP()
 
     def actOnPause(self, widget, state=None):
         ACTION.PAUSE()

@@ -1,7 +1,14 @@
 :lang: en
+:toc:
 
 [[cha:hal-twopass]]
 = HAL TWOPASS
+
+// Custom lang highlight
+// must come after the doc title, to work around a bug in asciidoc 8.6.6
+:ini: {basebackend@docbook:'':ini}
+:hal: {basebackend@docbook:'':hal}
+:ngc: {basebackend@docbook:'':ngc}
 
 == TWOPASS
 
@@ -10,13 +17,13 @@ that can help in the modularization and readability of hal files.
 (Hal files are specified in an LinuxCNC ini file in the HAL stanza
 as [HAL]HALFILE=filename).
 
-Normally, a set of one or more hal configuration files must use
-a single, unique loadrt line to load a kernel module that may
-handle multiple instances of a component.  For example, if you
-use a two input AND gate component (and2) in three different
-places in your setup, you would need to have a single line
-somewhere to specify:
+Normally, a set of one or more hal configuration files must use a single,
+unique loadrt line to load a kernel module that may handle multiple
+instances of a component.  For example, if you use a two input AND
+gate component (and2) in three different places in your setup, you
+would need to have a single line somewhere to specify:
 
+[source,{hal}]
 ----
 loadrt and2 count=3
 ----
@@ -26,6 +33,7 @@ resulting in components and2.0, and2.1, and2.2.
 Configurations are more readable if you specify with the
 names=option for components where it is supported, e.g.,:
 
+[source,{hal}]
 ----
 loadrt and2 names=aa,ab,ac
 ----
@@ -40,6 +48,7 @@ the component.
 TWOPASS processing is enabled by including an ini file parameter in
 the [HAL] section:
 
+[source,{ini}]
 ----
 [HAL]
 
@@ -49,6 +58,7 @@ TWOPASS = anystring
 Where "anystring" can be any non-null string.
 With this setting, you can have multiple specifications like:
 
+[source,{hal}]
 ----
 loadrt and2 names=aa
 ...
@@ -64,11 +74,10 @@ The TWOPASS option can be specified with options to add output for
 debugging (verbose) and to prevent deletion of temporary files (nodelete).
 The options are separated with commas.
 
-Example:
-
+.Example
+[source,{ini}]
 ----
 [HAL]
-
 TWOPASS = on,verbose,nodelete
 ----
 
@@ -106,6 +115,7 @@ ddt.1, ddt.2, etc.
 
 Alternatively, using the 'names=' option like:
 
+[source,{hal}]
 ----
 loadrt ddt names=xvel,yvel,zvel
 ...
@@ -124,11 +134,12 @@ with the halcompile utility, numerous other comps support the names=option.
 Comps that support names= option include: at_pid, encoder,
 encoder_ratio, pid, siggen, and sim_encoder.
 
-El procesamiento en dos pasos ocurre antes de la carga de la interfaz gráfica de usuario. Cuando se utiliza un
-[HAL]POSTGUI_HALFILE, es conveniente colocar todo las
-declaraciones loadrt para los componentes necesarios en un halfile que se carge con anterioridad.
+Two-step processing occurs before the GUI is loaded. When using a
+[HAL]POSTGUI_HALFILE, it is convenient to place all the [HAL]POSTGUI_HALFILE
+loadrt declarations for the necessary components in a preloaded halfile.
 
-Ejemplo de una sección HAL cuando se usa un POSTGUI_HALFILE:
+.Example of a HAL section when using a POSTGUI_HALFILE
+[source,{ini}]
 ----
 [HAL]
 
@@ -137,7 +148,7 @@ HALFILE = core_sim.hal
 HALFILE = sim_spindle_encoder.hal
 HALFILE = axis_manualtoolchange.hal
 HALFILE = simulated_home.hal
-HALFILE = load_for_postgui.hal <- líneas loadrt para componentes en postgui.hal
+HALFILE = load_for_postgui.hal <- loadrt lines for components in postgui.hal
 
 POSTGUI_HALFILE = postgui.hal
 HALUI = halui
@@ -151,7 +162,8 @@ TWOPASS processing, include all loadrt items for components added by postgui hal
 in a separate halfile that is processed before the GUI.  The addf commands can also
 be included in the file.
 
-.Example:
+.Example
+[source,{ini}]
 ----
 [HAL]
 TWOPASS = on
@@ -190,7 +202,7 @@ While the order of loadrt directives is not usually critical,
 ordering of addf directives is often very important for proper
 operation of servo loop components.
 
-.Excluded '.hal' file example:
+.Excluded '.hal' file example
 ----
 $ cat twopass_excluded.hal
 # The following magic comment causes this file to
@@ -220,8 +232,7 @@ their ordering may be important.
 
 Examples of TWOPASS usage for a simulator are included in the directories:
 
-   configs/sim/axis/twopass/
-
-   configs/sim/axis/simtcl/
+  configs/sim/axis/twopass/
+  configs/sim/axis/simtcl/
 
 // vim: set syntax=asciidoc:

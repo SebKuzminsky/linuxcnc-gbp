@@ -17,7 +17,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
+import os
 import gi
 from gi.repository import GObject as gobject
 from qtvcp.widgets.simple_widgets import _HalWidgetBase
@@ -25,11 +25,14 @@ from qtvcp.widgets.screen_options import ScreenOptions
 from PyQt5.QtCore import QObject
 from PyQt5.QtWidgets import QDesktopWidget
 
+from qtvcp.core import Info
+
 # Set up logging
 from . import logger
 
 LOG = logger.getLogger(__name__)
 
+INFO = Info()
 
 # Force the log level for this module
 #LOG.setLevel(logger.DEBUG) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
@@ -56,7 +59,7 @@ class QTPanel():
 
                     # change HAL base name to screenOptions setting if
                     # a new base name was not specified on the command line
-                    # and screenOptions name is not blank 
+                    # and screenOptions name is not blank
                     oldHALName = halcomp.comp.getprefix()
                     if oldHALName == path.BASENAME:
                         newHALName = widget.property('halCompBaseName')
@@ -74,22 +77,53 @@ class QTPanel():
                     except Exception as e:
                         LOG.warning('VCPObject Injection error: {}'.format(e))
 
+        # load any external embed qtvcp panels () found from INI entry.
+        if INFO.TAB_CMDS:
+            for name, loc, cmd in INFO.ZIPPED_TABS:
+                # install a QTvcp panel instance
+                if 'qtvcp' in cmd:
+                    cmd = cmd.split()[1]
+                    LOG.info('green<QTVCP: Found external qtvcp {} panel to instantiate>'.format(cmd))
+
+                    pName = name.replace(' ','_')
+                    window[pName] = window.makeMainPage(name)
+
+                    hndlr = os.path.join(path.PANELDIR , cmd, cmd+'_handler.py')
+                    if os.path.exists(hndlr):
+                        window[pName].load_extension(hndlr)
+
+                    window[pName].instance(os.path.join(path.PANELDIR , cmd, cmd+'.ui'))
+                    window[pName].handler_instance.initialized__()
+
+                    oldname = halcomp.comp.getprefix()
+                    halcomp.comp.setprefix('{}.{}'.format(oldname,cmd))
+
+                    LOG.debug('QTVCP: Parsing external qtvcp {} panel for EMBEDDED HAL widgets.'.format(cmd))
+                    for widget in window[pName].findChildren(QObject):
+                        if isinstance(widget, _HalWidgetBase):
+                            idname = widget.objectName()
+                            LOG.verbose('{}: HAL-ified widget: {}'.format(name.upper(), idname))
+                            if not isinstance(widget, ScreenOptions):
+                                widget.hal_init()
+                    halcomp.comp.setprefix(oldname)
+
         # parse for HAL objects:
         # initiate the hal function on each
         # keep a register list of these widgets for later
-        LOG.debug('QTVCP: Parcing for hal widgets')
+        LOG.debug('QTVCP: Parsing for HAL widgets.')
         for widget in window.findChildren(QObject):
             if isinstance(widget, _HalWidgetBase):
                 idname = widget.objectName()
-                LOG.verbose('HAL-ified instance found: {}'.format(idname))
+                LOG.verbose('HAL-ified widget: {}'.format(idname))
                 widget.hal_init()
+
 
     # Search all hal-ifed widgets for _hal_cleanup functions and call them
     # used for such things as preference recording current settings
     def shutdown(self):
         if self.window['PREFS_']:
             self.record_preference_geometry()
-        LOG.debug("calling widget's _hal_cleanup functions")
+        LOG.debug("Calling widget's _hal_cleanup functions.")
         for widget in self.window.getRegisteredHalWidgetList():
             try:
                 widget._hal_cleanup()
@@ -99,7 +133,7 @@ class QTPanel():
             if 'closing_cleanup__' in dir(widget):
                 idname = widget.objectName()
                 LOG.info('Closing cleanup on: {}'.format(idname))
-                LOG.info('"closing_cleanup__" function name is depreciated, please using "_hal_cleanup"')
+                LOG.info('"closing_cleanup__" function name is depreciated, please using "_hal_cleanup".')
                 widget.closing_cleanup__()
 
     # if there is a prefrence file and it is has digits (so no key word), then record
@@ -122,7 +156,7 @@ class QTPanel():
         if self.window['PREFS_']:
             self.geometry_parsing()
         else:
-            LOG.info('No preference file - can not set preference geometry.')
+            LOG.info('No preference file - cannot set preference geometry.')
 
     def geometry_parsing(self):
         def go(x, y, w, h):
@@ -130,7 +164,7 @@ class QTPanel():
 
         try:
             self._geo_string = self.window.PREFS_.getpref('mainwindow_geometry', '', str, 'SCREEN_OPTIONS')
-            LOG.debug('Calculating geometry of main window using natural placement:{}'.format(self._geo_string))
+            LOG.debug('Calculating geometry of main window using natural placement: {}'.format(self._geo_string))
             # If there is a preference file object use it to load the geometry
             if self._geo_string in ('default', ''):
                 return
@@ -151,6 +185,11 @@ class QTPanel():
             h = self.window.geometry().height()
             go(x, y, w, h)
 
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+    def __setitem__(self, item, value):
+        return setattr(self, item, value)
 
 if __name__ == "__main__":
     print("qtvcp_make_pins cannot be run on its own")

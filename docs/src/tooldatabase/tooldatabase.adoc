@@ -1,7 +1,14 @@
 :lang: en
+:toc:
 
 [[cha:tooldatabase]]
 = Tool Database Interface
+
+// Custom lang highlight
+// must come after the doc title, to work around a bug in asciidoc 8.6.6
+:ini: {basebackend@docbook:'':ini}
+:hal: {basebackend@docbook:'':hal}
+:ngc: {basebackend@docbook:'':ngc}
 
 Tool data is conventionally described by a tool table file specified
 by an inifile setting: [EMCIO]TOOL_TABLE=tooltable_filename.  A tool
@@ -21,6 +28,7 @@ tools.
 Ini file settings enable the (optional) operation of a user-provided
 tool database program:
 
+[source,{ini}]
 ----
 [EMCIO]
 DB_PROGRAM = db_program
@@ -30,12 +38,10 @@ The optional *db_program* specifies the path to a user-provided
 executable program that provides tool data.
 
 [NOTE]
-
 Ini file settings for [EMCIO]TOOL_TABLE are ignored when a *db_program*
 is specified.
 
 [NOTE]
-
 The *db_program* may be implemented in any language currently
 supported in LinuxCNC (e.g., bash scripts, python or tcl scripts,
 c/c++ programs) as long as it conforms to the interface messages
@@ -64,7 +70,6 @@ When a *db_progam* is specified, operation is as follows:
 . The *db_program* then enters an event wait loop to receive commands
   that indicate that tool data has been changed by LinuxCNC.  Tool data
   changes include:
-
   * a) spindle loading(Tn M6)/unloading(T0 M6)
   * b) tool parameter changes (G10L1Pn for example)
   * c) tool substitutions (M61Qn).
@@ -80,15 +85,15 @@ the fault.
 
 The commands issued for tool data changes are:
 
-  * "'p'" put data changes caused by G10L1, G10L10, G10L11 G-codes.
-    The tool data line will include all elements of a tool table
-    text line.
+* "'p'" put data changes caused by G10L1, G10L10, G10L11 G-codes.
+  The tool data line will include all elements of a tool table
+  text line.
 
-  * "'l'" spindle_load (TnM6). The tool data line includes only the 'T' and
-    'P' items identifying the relevant tool number and pocket number.
+* "'l'" spindle_load (TnM6). The tool data line includes only the 'T' and
+  'P' items identifying the relevant tool number and pocket number.
 
-  * "'u'" spindle_unload (T0M6).  The tool data line includes only the 'T'
-    and 'P' items identifying the relevant tool number and pocket number
+* "'u'" spindle_unload (T0M6).  The tool data line includes only the 'T'
+  and 'P' items identifying the relevant tool number and pocket number
 
 [NOTE]
 When a NON_RANDOM tool changer is specified using
@@ -128,6 +133,7 @@ A reload operation is also typically provided by a Graphical User
 Interface (GUI) so that on-demand reloads can be requested.  For
 example, a python GUI application can use:
 
+[source,python]
 ----
 #!/usr/bin/env python3
 from  linuxcnc import command
@@ -166,6 +172,7 @@ indicate tool data changes ('p', 'l', 'u').
 The *db_program* uses the 'tooldb' module by implementing the
 following python code:
 
+[source,python]
 ----
 user_tools = list(...)   # list of available tool numbers
 
@@ -203,7 +210,6 @@ Use of 'tooldb' is not required -- it is provided as a demonstration
 of the required interface and as a convenience for implementing
 python-based applications that interface with an external database.
 
-
 == Simulation configs
 
 Simulation configs using the axis gui:
@@ -232,3 +238,4 @@ When a *db_program* is used in conjunction with a random tool changer
 ('db_spindle.tbl' in the configuration directory) that consists of a
 single tool table line identifying the current tool in the spindle.
 
+// vim: set syntax=asciidoc:

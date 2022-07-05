@@ -173,9 +173,9 @@ class INI:
         # qtplasmac has a different filter section
         if self.d.select_qtplasmac:
             print("PROGRAM_EXTENSION = .ngc,.nc,.tap GCode File (*.ngc, *.nc, *.tap)", file=file)
-            print("ngc = ./qtplasmac/qtplasmac_gcode.py", file=file)
-            print("nc  = ./qtplasmac/qtplasmac_gcode.py", file=file)
-            print("tap = ./qtplasmac/qtplasmac_gcode.py", file=file)
+            print("ngc = qtplasmac_gcode", file=file)
+            print("nc  = qtplasmac_gcode", file=file)
+            print("tap = qtplasmac_gcode", file=file)
         else:
             print("PROGRAM_EXTENSION = .png,.gif,.jpg Greyscale Depth Image", file=file)
             print("PROGRAM_EXTENSION = .py Python Script", file=file)
@@ -195,13 +195,10 @@ class INI:
         print("PARAMETER_FILE = linuxcnc.var", file=file)
         # qtplasmac has extra rs274ngc variables
         if self.d.select_qtplasmac:
-            if self.d.units:
-                units = "metric"
-            else:
-                units = "imperial"
-            print("RS274NGC_STARTUP_CODE = o<{}_startup> call".format(units), file=file)
-            print("SUBROUTINE_PATH = ./:./qtplasmac:../../nc_files/subroutines", file=file)
-            print("USER_M_PATH = ./:./qtplasmac", file=file)
+            code = 21 if self.d.units else 20
+            print("RS274NGC_STARTUP_CODE = G{} G40 G49 G80 G90 G92.1 G94 G97 M52P1".format(code), file=file)
+            print("SUBROUTINE_PATH = ./:../../nc_files", file=file)
+            print("USER_M_PATH = ./:../../nc_files", file=file)
             print("", file=file)
 
         base_period = self.d.ideal_period()
@@ -284,10 +281,11 @@ class INI:
         minlim = get("minlim")
         maxlim = get("maxlim")
         home = get("homepos")
-        if self.d.units: extend = .001
-        else: extend = .01
-        minlim = min(minlim, home) - extend
-        maxlim = max(maxlim, home) + extend
+        extend = 0.001 if self.d.units else 0.01
+        if minlim == home:
+            minlim = minlim - extend
+        elif maxlim == home:
+            maxlim = maxlim + extend
         axis_letter = letter.upper()
         if not tandem:
             print(file=file)

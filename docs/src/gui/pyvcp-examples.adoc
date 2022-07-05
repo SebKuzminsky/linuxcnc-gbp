@@ -1,6 +1,13 @@
 :lang: en
+:toc:
 
 = PyVCP Examples
+
+// Custom lang highlight
+// must come after the doc title, to work around a bug in asciidoc 8.6.6
+:ini: {basebackend@docbook:'':ini}
+:hal: {basebackend@docbook:'':hal}
+:ngc: {basebackend@docbook:'':ngc}
 
 == AXIS
 
@@ -60,7 +67,7 @@ Wizard.
 
 [[cap:XYZ-Wizard-Configuration]]
 .XYZ Wizard Configuration
-image::images/xyz_ACO.png["XYZ Wizard Configuration"]
+image::images/xyz_ACO.png["PyVCP XYZ Wizard Configuration"]
 
 The Stepconf Wizard will create several files and place them in the
 linuxcnc/configs/pyvcp_xyz directory. If you left the create link checked
@@ -73,7 +80,7 @@ Open up the custompanel.xml file by right clicking on it and selecting
 the widgets for our panel.
 
 Look in the PyVCP Widgets Reference section of the manual for more
-detailed information on each widget <<sec:Documentation-des-widgets,documentation des widgets>>.
+detailed information on each widget <<sec:pyvcp:widgets,documentation des widgets>>.
 
 In your custompanel.xml file we will add the description of the
 widgets.
@@ -172,6 +179,7 @@ image::images/xyz_buttons.png["Jog Buttons Image"]
 To make the connections needed open up your custom_postgui.hal file
 and add the following.
 
+[source,{hal}]
 ----
 # connect the X PyVCP buttons
 net my-jogxminus halui.axis.x.minus <= pyvcp.x-minus
@@ -191,7 +199,7 @@ net my-jogspeed halui.axis.jog-speed <= pyvcp.jog-speed-f
 
 After resetting the E-Stop and putting it into jog mode and moving the
 jog speed slider in the PyVCP panel to a value greater than zero the
-PyVCP jog buttons should work. You can not jog when running a g code
+PyVCP jog buttons should work. You can not jog when running a G-code
 file or while paused or while the MDI tab is selected.
 
 == Port Tester
@@ -272,6 +280,7 @@ image::images/ptest.png["Port Tester Panel"]
 To run the HAL commands that we need to get everything up and running
 we put the following in our ptest.hal file.
 
+[source,c]
 ----
 loadrt hal_parport cfg="0x378 out"
 loadusr -Wn ptest pyvcp -c ptest ptest.xml
@@ -442,6 +451,7 @@ image::images/gs2_panel.png["GS2 Panel"]
 To make it work we add the following code to the custom_postgui.hal
 file.
 
+[source,{hal}]
 ----
 # display the rpm based on freq * rpm per hz
 loadrt mult2
@@ -489,6 +499,7 @@ In your configuration directory create the .xml file. In this example it's named
 Open your .ini file with a text editor and in the [DISPLAY] section add the
 following line. This is what loads the PyVCP panel.
 
+[source,{ini}]
 ----
 PYVCP = rth.xml
 ----
@@ -496,16 +507,20 @@ PYVCP = rth.xml
 If you don't have a [HALUI] section in the ini file create it and add the
 following MDI command.
 
+[source,{ini}]
 ----
 MDI_COMMAND = G53 G0 X0 Y0 Z0
 ----
 
 [NOTE]
+====
 Information about <<gcode:g53,G53>> and <<gcode:g0,G0>> G-codes
+====
 
 In the [HAL] section if you don't have a post gui file add the following and
 create a file called 'postgui.hal'.
 
+[source,{ini}]
 ----
 POSTGUI_HALFILE = postgui.hal
 ----
@@ -513,11 +528,14 @@ POSTGUI_HALFILE = postgui.hal
 In the 'postgui.hal' file add the following code to link the PyVCP button to the
 MDI command.
 
+[source,{hal}]
 ----
 net rth halui.mdi-command-00 <= pyvcp.rth-button
 ----
 
 [NOTE]
-Information about the <<sub:net, net>> command
+====
+Information about the <<sub:hal-net, net>> command
+====
 
 // vim: set syntax=asciidoc:
