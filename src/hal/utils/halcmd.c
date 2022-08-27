@@ -188,7 +188,7 @@ static int compare_command(const void *namep, const void *commandp) {
 }
 
 
-pid_t hal_systemv_nowait(char *const argv[]) {
+pid_t hal_systemv_nowait(const char *const argv[]) {
     pid_t pid;
     int n;
 
@@ -223,7 +223,7 @@ pid_t hal_systemv_nowait(char *const argv[]) {
         }
 	rtapi_print_msg(RTAPI_MSG_DBG, "\n" );
         /* call execv() to invoke command */
-	execvp(argv[0], argv);
+	execvp(argv[0], (char * const *)argv);
 	/* should never get here */
 	halcmd_error("execv(%s): %s\n", argv[0], strerror(errno) );
 	exit(1);
@@ -235,7 +235,7 @@ pid_t hal_systemv_nowait(char *const argv[]) {
     return pid;
 }
 
-int hal_systemv(char *const argv[]) {
+int hal_systemv(const char *const argv[]) {
     pid_t pid;
     int status;
     int retval;
@@ -678,10 +678,10 @@ static int strip_comments ( char *buf )
 
 */
 static int strlimcpy(char **dest, char *src, int srclen, int *destspace) {
-    if (*destspace < srclen) {
+    if (*destspace < srclen+1) {
 	return -1;
     } else {
-	strncpy(*dest, src, srclen);
+	strncpy(*dest, src, *destspace);
 	(*dest)[srclen] = '\0';
 	srclen = strlen(*dest);		/* use the actual number of bytes copied */
 	*destspace -= srclen;

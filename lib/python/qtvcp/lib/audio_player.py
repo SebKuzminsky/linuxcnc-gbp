@@ -45,7 +45,6 @@ except Exception as e:
         GST_LIB_GOOD = False
 
 from qtvcp.core import Status
-from qtvcp.widgets.widget_baseclass import _HalWidgetBase
 
 # Instaniate the libraries with global reference
 # STATUS gives us status messages from linuxcnc
@@ -100,7 +99,7 @@ class Player:
                 self.logout = '/usr/share/sounds/LinuxMint/stereo/desktop-logout.ogg'
                 self.bell = '/usr/share/sounds/freedesktop/stereo/bell.oga'
                 if not os.path.exists(self.error):
-                    log.error('Audio player - Mint sound File not found {}'.format(self.error))
+                    LOG.error('Audio player - Mint sound File not found {}'.format(self.error))
                 return
         except:
             pass
@@ -127,7 +126,7 @@ class Player:
 
     # jump to a builtin alert sound
     # This uses the system to play the sound because gst is not available
-    # this can still fail if gstreamer/tools are not available 
+    # this can still fail if gstreamer/tools are not available
     def os_jump(self, w, f):
         if 'beep' in f.lower():
             self[f.lower()]()
@@ -254,7 +253,7 @@ class Player:
                 # fallback call the system espeak - no queue used
                 os.system('''espeak -s 160 -v m3 -p 1 "%s" &''' % cmd)
 
-    # when sentences ends, start the next one, until there are none. 
+    # when sentences ends, start the next one, until there are none.
     def speak_finished(self, *args):
         if args[0] == espeak.event_MSG_TERMINATED:
             if not esQueue.empty():
@@ -276,7 +275,6 @@ class Player:
 
 if __name__ == "__main__":
     import gi
-    from gi.repository import GObject as gobject
     from gi.repository import GLib
     try:
         test = Player()

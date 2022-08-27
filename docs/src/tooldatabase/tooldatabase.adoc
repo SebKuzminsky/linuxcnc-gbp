@@ -1,14 +1,19 @@
 :lang: en
+:toc:
 
 [[cha:tooldatabase]]
 = Tool Database Interface
 
+// Custom lang highlight
+// must come after the doc title, to work around a bug in asciidoc 8.6.6
+:ini: {basebackend@docbook:'':ini}
+:hal: {basebackend@docbook:'':hal}
+:ngc: {basebackend@docbook:'':ngc}
+
 Tool data is conventionally described by a tool table file specified
 by an inifile setting: [EMCIO]TOOL_TABLE=tooltable_filename.  A tool
 table file consists of a text line for each available tool describing
-the tool's parameters.
-
-See: <<sec:tool-table,Tool Table Format>>
+the tool's parameters, see <<sec:tool-table,Tool Table Format>>.
 
 The tool database interface provides an alternative method for
 obtaining tool data via a separate program that manages a database of
@@ -16,11 +21,12 @@ tools.
 
 ==  Interface
 
-=== Ini file Settings
+=== INI file Settings
 
-Ini file settings enable the (optional) operation of a user-provided
+INI file settings enable the (optional) operation of a user-provided
 tool database program:
 
+[source,{ini}]
 ----
 [EMCIO]
 DB_PROGRAM = db_program
@@ -30,17 +36,15 @@ The optional *db_program* specifies the path to a user-provided
 executable program that provides tool data.
 
 [NOTE]
-
-Ini file settings for [EMCIO]TOOL_TABLE are ignored when a *db_program*
+INI file settings for [EMCIO]TOOL_TABLE are ignored when a *db_program*
 is specified.
 
 [NOTE]
-
 The *db_program* may be implemented in any language currently
 supported in LinuxCNC (e.g., bash scripts, python or tcl scripts,
 c/c++ programs) as long as it conforms to the interface messages
 received on stdin and replied on stdout.  A *db_program* could
-manage data from a flat file, a relational database (sqlite for
+manage data from a flat file, a relational database (SQLite for
 example), or other data sources.
 
 === *db_program* operation (v2.0)
@@ -64,10 +68,9 @@ When a *db_progam* is specified, operation is as follows:
 . The *db_program* then enters an event wait loop to receive commands
   that indicate that tool data has been changed by LinuxCNC.  Tool data
   changes include:
-
-  * a) spindle loading(Tn M6)/unloading(T0 M6)
-  * b) tool parameter changes (G10L1Pn for example)
-  * c) tool substitutions (M61Qn).
+  * a) spindle loading(T__n__ M6)/unloading(T0 M6)
+  * b) tool parameter changes (G10L1P__n__ for example)
+  * c) tool substitutions (M61Q__n__).
 
 When a tool data change occurs, LinuxCNC sends a command to the
 *db_program* consisting of an identifying command letter followed by a
@@ -80,30 +83,30 @@ the fault.
 
 The commands issued for tool data changes are:
 
-  * "'p'" put data changes caused by G10L1, G10L10, G10L11 G-codes.
-    The tool data line will include all elements of a tool table
-    text line.
+* "'p'" put data changes caused by G10L1, G10L10, G10L11 G-codes.
+  The tool data line will include all elements of a tool table
+  text line.
 
-  * "'l'" spindle_load (TnM6). The tool data line includes only the 'T' and
-    'P' items identifying the relevant tool number and pocket number.
+* "'l'" spindle_load (TnM6). The tool data line includes only the 'T' and
+  'P' items identifying the relevant tool number and pocket number.
 
-  * "'u'" spindle_unload (T0M6).  The tool data line includes only the 'T'
-    and 'P' items identifying the relevant tool number and pocket number
+* "'u'" spindle_unload (T0M6).  The tool data line includes only the 'T'
+  and 'P' items identifying the relevant tool number and pocket number
 
 [NOTE]
 When a NON_RANDOM tool changer is specified using
 [EMCIO]RANDOM_TOOL_CHANGER=0 (the default), the spindle_load command
-issued for TnM6 (or M61Qn) is: 'l Tn P0' (pocket '0' is the spindle).
+issued for T__n__M6 (or M61Q__n__) is: 'l T__n__ P0' (pocket 0 is the spindle).
 The spindle_unload command issued for T0M6 is 'u T0 P0'.
 
 [NOTE]
 When a RANDOM tool changer is specified using
 [EMCIO]RANDOM_TOOL_CHANGER=1, a pair of spindle_unload/spindle_load
 commands are issued at each tool exchange.  The pair of commands
-issued for TnM6 (or M61Qn) are 'u Tu Pm' followed by 'l Tn P0' where
-'u' is the current tool to be sent to pocket 'm' and 'n' is the new
+issued for T__n__M6 (or M61Q__n__) are 'u T__u__ P__m__' followed by 'l T__n__ P0' where
+__u__ is the current tool to be sent to pocket __m__ and __n__ is the new
 tool to load in the spindle (pocket '0').  By convention, a tool
-number of '0' is used to specify an empty tool,
+number of 0 is used to specify an empty tool,
 
 === Usage
 
@@ -112,27 +115,59 @@ provides support for new database functionality for tool management.
 
 For example, a *db_program* database application can maintain the
 operating hours for all tools by tracking each load/unload of a tool.
-A machine could then have three 6mm endmills in pockets 111,112, and
+A machine could then have three 6&thinsp;mm endmills in pockets 111, 112, and
 113 with the database application programmed to assign tool number 110
-to the 6mm endmill with the fewest operating hours.  Then, when a
+to the 6&thinsp;mm endmill with the fewest operating hours.  Then, when a
 LinuxCNC program requests tool 110, the database would specify the
 appropriate pocket based on tool usage history.
 
-By default, requests for tool data are made at startup only.  A database
-program may update tool usage data on a continuous basis so long-lived
-LinuxCNC applications may benefit by refreshing the tool data.  The
-G-code command *G10 L0* can be used to request a tool data reload ('g'
-command) from within G-code programs or by MDI.
-
+Tool data changes made within LinuxCNC ('p','u','l' commands) are
+pushed immediately to the *db_program* which is expected to
+synchronize its source data.  By default, LinuxCNC requests for tool
+data ('g' commands) are made at startup only.  A database program may
+update tool usage data on a continuous basis so long-lived LinuxCNC
+applications may benefit by refreshing the tool data provided by the
+*db_program*.  The G-code command *G10L0* can be used to request a
+tool data reload ('g' command) from within G-code programs or by MDI.
 A reload operation is also typically provided by a Graphical User
 Interface (GUI) so that on-demand reloads can be requested.  For
 example, a python GUI application can use:
 
+[source,python]
 ----
 #!/usr/bin/env python3
 from  linuxcnc import command
 command().load_tool_table()
 ----
+
+Alternatively, a *db_program* may push its local data changes to
+synchronize its data with LinuxCNC by using the load_tool_table()
+interface command.  Commands which push changes to LinuxCNC may be
+rejected if the interpreter is running.  The interpreter state can be
+checked before issuing a load_tool_table() command.  Example:
+
+[source,python]
+----
+#! /usr/bin/env python3
+import linuxcnc
+s = linuxcnc.stat()
+s.poll()
+if s.interp_state == linuxcnc.INTERP_IDLE:
+    linuxcnc.command().load_tool_table()
+else: # defer until interp not idle
+   ...
+----
+
+If the database application adds or removes tools after
+initialization, a call to tooldb_tools() must be issued with an
+updated user_tools list.  The updated list of tools will
+be used on subsequent get commands or load_tool_table()
+requests.
+
+[NOTE]
+Removal of a tool number should only be done if the tool number
+is not currently loaded in spindle.
+
 
 ==== Debug Environmental Variables
 
@@ -166,6 +201,7 @@ indicate tool data changes ('p', 'l', 'u').
 The *db_program* uses the 'tooldb' module by implementing the
 following python code:
 
+[source,python]
 ----
 user_tools = list(...)   # list of available tool numbers
 
@@ -203,7 +239,6 @@ Use of 'tooldb' is not required -- it is provided as a demonstration
 of the required interface and as a convenience for implementing
 python-based applications that interface with an external database.
 
-
 == Simulation configs
 
 Simulation configs using the axis gui:
@@ -225,6 +260,15 @@ module and implement a basic flat-file database that tracks tool time
 usage for multiple tools having equal diameters.  The database rules
 support selection of the tool having the lowest operating time.
 
+The sim configs use a primary task to monitor and respond to tool
+updates initiated from within LinuxCNC.  Separate, concurrent tasks
+show the code required when changes are initiated by the *db_program*
+and demonstrate methods for synchronizing LinuxCNC internal tooldata.
+Examples include:
+
+. updates of tool parameters
+. addition and removal of tool numbers
+
 === Notes
 
 When a *db_program* is used in conjunction with a random tool changer
@@ -232,3 +276,4 @@ When a *db_program* is used in conjunction with a random tool changer
 ('db_spindle.tbl' in the configuration directory) that consists of a
 single tool table line identifying the current tool in the spindle.
 
+// vim: set syntax=asciidoc:

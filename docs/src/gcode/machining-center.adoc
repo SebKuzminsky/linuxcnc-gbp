@@ -4,6 +4,12 @@
 [[cha:cnc-machine-overview]]
 = CNC Machine Overview(((Machine Overview)))
 
+// Custom lang highlight
+// must come after the doc title, to work around a bug in asciidoc 8.6.6
+:ini: {basebackend@docbook:'':ini}
+:hal: {basebackend@docbook:'':hal}
+:ngc: {basebackend@docbook:'':ngc}
+
 This section gives a brief description of how a CNC machine is viewed
 from the input and output ends of the Interpreter.
 
@@ -25,36 +31,38 @@ foam-cutting machine may have XYUV axes. In LinuxCNC, the case of a XYYZ
 'gantry' machine with two motors for one axis is better handled by
 kinematics rather than by a second linear axis.
 
-NOTE:
-If the
-motion of mechanical components is not independent, as with
+[NOTE]
+====
+If the motion of mechanical components is not independent, as with
 hexapod machines, the RS274/NGC language and the canonical machining
 functions will still be usable, as long as the lower levels of control
 know how to control the actual mechanisms to produce the same relative
 motion of tool and workpiece as would be produced by independent axes.
 This is called 'kinematics'.
+====
 
-NOTE:
-Avec LinuxCNC, le cas de la machine à portique XYYZ avec deux
-moteurs pour un axe est mieux traité par la cinématique que par un
-axe linéaire supplémentaire.
+[NOTE]
+====
+With LinuxCNC, the case of the XYYZ gantry machine with two
+motors for one axis is better handled by the kinematics than by an additional
+linear axis.
+====
 
-.Primary Linear Axes (((axes, primary linear)))
-
+.Primary Linear Axes(((axes, primary linear)))
 The X, Y, and Z axes produce linear motion in three mutually
 orthogonal directions.
 
-.Secondary Linear Axes (((axes, secondary linear)))
+.Secondary Linear Axes(((axes, secondary linear)))
 The U, V, and W axes produce linear motion in three mutually
 orthogonal directions. Typically, X and U are parallel, Y and V are
 parallel, and Z and W are parallel.
 
-.Rotational Axes (((axes, rotational)))
+.Rotational Axes(((axes, rotational)))
 The A, B and C axes produce angular motion (rotation). Typically, A
 rotates around a line parallel to X, B rotates around a line parallel
 to Y, and C rotates around a line parallel to Z.
 
-=== Spindle (((spindle)))
+=== Spindle(((spindle)))
 
 A CNC machine typically has a spindle which holds one cutting tool,
 probe, or the material in the case of a lathe. The spindle may or may
@@ -66,10 +74,10 @@ directions.
 === Coolant(((coolant)))
 
 Flood coolant and mist coolant may each be turned on independently.
-The RS274/NGC language turns them off together see Section
+The RS274/NGC language turns them off together see section
 <<mcode:m7-m8-m9,M7 M8 M9>>.
 
-=== Feed and Speed Override(((correcteurs vitesse)))(((correcteur vitesse broche)))
+=== Feed and Speed Override(((feed override)))(((spindle override)))
 
 A CNC machine can have separate feed and speed override controls,
 which let the operator specify that the actual feed rate or spindle
@@ -78,12 +86,13 @@ speed used in machining at some percentage of the programmed rate.
 === Block Delete Switch
 
 A CNC machine can have a block delete switch.
-See the <<sub:block-delete-switch,Block Delete>> Section.
+See the <<sub:block-delete-switch,Block Delete>> section.
 
+[[sub:optional-program-stop-switch]]
 === Optional Program Stop Switch
 
 A CNC machine can have an optional program stop switch.
-See the <<sub:optional-program-stop,Optional Program Stop>> Section.
+See the <<sub:optional-program-stop,Optional Program Stop>> section.
 
 == Control and Data Components
 
@@ -134,7 +143,7 @@ controlled point is either at the tool tip or slightly outside it
 (where the perpendicular, axis-aligned lines touched by the 'front' and
 'side' of the tool intersect).
 
-[[sec:Mouvement-lineaire-coordonne]]
+[[sec:Coordinated-Linear-Motion]]
 === Coordinated Linear Motion
 
 To drive a tool along a specified path, a machining center must often
@@ -162,24 +171,30 @@ rate unobtainable, all axes are slowed to maintain the desired path.
 The rate at which the controlled point moves is nominally a steady
 rate which may be set by the user. In the Interpreter, the feed
 rate is interpreted as follows (unless 'inverse time feed' or 'feed
-per revolution' modes are being used, in which case see Section
+per revolution' modes are being used, in which case see section
 <<gcode:g93-g94-g95,G93-G94-G95-Mode,G93 G94 G95>>).
 
- . If any of XYZ are moving, F is in units per minute in the XYZ
-   cartesian system, and all other axes (ABCUVW) move so as to start and
-   stop in coordinated fashion.
- . Otherwise, if any of UVW are moving, F is in units per minute in the
-   UVW cartesian system, and all other axes (ABC) move so as to start and
-   stop in coordinated fashion.
- . Otherwise, the move is pure rotary motion and the F word is in rotary
-   units in the ABC 'pseudo-cartesian' system.
+. If any of XYZ are moving, F is in units per minute in the XYZ
+  cartesian system, and all other axes (ABCUVW) move so as to start and
+  stop in coordinated fashion.
+. Otherwise, if any of UVW are moving, F is in units per minute in the
+  UVW cartesian system, and all other axes (ABC) move so as to start and
+  stop in coordinated fashion.
+. Otherwise, the move is pure rotary motion and the F word is in rotary
+  units in the ABC 'pseudo-cartesian' system.
+
+=== Cooling(((Cooling)))
+
+Flood or droplets cooling can be enabled separately.
+RS274/NGC language stops them together.
+See section about <<mcode:m7-m8-m9,cooling control>>.
 
 === Dwell(((dwell)))
 
 A machining center may be commanded to dwell (i.e., keep all axes
 unmoving) for a specific amount of time. The most common use of dwell
 is to break and clear chips, so the spindle is usually turning during a
-dwell. Regardless of the Path Control Mode (see Section
+dwell. Regardless of the Path Control Mode (see section
 <<sec:path-control-mode,Path Control>>) the machine will stop exactly at the end of
 the previous programmed move, as though it was in exact path mode.
 
@@ -191,7 +206,7 @@ machine control cannot be changed. Different quantities use different
 specific units. Spindle speed is measured in revolutions per minute.
 The positions of rotational axes are measured in degrees. Feed rates
 are expressed in current length units per minute, or degrees per
-minute, or length units per spindle revolution, as described in Section
+minute, or length units per spindle revolution, as described in section
 <<gcode:g93-g94-g95,G93 G94 G95>>.
 
 === Current Position
@@ -201,9 +216,9 @@ and the controller always knows where that is. The numbers
 representing the current position must be adjusted in the absence of
 any axis motion if any of several events take place:
 
- . Length units are changed.
- . Tool length offset is changed.
- . Coordinate system offsets are changed.
+. Length units are changed.
+. Tool length offset is changed.
+. Coordinate system offsets are changed.
 
 === Selected Plane
 
@@ -224,14 +239,14 @@ A machining center may be commanded to change tools.
 
 The two pallets may be exchanged by command.
 
-=== Boutons des correcteurs de vitesses
+=== Speed Override
 
-Feed and speed override controls can either be active or disabled.
-RS274/NGC langage has codes to switch between both states.
-See the <<mcode:m48-m49, M48 and M49>> sections for more
-informations about activation and inhibition of overrides controls.
-
-See also the <<cnc:interpreter-interaction-with-switches, interpreter interaction with switches>> section for more details.
+The speed override buttons can be activated (they
+function normally) or rendered inoperative (they no longer have any
+effect). The RS274/NGC language has a command that activates all the
+buttons and another that disables them.
+See inhibition and activation <<mcode:m48-m49, speed correctors>>.
+See also <<sec:speed-interaction,here for further details>>.
 
 [[sec:path-control-mode]]
 === Path Control Mode(((Path Control Mode)))
@@ -239,23 +254,20 @@ See also the <<cnc:interpreter-interaction-with-switches, interpreter interactio
 The machining center may be put into any one of three path control
 modes:
 
-* exact stop mode::
+exact stop mode::
   In exact stop mode, the machine stops briefly at the end of each
   programmed move.
-* exact path mode::
+exact path mode::
   In exact path mode, the machine follows the programmed path as exactly
   as possible, slowing or stopping if necessary at sharp corners of
   the path.
-* continuous mode::
+continuous mode::
   In continuous mode, sharp corners of the path may be rounded slightly
   so that the feed rate may be kept up (but by no more than the tolerance,
   if specified).
 
-See Sections <<gcode:g61,G61>> and <<gcode:g64,G64>>.
+See sections <<gcode:g61,G61>> and <<gcode:g64,G64>>.
 
-[[sec:Interaction-vitesses]](((Interraction vitesse)))
-[[sec:Interaction-effacement-de-bloc]](((effacement de bloc)))
-[[sec:Interaction-arrets-optionnels]](((Arrêts optionnels)))
 [[cnc:interpreter-interaction-with-switches]]
 == Interpreter Interaction with Switches
 
@@ -263,7 +275,8 @@ The Interpreter interacts with several switches. This section
 describes the interactions in more detail. In no case does the
 Interpreter know what the setting of any of these switches is.
 
-=== Feed and Speed Override Switches
+[[sec:speed-interaction]]
+=== Feed and Speed Override Switches(((Feed and Speed Interaction)))
 
 The Interpreter will interpret RS274/NGC commands which enable 'M48'
 or disable 'M49' the feed and speed override switches. For certain
@@ -289,13 +302,13 @@ switch should be set before starting the NGC program.
 If this switch is on and an M1 code is encountered, program execution
 is paused.
 
-[[sec:tool-table]]
 == Tool Table(((Tool Table)))
 
 A tool table is required to use the Interpreter. The file tells which
 tools are in which tool changer slots and what the size and type of
-each tool is. The name of the tool table is defined in the ini file:
+each tool is. The name of the tool table is defined in the INI file:
 
+[source,{ini}]
 ----
 [EMCIO]
 
@@ -305,20 +318,22 @@ TOOL_TABLE = tooltable.tbl
 
 The default filename probably looks something like the above, but
 you may prefer to give your machine its own tool table, using the
-same name as your ini file, but with a tbl extension:
+same name as your INI file, but with a tbl extension:
 
+[source,{ini}]
 ----
 TOOL_TABLE = acme_300.tbl
 ----
 
-or
+or:
 
+[source,{ini}]
 ----
 TOOL_TABLE = EMC-AXIS-SIM.tbl
 ----
 
 For more information on the specifics of the tool table format, see the
-<<sec:tool-table,Tool Table Format>> Section.
+<<sec:tool-table,Tool Table Format>> section.
 
 [[sec:machine-center-parameters]]
 == Parameters(((Parameters)))
@@ -365,7 +380,7 @@ it exits. The original file is saved as a backup file when the new file
 is written. Comments are not preserved when the file is written.
 
 .Parameter File Format
-[width="75%", options="header", cols="^,^,<"]
+[width="75%",options="header",cols="^,^,<"]
 |===
 |Parameter Number | Parameter Value | Comment
 |5161             | 0.0             | G28 Home X
@@ -373,3 +388,5 @@ is written. Comments are not preserved when the file is written.
 |===
 
 See the <<sec:overview-parameters,Parameters>> section for more information.
+
+// vim: set syntax=asciidoc:

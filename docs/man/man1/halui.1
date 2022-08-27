@@ -128,6 +128,8 @@ a rising edge on this pin stops the spindle
 
 .SS spindle override
 .TP
+(SO = Spindle Override. FO = Feed Override)
+.TP
 .B halui.spindle.N.override.count\-enable\fR bit in \fR (default: \fBTRUE\fR)
 When TRUE, modify spindle override when counts changes.
 .TP
@@ -142,6 +144,9 @@ pin to enable direct spindle override value input
 .TP
 .B halui.spindle.N.override.increase\fR bit in \fR
 pin for increasing the SO (+=scale)
+.TP
+.B halui.spindle.N.override.reset\fR bit in \fR
+pin for resetting the scale SO value (scale=1.0)
 .TP
 .B halui.spindle.N.override.scale\fR float in \fR
 pin for setting the scale of counts for SO
@@ -506,6 +511,9 @@ pin to enable direct value feed override input
 .B halui.feed\-override.increase\fR bit in \fR
 pin for increasing the FO (+=scale)
 .TP
+.B halui.feed\-override.reset\fR bit in \fR
+pin for resetting the FO (scale=1.0)
+.TP
 .B halui.feed\-override.scale\fR float in \fR
 pin for setting the scale on changing the FO
 .TP
@@ -528,6 +536,9 @@ pin to enable direct value Rapid Override input
 .TP
 .B halui.rapid\-override.increase\fR bit in \fR
 pin for increasing the Rapid Override (+=scale)
+.TP
+.B halui.rapid\-override.reset\fR bit in \fR
+pin for resetting the Rapid Override (scale=1.0)
 .TP
 .B halui.rapid\-override.scale\fR float in \fR
 pin for setting the scale on changing the Rapid Override
@@ -555,10 +566,8 @@ pin for requesting home-all
 
 .SH "SEE ALSO"
 
-.SH HISTORY
-
 .SH BUGS
-none known at this time.
+None known at this time.
 .SH AUTHOR
 Written by Alex Joni, as part of the LinuxCNC project. Updated by John
 Thornton

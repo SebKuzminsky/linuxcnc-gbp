@@ -44,12 +44,22 @@ for num,temp in enumerate(sys.argv):
         if temp == '-h' or temp == '--help' or len(sys.argv) == 1:
             _print_help()
 
+# Set up the base logger
+#   We have do do this before importing other modules because on import
+#   they set up their own loggers as children of the base logger.
+from qtvcp import logger
+LOG = logger.initBaseLogger('GScreen', log_file=None, log_level=logger.INFO)
+
 import gi
 gi.require_version("Gtk","3.0")
 gi.require_version("Gdk","3.0")
 gi.require_version('PangoCairo', '1.0')
-from gi.repository import Gtk,Gdk,GObject,Pango,PangoCairo,cairo, Vte,GLib
+from gi.repository import Gtk,Gdk,GObject,Pango,PangoCairo,cairo,GLib
 from gi.repository import Pango as pango
+try:
+    from gi.repository import Vte as vte
+except:
+    LOG.error("**** WARNING GSCREEN: could not import vte terminal - is package installed?")
 
 import hal
 import errno
@@ -58,10 +68,7 @@ from gladevcp.gladebuilder import GladeBuilder
 #import pango
 import traceback
 import atexit
-try:
-    import vte
-except:
-    print (_("**** WARNING GSCREEN: could not import vte terminal - is package installed?"))
+
 import time
 from time import strftime,localtime
 import hal_glib
@@ -972,9 +979,9 @@ class Gscreen:
         self.data.window2_max = self.prefs.getpref('window2_force_max', False, bool)
 
     def init_keybinding_pref(self):
-        """ adds the default keyboard bindings from the prefence file
+        """ adds the default keyboard bindings from the preference file
         This covers jogging, increments, estop,power and abort
-        A user can change the prefence file entries to change keys
+        A user can change the preference file entries to change keys
         Right
         Left
         Up
@@ -1256,7 +1263,7 @@ class Gscreen:
         self.widgets.audio_error_chooser.set_filename(self.data.error_sound)
 
     def init_desktop_notify(self):
-        """set destop_notfy widget active as per data class
+        """set desktop_notify widget active as per data class
         """
         self.widgets.desktop_notify.set_active(self.data.desktop_notify)
 
@@ -2045,7 +2052,7 @@ class Gscreen:
 
     def set_grid_size(self,widget):
         """ This is a callback function for setting the graphics display grid size
-            reguires the graphics display to be called gremlin.
+            requires the graphics display to be called gremlin.
             requires the calling widget to return a float value
             records the preference in the preference file.
         """
@@ -2534,7 +2541,7 @@ class Gscreen:
 
     def on_estop_clicked(self,*args):
         """This is a callback function for a click of the estop button
-            It will togle between estop/machine off and enabled/machine on.
+            It will toggle between estop/machine off and enabled/machine on.
             Requires a button widget with a label named on_label
             Adds an alarm entry message on each toggle. 
         """
@@ -4077,7 +4084,7 @@ class Gscreen:
     # adjust sensitivity and labels of buttons
     def jog_mode(self):
         print("jog mode:",self.widgets.button_jog_mode.get_active())
-        # if muliple axis selected - unselect all of them
+        # if multiple axes selected - unselect all of them
         if len(self.data.active_axis_buttons) > 1 and self.widgets.button_jog_mode.get_active():
             for i in self.data.axis_list:
                 self.widgets["axis_%s"%i].set_active(False)
@@ -4576,7 +4583,7 @@ class Gscreen:
                             self.data.active_spindle_command,text))
 
     def update_tool_label(self):
-        # corodinate system:
+        # coordinate system:
         systemlabel = (_("Machine"),"G54","G55","G56","G57","G58","G59","G59.1","G59.2","G59.3")
         tool = str(self.data.tool_in_spindle)
         if tool == None: tool = "None"

@@ -1,4 +1,5 @@
 :lang: en
+:toc:
 
 [[cha:linux-faq]]
 = Linux FAQ(((Linux FAQ)))
@@ -7,28 +8,32 @@ These are some basic Linux commands and techniques for new to Linux
 users. More complete information can be found on the web or by using
 the man pages.
 
-N.T. Debian Stretch usa por defecto el entorno de escritorio Xfce, con el gestor
-de pantallas lightDM. Para obtener acceso automatico con Stretch:
+== Automatic Login(((Automatic Login)))
 
-* En un terminal, use el comando:
+=== Debian
+
+Debian Stretch uses the Xfce desktop environment by default, with the lightDM
+display manager lightDM. To get automatic login with Stretch:
+
+* In a terminal, use the command:
 
 ----
 $ /usr/sbin/lightdm --show-config
 ----
 
-* Anote el path absoluto del archivo de configuracion lightdm.conf.
-* Edite ese archivo con un editor de texto puro (gedit, nano, etc), como root.
-* Busque y descomente las lineas:
+* Make a note of the absolute path to the configuration file lightdm.conf.
+* Edit that file with a pure text editor (gedit, nano, etc), as root.
+* Find and uncomment the lines:
 
 ----
 #autologin-user=
 #autologin-user-timeout=0
 ----
 
-* Haga autologin-user=su_nombre_usuario
-* Guarde y reinicie.
+* Set autologin-user=your_user_name
+* Save and reboot.
 
-== Automatic Login
+=== Ubuntu
 
 When you install LinuxCNC with the Ubuntu LiveCD the default is to have to
 log in each time you turn the computer on. To enable automatic login go
@@ -37,16 +42,6 @@ Login Window might take a second or three to pop up. You will have to
 have your password that you used for the install to gain access to the
 Login Window Preferences window. In the Security tab check off Enable
 Automatic Login and pick a user name from the list (that would be you).
-
-Ejemplo:
-
-----
-linuxcnc /home/mill/linuxcnc/config/mill/mill.ini
-----
-
-N.T. En Debian Stretch, vaya a 'Aplicaciones > Configuracion > Administrador de Configuracion > Sesion e Inicio'.
-En la pestaña 'Autoarranque de aplicaciones', use el boton 'Añadir'. De un nombre, una descripcion y una orden similar
-al ejemplo anterior. En el proximo reinicio, LinuxCNC arrancara automaticamente.
 
 == Automatic Startup
 
@@ -61,19 +56,18 @@ Example:
 linuxcnc /home/mill/linuxcnc/config/mill/mill.ini
 ----
 
+The documentation refers to your respective .ini file as INI-file.
+
 [[faq:terminal]]
 == Terminal
 
 Many things need to be done from the terminal like checking the kernel message
 buffer with 'dmesg'. Ubuntu and Linux Mint have a keyboard shortcut Ctrl + Alt + t.
+Debian Stretch does not have any keyboard shortcuts defined.
+It can be easily created with the 'Configuration Manager'.
 Most modern file managers support the right key to open a terminal just
 make sure your right clicking on a blank area or a directory not a file name.
 Most OS's have the terminal as a menu item, usually in Accessories.
-N.T. Debian Stretch no tiene definido ningun atajo de teclado. Se puede crear facilmente
-con el 'Administrador de Configuracion'.
-
-La mayoría de los sistemas operativos tienen el terminal como elemento de menú,
-generalmente en 'Accesorios'.
 
 [[faq:man-pages]]
 == Man Pages(((Man Pages)))
@@ -118,7 +112,7 @@ it will be named mymod.txt or what ever you named it.
 
 == Editing a Root File
 
-When you open the file browser and you see the Owner of the file is
+When you open the file browser and you see the owner of the file is
 root you must do extra steps to edit that file. Editing some root files
 can have bad results. Be careful when editing root files. Generally, you
 can open and view most root files, but they will open in 'read only'
@@ -136,11 +130,11 @@ Open the file with File > Open > Edit
 
 === The GUI Way
 
- . Right click on the desktop and select Create Launcher
- . Type a name in like sudo edit
- . Type 'gksudo "gnome-open %u"' as the command and save the launcher to
-   your desktop
- . Drag a file onto your launcher to open and edit
+. Right click on the desktop and select Create Launcher
+. Type a name in like sudo edit
+. Type 'gksudo "gnome-open %u"' as the command and save the launcher to
+  your desktop
+. Drag a file onto your launcher to open and edit
 
 === Root Access
 
@@ -160,9 +154,9 @@ pwd
 ----
 
 [[faq:cd]]
-=== Changing Directories
+=== Changing Directories(((Changing Directories)))(((cd)))
 
-To move up one level in the terminal window type:
+To change the working directory to the one one level up, i.e., the parent directory, in the terminal window type:
 
 ----
 cd ..
@@ -172,6 +166,12 @@ To move up two levels in the terminal window type:
 
 ----
 cd ../..
+----
+
+To move directly to your home directory, in the terrminal window use the cd command with no arguments:
+
+----
+cd
 ----
 
 To move down to the linuxcnc/configs subdirectory in the terminal window
@@ -205,7 +205,8 @@ find starting-directory parameters actions
 ----
 
 For example to find all the .ini files in your linuxcnc directory you
-first need to use the pwd command to find out the directory. +
+first need to use the pwd command to find out the directory.
+
 Open a new terminal window and type:
 
 ----
@@ -310,15 +311,14 @@ https://help.ubuntu.com/community/FixVideoResolutionHowto[https://help.ubuntu.co
 
 .Relative Paths
 Relative paths are based on the startup directory which is the directory
-containing the ini file.  Using relative paths can facilitate relocation of
+containing the INI-file.  Using relative paths can facilitate relocation of
 configurations but requires a good understanding of linux path specifiers.
 
 ....
-   ./f0        is the same as f0, e.g., a file named f0 in the startup directory
-   ../f1       refers to a file f1 in the parent directory
-   ../../f2    refers to a file f2 in the parent of the parent directory
-   ../../../f3 etc.
+./f0        is the same as f0, e.g., a file named f0 in the startup directory
+../f1       refers to a file f1 in the parent directory
+../../f2    refers to a file f2 in the parent of the parent directory
+../../../f3 etc.
 ....
-
 
 // vim: set syntax=asciidoc:
