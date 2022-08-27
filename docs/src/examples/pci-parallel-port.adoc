@@ -4,6 +4,12 @@
 [[cha:pci-parallel-port]]
 = PCI Parallel Port
 
+// Custom lang highlight
+// must come after the doc title, to work around a bug in asciidoc 8.6.6
+:ini: {basebackend@docbook:'':ini}
+:hal: {basebackend@docbook:'':hal}
+:ngc: {basebackend@docbook:'':ngc}
+
 When you add a second parallel port to your PCI bus you have to find
 out the address before you can use it with LinuxCNC.
 
@@ -19,7 +25,7 @@ else on the PCI bus:
 
 ----
 0000:00:10.0 Communication controller: \
-        NetMos Technology PCI 1 port parallel adapter (rev 01
+        NetMos Technology PCI 1 port parallel adapter (rev 01)
         Subsystem: LSI Logic / Symbios Logic: Unknown device 0010
         Flags: medium devsel, IRQ 11
         I/O ports at a800 [size=8]
@@ -32,12 +38,14 @@ else on the PCI bus:
 
 In my case the address was the first one so I changed my .hal file from
 
+[source,{hal}]
 ----
 loadrt hal_parport cfg=0x378
 ----
 
 to
 
+[source,{hal}]
 ----
 loadrt hal_parport cfg="0x378 0xa800 in"
 ----
@@ -46,6 +54,7 @@ loadrt hal_parport cfg="0x378 0xa800 in"
 
 and then added the following lines so the parport will be read and written:
 
+[source,{hal}]
 ----
 addf parport.1.read base-thread
 addf parport.1.write base-thread
@@ -53,3 +62,5 @@ addf parport.1.write base-thread
 
 After doing the above then run your config and verify that the
 parallel port got loaded in Machine/Show HAL Configuration window.
+
+// vim: set syntax=asciidoc:

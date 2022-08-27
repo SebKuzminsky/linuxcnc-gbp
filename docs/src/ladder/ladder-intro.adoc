@@ -1,17 +1,16 @@
 :lang: en
 :toc:
 
-[[cha:classicladder-introduction]]
-= Classicladder Introduction
+[[cha:classicladder]]
+= ClassicLadder Introduction
 
 == History
 
-Classic Ladder is a free implementation of a ladder interpreter,
+ClassicLadder is a free implementation of a ladder interpreter,
 released under the LGPL. It was written by Marc Le Douarain.
 
 He describes the beginning of the project on his website:
 
-[quote,Marc Le Douarain, from "Genesis" at the Classic Ladder website]
 _____________________________________________________________________
 I decided to program a ladder language only for test purposes at the
 start, in February 2001. It was planned, that I would have to
@@ -27,12 +26,13 @@ with more complex elements: timer, multiples rungs, etc...
 
 Voila, here is this work... and more: I've continued to add features
 since then.
+
+-- Marc Le Douarain, from "Genesis" at the ClassicLadder website
 _____________________________________________________________________
 
-Classic Ladder has been adapted to work with LinuxCNC's HAL, and is
+ClassicLadder has been adapted to work with LinuxCNC's HAL, and is
 currently being distributed along with LinuxCNC. If there are
-issues/problems/bugs please report them to the Enhanced Machine
-Controller project.
+issues/problems/bugs please report them to the LinuxCNC project.
 
 == Introduction
 
@@ -78,9 +78,9 @@ The most common components of ladder are contacts (inputs), these
 usually are either NC (normally closed) or NO (normally open), and
 coils (outputs).
 
- - the NO contact image:images/ladder_action_load.png[]
- - the NC contact image:images/ladder_action_loadbar.png[]
- - the coil (output) image:images/ladder_action_out.png[]
+- the NO contact image:images/ladder_action_load.png[]
+- the NC contact image:images/ladder_action_loadbar.png[]
+- the coil (output) image:images/ladder_action_out.png[]
 
 Of course there are many more components to a full ladder language,
 but understanding these will help you grasp the overall concept.
@@ -91,7 +91,7 @@ outputs and other), which get evaluated left to right.
 
 This example is the simplest rung:
 
-image:images/example_link_contact_coil.png[align="center"]
+image::images/example_link_contact_coil.png[align="center"]
 
 The input on the left, B0, a normally open contact, is connected to the
 coil (output) on the right, Q0. Now imagine a voltage gets applied to the
@@ -120,7 +120,7 @@ connect it across the B0 'pushbutton' contact from our earlier example.
 
 Let's take a look at it:
 
-image:images/example_link_contact_coil2.png[align="center"]
+image::images/example_link_contact_coil2.png[align="center"]
 
 As before, when the user presses pushbutton B0, coil Q0 comes on.
 And when coil Q0 comes on, switch Q0 comes on. Now the interesting
@@ -145,7 +145,7 @@ interrupt the power to coil Q0. So let's add a normally-closed
 
 Here's how that would look:
 
-image:images/example_link_contact_coil3.png[align="center"]
+image::images/example_link_contact_coil3.png[align="center"]
 
 Now we have added 'off' or 'stop' pushbutton B1. If the user
 pushes it, contact from the rung to the coil is broken.
@@ -166,3 +166,5 @@ the same time, the 'stop' function always wins.
 This is the basic building block of much of ladder programming,
 so if you are new to it, you would do well to make sure that
 you understand how this circuit operates.
+
+// vim: set syntax=asciidoc:

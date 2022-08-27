@@ -7,12 +7,12 @@ from collections import OrderedDict
 
 from PyQt5.QtWidgets import (QApplication, QFileSystemModel,
                  QWidget, QVBoxLayout, QHBoxLayout, QListView,
-                 QComboBox, QPushButton, QToolButton, QSizePolicy,
-                 QMenu, QAction, QLineEdit, QLabel, QFrame,
+                 QComboBox, QToolButton, QSizePolicy,
+                 QMenu, QAction, QLineEdit, QFrame,
                     QTableView, QHeaderView)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import (QModelIndex, QDir, Qt, pyqtSlot,
-                    QItemSelectionModel, QEvent, QItemSelection)
+                    QItemSelectionModel, QItemSelection)
 
 from qtvcp.widgets.widget_baseclass import _HalWidgetBase
 from qtvcp.core import Status, Action, Info
@@ -161,7 +161,7 @@ class FileManager(QWidget, _HalWidgetBase):
         if self.PREFS_:
             last_path = self.PREFS_.getpref('last_loaded_directory', self.user_path, str, 'BOOK_KEEPING')
             LOG.debug("lAST FILE PATH: {}".format(last_path))
-            if not last_path == '':
+            if not last_path == '' and os.path.exists(last_path):
                 self.updateDirectoryView(last_path)
             else:
                 self.updateDirectoryView(self.user_path)
@@ -260,8 +260,8 @@ class FileManager(QWidget, _HalWidgetBase):
             if temp is not None:
                 self.updateDirectoryView(temp)
             else:
-                STATUS.emit('error', linuxcnc.OPERATOR_ERROR, 'file jumopath: {} not valid'.format(data))
-                log.debug('file jumopath: {} not valid'.format(data))
+                STATUS.emit('error', OPERATOR_ERROR, 'file jumopath: {} not valid'.format(data))
+                LOG.debug('file jumopath: {} not valid'.format(data))
 
     # jump directly to a saved path from the menu
     def jumpTriggered(self, data):
@@ -301,7 +301,7 @@ class FileManager(QWidget, _HalWidgetBase):
             self.listClicked(row)
 
         fname = self.currentPath
-        if fname is None: 
+        if fname is None:
             return
         if fname:
             self.load(fname)
@@ -447,7 +447,7 @@ class FileManager(QWidget, _HalWidgetBase):
     # This can be class patched to do something else
     def recordBookKeeping(self):
         fname = self.currentPath
-        if fname is None: 
+        if fname is None:
             return
         if self.PREFS_:
             self.PREFS_.putpref('last_loaded_directory', self.model.rootPath(), str, 'BOOK_KEEPING')

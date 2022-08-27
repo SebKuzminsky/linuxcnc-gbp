@@ -11,10 +11,10 @@ run it from the <<faq:terminal,terminal>> by issuing the command 'linuxcnc',
 or select it in the 'Applications -> CNC' menu.
 
 [[sec:config-launcher]]
-== Configuration Launcher(((Configuracion Launcher)))
+== Configuration Launcher(((Configuration Launcher)))
 
-When starting LinuxCNC from the CNC menu or from the command line without
-specifying an ini file the Configuration Selector dialog starts.
+When starting LinuxCNC (from the CNC menu or from the command line without
+specifying an INI file) the Configuration Selector dialog starts.
 
 The Configuration Selector dialog allows the user to pick one of their
 existing configurations (My Configurations) or select a new one (from the Sample
@@ -22,35 +22,33 @@ Configurations) to be copied to their home directory. Copied configurations
 will appear under My Configurations on the next invocation of the Configuration
 Selector.
 
-The Configuration Selector offers a selection of configurations
-organized:
+The Configuration Selector offers a selection of configurations organized:
 
-* 'My Configurations' - User configurations located in ~/linuxcnc/configs
-* 'Sample Configurations' - Sample configurations, when selected are copied to ~/linuxcnc/configs.
-  Once you copy a sample configuration if you use the launcher pick it from 'My Configurations'
-  Los nombres corresponden a los directorios bajo ../configs/
-** 'sim' - Configurations that include simulated hardware. These can be used for testing or learning how LinuxCNC works.
+* 'My Configurations' - User configurations located in linuxcnc/configs in your home directory.
+* 'Sample Configurations' - Sample configurations, when selected, are copied to linuxcnc/configs.
+  Once a sample configuration was copied to your local directory, the launcher will offer it as 'My Configurations'.
+  The names under which these local configurations are presented correspond to the names of the directories within the configs/ directory:
+** 'sim' - Configurations that include simulated hardware.
+   These can be used for testing or learning how LinuxCNC works.
 ** 'by_interface' - Configurations organized by GUI.
 ** 'by_machine' - Configurations organized by machine.
-** 'apps' - Applications that do not require starting linuxcnc but may
-   be useful for testing or trying applications like <<cha:pyvcp,PyVCP>>
-   or <<cha:glade-vcp,GladeVCP>>.
+** 'apps' - Applications that do not require starting linuxcnc but may be useful for testing or
+   trying applications like <<cha:pyvcp,PyVCP>> or <<cha:glade-vcp,GladeVCP>>.
 ** 'attic' - Obsolete or historical configurations.
 
-
 The sim configurations are often the most useful starting point for
-new users and are organized around supported guis:
+new users and are organized around supported GUIs:
 
-* 'axis' - Keyboard and Mouse Gui
-* 'gmoccapy' - Touch Screen Gui
-* 'gscreen' - Touch Screen Gui
-* 'low_graphics' - Keyboard Gui
+* 'axis' - Keyboard and Mouse GUI
+* 'gmoccapy' - Touch Screen GUI
+* 'gscreen' - Touch Screen GUI
+* 'low_graphics' - Keyboard GUI
 * 'pyvcp_demo' - Paneles de Control Virtuales Python
 * 'qtvcp_screens' - Guis diseñadas con Qt5 y Python
 * 'tklinuxcnc' - Keyboard and Mouse Gui(no longer maintained)
-* 'touchy' - Touch Screen Gui
+* 'touchy' - Touch Screen GUI
 
-A gui configuration directory may contain subdirectories with
+A GUI configuration directory may contain subdirectories with
 configurations that illustrate special situations or the embedding
 of other applications.
 
@@ -86,9 +84,8 @@ The 'apps items' are typically 1) utilities that don't require starting
 linuxcnc or 2) demonstrations of applications that can be used with
 linuxcnc:
 
-* info - creates a file with system information that may be useful for
-  problem diagnosis.
-* gladevcp - Example gladevcp applications.
+* info - creates a file with system information that may be useful for problem diagnosis.
+* gladevcp - Example GladeVCP applications.
 * halrun  - Starts halrun in an <<faq:terminal,terminal>>.
 * latency - Applications to investigate latency
 ** latency-test - standard test
@@ -102,8 +99,9 @@ linuxcnc:
 Under the Apps directory, only applications that are usefully modified
 by the user are offered for copying to the user's directory.
 
-.LinuxCNC Configuration Selector[[cap:LinuxCNC-Configuration-Selector]]
-image::images/configuration-selector.png["Configuration Selector"]
+[[cap:LinuxCNC-Configuration-Selector]]
+.LinuxCNC Configuration Selector
+image::images/configuration-selector.png["LinuxCNC Configuration Selector"]
 
 Click any of the listed configurations to display specific information about it.
 Double-click a configuration or click OK to start the configuration.
@@ -142,30 +140,30 @@ available in other GUIs as well.
 The Configuration Selector copies all files needed
 for a configuration to a new subdirectory of ~/linuxcnc/configs
 (equivalently: /home/username/linuxcnc/configs).  Each
-created directory will include at least one ini file (iniflename.ini)
+created directory will include at least one INI file (iniflename.ini)
 that is used to describe a specific configuration.
 
 File resources within the copied directory will typically
-include one or more ini file (filename.ini) for related
+include one or more INI file (filename.ini) for related
 configurations and a tool table file (toolfilename.tbl).
-Additionally, resources may include halfiles (filename.hal,
+Additionally, resources may include HAL files (filename.hal,
 filename.tcl), a README file for describing the directory, and
 configuration specific information in a text file named after
 a specific configuration (inifilename.txt).  That latter two
 files are displayed when using the Configuration Selector.
 
-The supplied sample configurations may specify HALFILEs
-in the configuration ini file that are not present in the
+The supplied sample configurations may specify the parameter HALFILE
+(filename.hal) in the configuration INI file that are not present in the
 copied directory because they are found in the system
-Halfile library.  These files can be copied to the user
+HAL file library.  These files can be copied to the user
 configuration directory and altered as required by the
 user for modification or test.  Since the user configuration
-directory is searched first when finding Halfiles, local
+directory is searched first when finding HAL files, local
 modifications will then prevail.
 
 The Configuration selector makes a symbolic link in the
 user configuration directory (named hallib) that points to
-the system Halfile library.  This link simplifies copying
+the system HAL file library.  This link simplifies copying
 a library file.  For example, to copy the library core_sim.hal
 file in order to make local modifications:
 

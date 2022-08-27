@@ -30,11 +30,11 @@
 import sys
 import os
 
-from PyQt5.QtCore import pyqtProperty, pyqtSignal, QSize, QObject
-from PyQt5.QtGui import QFont, QFontMetrics, QColor, QIcon, QPalette
-from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QAction,\
-         QVBoxLayout,QToolBar,QGroupBox,QLineEdit, QHBoxLayout,QMessageBox, \
-            QFileDialog, QFrame, QLabel, QStyleOption
+from PyQt5.QtCore import pyqtProperty, pyqtSignal, QSize
+from PyQt5.QtGui import QFont, QFontMetrics, QColor, QIcon
+from PyQt5.QtWidgets import QWidget, QAction,\
+         QVBoxLayout, QToolBar, QLineEdit, QHBoxLayout, QMessageBox, \
+            QFrame, QLabel
 
 from qtvcp.widgets.widget_baseclass import _HalWidgetBase
 from qtvcp.core import Status, Info, Action
@@ -293,7 +293,7 @@ class EditorBase(QsciScintilla):
 
         # default gray background
         self.set_background_color('#C0C0C0')
-        self._stylebackgroundColor = '#C0C0C0'
+        self._styleBackgroundColor = QColor('#C0C0C0')
 
         # not too small
         self.setMinimumSize(200, 100)
@@ -366,11 +366,15 @@ class EditorBase(QsciScintilla):
         self.lexer = QsciLexerPython()
         self.lexer.setDefaultFont(self.font)
         self.setLexer(self.lexer)
+        #self.set_background_color(self.backgroundColor())
         #self.SendScintilla(QsciScintilla.SCI_STYLESETFONT, 1, 'Courier')
 
     def set_gcode_lexer(self):
         self.lexer = GcodeLexer(self)
+        self.lexer.setDefaultFont(self.font)
         self.setLexer(self.lexer)
+        self.set_background_color(self.backgroundColor())
+        self.setMarginsBackgroundColor(self._styleMarginsBackgroundColor)
 
     def new_text(self):
         self.setText('')
@@ -751,8 +755,8 @@ class GcodeEditor(QWidget, _HalWidgetBase):
 
         self.isCaseSensitive = 0
 
-        self.setMinimumSize(QSize(300, 200))    
-        self.setWindowTitle("PyQt5 editor test example") 
+        self.setMinimumSize(QSize(300, 200))
+        self.setWindowTitle("PyQt5 editor test example")
 
         lay = QVBoxLayout()
         lay.setContentsMargins(0,0,0,0)
@@ -773,7 +777,7 @@ class GcodeEditor(QWidget, _HalWidgetBase):
         ################################
 
         # Create new action
-        self.newAction = QAction(QIcon.fromTheme('document-new'), 'New', self)       
+        self.newAction = QAction(QIcon.fromTheme('document-new'), 'New', self)
         self.newAction.setShortcut('Ctrl+N')
         self.newAction.setStatusTip('New document')
         self.newAction.triggered.connect(self.newCall)
@@ -886,7 +890,7 @@ class GcodeEditor(QWidget, _HalWidgetBase):
         # create case action
         caseAction = QAction(QIcon.fromTheme('edit-case'), 'Aa', self)
         caseAction.setStatusTip('Toggle between any case and match case')
-        caseAction.setCheckable(1)      
+        caseAction.setCheckable(1)
         caseAction.triggered.connect(self.caseCall)
         toolBar.addAction(caseAction)
 
@@ -1071,8 +1075,8 @@ class GcodeEditor(QWidget, _HalWidgetBase):
         self.editor.set_margin_width(width)
 
     def set_font(self, font):
-        self.editor.font = font
-        for i in range(0,4):
+        self.editor.lexer.setFont(font)
+        for i in range(0,8):
             self.editor.lexer.setFont(font,i)
 
     def set_background_color(self, color):

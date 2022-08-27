@@ -1,13 +1,13 @@
 :lang: en
 :lversion: {sys: cat ../VERSION}
 :date: {sys: LANG=C date --date="@$(dpkg-parsechangelog --file ../debian/changelog -S timestamp)" '+%d %b %Y'}
+:ascii-ids:
+:masterdir: {indir}
+:revdate: 2021-10-28
 LinuxCNC V{lversion}, {date}
 ============================
-:revdate: 2021-10-28
 
 = Contents
-
-:masterdir: {indir}
 
 :leveloffset: 0
 
@@ -59,7 +59,6 @@ include::plasma/plasma-cnc-primer.adoc[]
 
 :leveloffset: 1
 
-
 = User Interfaces
 
 :leveloffset: 2
@@ -77,6 +76,8 @@ include::gui/gscreen.adoc[]
 include::gui/tklinuxcnc.adoc[]
 
 include::plasma/qtplasmac.adoc[]
+
+include::gui/mdro.adoc[]
 
 :leveloffset: 1
 
@@ -146,8 +147,6 @@ include::config/iov2.adoc[]
 
 include::config/lathe-config.adoc[]
 
-include::hal/haltcl.adoc[]
-
 include::remap/remap.adoc[]
 
 include::config/moveoff.adoc[]
@@ -170,7 +169,7 @@ include::gui/qtvcp.adoc[]
 
 :leveloffset: 3
 
-include::gui/qtvcp-VCPpanels.adoc[]
+include::gui/qtvcp-vcp-panels.adoc[]
 
 include::gui/qtvcp-widgets.adoc[]
 
@@ -196,9 +195,11 @@ include::gui/halui.adoc[]
 
 include::hal/halui-examples.adoc[]
 
+include::gui/vismach.adoc[]
+
 include::config/python-interface.adoc[]
 
-include::gui/vismach.adoc[]
+include::gui/gstat.adoc[]
 
 :leveloffset: 1
 
@@ -292,6 +293,8 @@ include::hal/hal-examples.adoc[]
 
 include::hal/comp.adoc[]
 
+include::hal/haltcl.adoc[]
+
 include::hal/halmodule.adoc[]
 
 
@@ -326,5 +329,3 @@ include::common/gpld-copyright.adoc[]
 // = Index
 
 // vim: set syntax=asciidoc:
-
-

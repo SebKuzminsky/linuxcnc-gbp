@@ -163,7 +163,7 @@ retCode parse_pin_names(const char * names_string, mb_tx_t *this_mb_tx)
 retCode parse_transaction_section(const int mb_tx_num)
 {
     char *fnct_name = "parse_transaction_section";
-    char section[20];
+    char section[40];
     char *tag;
     const char *tmpstr;
     mb_tx_t *this_mb_tx;
@@ -290,7 +290,7 @@ retCode parse_transaction_section(const int mb_tx_num)
     DBG(gbl.init_dbg, "[%s] [%s] [%d]", section, tag, this_mb_tx->mb_tx_nelem);
 
     tag = "MAX_UPDATE_RATE"; //optional
-    this_mb_tx->cfg_update_rate = 0; //default: 0=infinit
+    this_mb_tx->cfg_update_rate = 0; //default: 0=infinite
     if (iniFindDouble(gbl.ini_file_ptr, tag, section, &this_mb_tx->cfg_update_rate) != 0) { //not found
         if (mb_tx_num > 0) { //previous value?
             if (strcasecmp(this_mb_tx->cfg_link_type_str, gbl.mb_tx[mb_tx_num-1].cfg_link_type_str) == 0) {
