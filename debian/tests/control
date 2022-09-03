@@ -1,3 +1,7 @@
-Tests: runtests
+Tests: linuxcnc-test
 Depends: @
-Restrictions:
+Restrictions: allow-stderr flaky
+
+Tests: rs274-test
+Depends: @
+Restrictions: flaky
