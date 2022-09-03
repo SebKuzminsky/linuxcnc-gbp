@@ -63,7 +63,8 @@ Build-Depends-Indep:
     texlive-latex-recommended,
     fonts-dejavu,
     texlive-xetex,
-Standards-Version: 4.6.0
+Standards-Version: 4.6.1
+Homepage: https://linuxcnc.org/
 Vcs-Browser: https://github.com/LinuxCNC/linuxcnc
 Vcs-Git: https://github.com/LinuxCNC/linuxcnc.git
 Rules-Requires-Root: binary-targets
@@ -226,6 +227,7 @@ Description: motion controller for CNC machines and robots
 Package: linuxcnc-doc-en
 Provides: linuxcnc-doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Breaks: linuxcnc-uspace (<= 2.9.0~pre0+git20220402.2500863908-4),
 Replaces: linuxcnc-uspace (<= 2.9.0~pre0+git20220402.2500863908-4)
@@ -241,6 +243,7 @@ Description: motion controller for CNC machines and robots (English documentatio
 Package: linuxcnc-doc-fr
 Provides: linuxcnc-doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Breaks: linuxcnc-uspace (<= 2.9.0~pre0+git20220402.2500863908-4)
 Replaces: linuxcnc-uspace (<= 2.9.0~pre0+git20220402.2500863908-4)
@@ -256,6 +259,7 @@ Description: motion controller for CNC machines and robots (French documentation
 Package: linuxcnc-doc-es
 Provides: linuxcnc-doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Breaks: linuxcnc-uspace (<= 2.9.0~pre0+git20220402.2500863908-4)
 Replaces: linuxcnc-uspace (<= 2.9.0~pre0+git20220402.2500863908-4)
@@ -271,6 +275,7 @@ Description: controlador de movimiento para máquinas CNC y robots (Español).
 Package: linuxcnc-doc-zh-cn
 Provides: linuxcnc-doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Recommends: xdg-utils
 Suggests: pdf-viewer
