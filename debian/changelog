@@ -1,4 +1,4 @@
-linuxcnc (2.9.0~pre0+git20220903.c8c4c539b1-1) UNRELEASED; urgency=medium
+linuxcnc (2.9.0~pre0+git20220903.c8c4c539b1-1) unstable; urgency=medium
 
   * New upstream version 2.9.0~pre0+git20220903.c8c4c539b1
   * regenerate debian/* files using d/configure
@@ -6,7 +6,7 @@ linuxcnc (2.9.0~pre0+git20220903.c8c4c539b1-1) UNRELEASED; urgency=medium
   * QtVCP fixes & improvements.
   * Work around autopkgtest failure.
 
- -- Sebastian Kuzminsky <seb@highlab.com>  Sat, 03 Sep 2022 13:17:51 -0600
+ -- Sebastian Kuzminsky <seb@highlab.com>  Sat, 03 Sep 2022 16:29:26 -0600
 
 linuxcnc (2.9.0~pre0+git20220827.f7d1c37ffd-1) unstable; urgency=medium
 
