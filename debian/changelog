@@ -1,4 +1,4 @@
-linuxcnc (2.9.0~pre0+git20220905.b2e28a88c3-1) UNRELEASED; urgency=medium
+linuxcnc (2.9.0~pre0+git20220905.b2e28a88c3-1) unstable; urgency=medium
 
   * New upstream version 2.9.0~pre0+git20220905.b2e28a88c3
     (Closes: #1019212).
@@ -6,7 +6,7 @@ linuxcnc (2.9.0~pre0+git20220905.b2e28a88c3-1) UNRELEASED; urgency=medium
   * Misc updates to QtVCP.
   * Minor fixes to docs.
 
- -- Sebastian Kuzminsky <seb@highlab.com>  Mon, 05 Sep 2022 14:52:00 -0600
+ -- Sebastian Kuzminsky <seb@highlab.com>  Mon, 05 Sep 2022 17:38:14 -0600
 
 linuxcnc (2.9.0~pre0+git20220903.c8c4c539b1-1) unstable; urgency=medium
 
