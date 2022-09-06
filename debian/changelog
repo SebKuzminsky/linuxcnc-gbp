@@ -1,3 +1,12 @@
+linuxcnc (2.9.0~pre0+git20220906.02744cdef6-1) UNRELEASED; urgency=medium
+
+  * New upstream version 2.9.0~pre0+git20220906.02744cdef6
+  * Fix RPC linking (changed in glibc 2.34-1).
+  * Improve docs.
+  * QtVCP: add API function to remove keybinding.
+
+ -- Sebastian Kuzminsky <seb@highlab.com>  Tue, 06 Sep 2022 15:47:59 -0600
+
 linuxcnc (2.9.0~pre0+git20220905.b2e28a88c3-1) unstable; urgency=medium
 
   * New upstream version 2.9.0~pre0+git20220905.b2e28a88c3
