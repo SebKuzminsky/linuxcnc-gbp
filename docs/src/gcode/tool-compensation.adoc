@@ -18,7 +18,7 @@ tool table automatically.
 
 Typical steps for updating the tool table:
 
-* After homing load a tool with 'Tn M6' where 'n' is the tool number.
+* After homing load a tool with 'T__n__ M6' where _n_ is the tool number.
 * Move tool to an established point using a gauge or take a test cut and
   measure.
 * Click the 'Touch Off' button in the Manual Control tab (or hit the
@@ -29,7 +29,7 @@ Typical steps for updating the tool table:
 The Tool Table will be changed with the correct Z length to make the
 DRO display the correct Z position and a G43 command will be issued so
 the new tool Z length will be in effect. Tool table touch off is only
-available when a tool is loaded with 'Tn M6'.
+available when a tool is loaded with 'T__n__ M6'.
 
 [[cap:touch-off-tool]]
 .Touch Off Tool Table
@@ -39,11 +39,11 @@ image::images/ToolTable-TouchOff.png["Touch Off Tool Table",align="center"]
 
 The G10 L1/L10/L11 commands can be used to set tool table offsets:
 
-* `G10 L1  Pn` - Set offset(s) to a value. Current position irrelevant.
+* `G10 L1  P__n__` - Set offset(s) to a value. Current position irrelevant.
   (see <<gcode:g10-l1,G10 L1>> for details)
-* `G10 L10 Pn` - Set offset(s) so current position w/ fixture 1-8
+* `G10 L10 P__n__` - Set offset(s) so current position w/ fixture 1-8
   becomes a value. (see <<gcode:g10-l10,G10 L10>> for details)
-* `G10 L11 Pn` - Set offset(s) so current position w/ fixture 9 becomes
+* `G10 L11 P__n__` - Set offset(s) so current position w/ fixture 9 becomes
   a value. (see <<gcode:g10-l11,G10 L11>> for details)
 
 [NOTE]
@@ -71,12 +71,13 @@ table in the GUI.
 
 .Tool Table Format
 [width="100%",options="header"]
-|====
-|;T#   |P#  |X  |Y  |Z  |A  |B  |C  |U  |V  |W  |Dia |FA |BA |Ori |Rem
+|===
+|T#   |P#  |X  |Y  |Z  |A  |B  |C  |U  |V  |W  |Dia |FA |BA |Ori |Rem
+|; 15+^|(no data after opening semicolon)
 |T1    |P17 |X0 |Y0 |Z0 |A0 |B0 |C0 |U0 |V0 |W0 |D0  |I0 |J0 |Q0  |;rem
 |T2    |P5  |X0 |Y0 |Z0 |A0 |B0 |C0 |U0 |V0 |W0 |D0  |I0 |J0 |Q0  |;rem
 |T3    |P12 |X0 |Y0 |Z0 |A0 |B0 |C0 |U0 |V0 |W0 |D0  |I0 |J0 |Q0  |;rem
-|====
+|===
 
 In general, the tool table line format is:
 
@@ -98,6 +99,7 @@ You will probably want to keep the tool entries in ascending order,
 especially if you are going to be using a randomizing tool changer.
 Although the tool table does allow for tool numbers in any order.
 
+One line may contain as many as 16 entries, but will likely contain much fewer.
 The entries for T (tool number) and P (pocket number) are required.
 The last entry (a remark or comment, preceded by a semicolon) is
 optional. It makes reading easier if the entries are arranged in
@@ -197,7 +199,7 @@ type of toolchanger specified by *[EMCIO]RANDOM_TOOLCHANGER=type*.
   toolchanger) idx is a number indicating the sequence in which tooldata was
   loaded.
 . For *RANDOM_TOOLCHANGER = 1*, idx is the *current* pocket number
-  for the toolnumber specified by the G-code select tool command *Tn*.
+  for the tool number specified by the G-code select tool command *T__n__*.
 
 The io program provides HAL output pins to facilitate toolchanger management:
 
@@ -208,14 +210,14 @@ The io program provides HAL output pins to facilitate toolchanger management:
 
 ==== IO for non-random toolchanger
 
-. Tool number n==0 indicates no tool
+. Tool number _n_==0 indicates no tool.
 . The pocket number for a tool is set when tooldata is loaded/reloaded
-from its data source ([EMCIO]TOOL_TABLE or [EMCIO]DB_PROGRAM).
-. At G-code *Tn* (n != 0) command:
-.. *iocontrol.0.tool-prep-index*  = idx (index based on tooldata load sequence)
-.. *iocontrol.0.tool-prep-number* = n
-.. *iocontrol.0.tool-prep-pocket* = the pocketno for n
-. At G-code *T0* (n == 0 remove) command:
+  from its data source ([EMCIO]TOOL_TABLE or [EMCIO]DB_PROGRAM).
+. At G-code *T__n__* (_n_ != 0) command:
+.. *iocontrol.0.tool-prep-index*  = _idx_ (index based on tooldata load sequence)
+.. *iocontrol.0.tool-prep-number* = _n_
+.. *iocontrol.0.tool-prep-pocket* = the pocket number for _n_
+. At G-code *T0* (_n_ == 0 remove) command:
 .. *iocontrol.0.tool-prep-index*  = 0
 .. *iocontrol.0.tool-prep-number* = 0
 .. *iocontrol.0.tool-prep-pocket* = 0
@@ -224,20 +226,20 @@ from its data source ([EMCIO]TOOL_TABLE or [EMCIO]DB_PROGRAM).
 
 ==== IO for random toolchanger
 
-. Tool number n==0 is *not special*.
+. Tool number _n_==0 is *not special*.
 . Pocket number 0 is *special* as it indicates the *spindle*.
-. The *current* pocket number for tool N is the tooldata index (idx) for tool n.
-. At G-code command *Tn*:
-.. *iocontrol.0.tool-prep-index*  = tooldata index (idx) for tool n
-.. *iocontrol.0.tool-prep-number* = n
-.. *iocontrol.0.tool-prep-pocket* = pocket number for tool n
+. The *current* pocket number for tool _n_ is the tooldata index (_idx_) for tool _n_.
+. At G-code command *T__n__*:
+.. *iocontrol.0.tool-prep-index*  = tooldata index (idx) for tool _n_
+.. *iocontrol.0.tool-prep-number* = _n_
+.. *iocontrol.0.tool-prep-pocket* = pocket number for tool _n_
 . At M-code *M6* (following iocontrol.0.tool-changed pin 0-->1):
 .. *iocontrol.0.tool-from-pocket* = pocket number used to retrieve tool
 
 [NOTE]
 At startup, *iocontrol.0.tool-from-pocket* = 0.
-An M61Qn (n!=0) command does not change the *iocontrol.0.tool-from-pocket*.
-An M61Qn (n==0) command sets *iocontrol.0.tool-from-pocket* to 0.
+An M61Q__n__ (_n_!=0) command does not change the *iocontrol.0.tool-from-pocket*.
+An M61Q0 (_n_==0) command sets *iocontrol.0.tool-from-pocket* to 0.
 
 [[sub:tool-changers]]
 === Tool Changers(((Tool Changers)))
@@ -272,11 +274,11 @@ When using [EMCIO]RANDOM_TOOLCHANGER = 0 (the default), the 'P'
 pocket number is a parameter of the tooldata that is retrieved from
 the tooldata source ([EMCIO]TOOL_TABLE or [EMCIO]DB_PROGRAM).  In many
 applications it is fixed but it may be changed by edits to the
-[EMCIO]TOOL_TABLE or programatically when the [EMCIO]DB_PROGRAM is
+[EMCIO]TOOL_TABLE or programmatically when the [EMCIO]DB_PROGRAM is
 used.  LinuxCNC pushes updates to the data source ([EMCIO]TOOL_TABLE
 or [EMCIO]DB_PROGRAM) for gcodes G10L1,G10L10,G10L11,M61.  LinuxCNC
 can pull tooldata updates from the data source by UI (user-interface)
-commands (python example: linuxcnc.command().load_tool_table()) or by
+commands (Python example: linuxcnc.command().load_tool_table()) or by
 the gcode: G10L0.
 
 .Random Location Tool Changers
@@ -290,17 +292,17 @@ must be a number that makes sense for the machine.
 
 == Tool Length Compensation(((Tool Length Compensation)))
 The tool length compensations are given as positive numbers in the tool table.
-A tool compensation is programmed using G43 H'n', where 'n' is the index number
+A tool compensation is programmed using G43 H_n_, where _n_ is the index number
 of the desired tool in the tool table. It is intended that all entries
 in the tool table are positive. The value of H is checked,
 it must be a non-negative integer when read. The interpreter behaves as follows:
 
-1. If G43 H'n' is programmed, a call to the function
+1. If G43 H_n_ is programmed, a call to the function
    USE_TOOL_LENGTH_OFFSET(length) is made (where length is the length difference,
-   read from the tool table, of the indexed tool n),
+   read from the tool table, of the indexed tool _n_),
    tool_length_offset is repositioned in the machine settings model
    and the value of current_z in the model is adjusted. Note that
-   'n' does not have to be the same as the slot number of the tool
+   _n_ does not have to be the same as the slot number of the tool
    currently in the spindle.
 
 2. If G49 is programmed, USE_TOOL_LENGTH_OFFSET(0.0) is called,

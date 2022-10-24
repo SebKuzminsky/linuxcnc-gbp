@@ -29,11 +29,13 @@ tool database program:
 [source,{ini}]
 ----
 [EMCIO]
-DB_PROGRAM = db_program
+DB_PROGRAM = db_program [args]
 ----
 
-The optional *db_program* specifies the path to a user-provided
-executable program that provides tool data.
+When included, *db_program* specifies the path to a user-provided
+executable program that provides tooldata.  Up to 10
+space-separated args may be included and passed to the
+*db_program* at startup.
 
 [NOTE]
 INI file settings for [EMCIO]TOOL_TABLE are ignored when a *db_program*
@@ -41,13 +43,13 @@ is specified.
 
 [NOTE]
 The *db_program* may be implemented in any language currently
-supported in LinuxCNC (e.g., bash scripts, python or tcl scripts,
-c/c++ programs) as long as it conforms to the interface messages
+supported in LinuxCNC (e.g., BASH scripts, Python or Tcl scripts,
+C/C++ programs) as long as it conforms to the interface messages
 received on stdin and replied on stdout.  A *db_program* could
 manage data from a flat file, a relational database (SQLite for
 example), or other data sources.
 
-=== *db_program* operation (v2.0)
+=== *db_program* operation (v2.1)
 
 When a *db_progam* is specified, operation is as follows:
 
@@ -55,7 +57,7 @@ When a *db_progam* is specified, operation is as follows:
   to its stdin and stdout.
 
 . The *db_program* must respond by writing a single line acknowledgement
-  consisting of a version string (e.g., "v2.0").  No tools will be
+  consisting of a version string (e.g., "v2.1").  No tools will be
   available if the version is not compatible with the LinuxCNC database
   interface version.
 
@@ -83,14 +85,14 @@ the fault.
 
 The commands issued for tool data changes are:
 
-* "'p'" put data changes caused by G10L1, G10L10, G10L11 G-codes.
+* "p" put data changes caused by G10L1, G10L10, G10L11 G-codes.
   The tool data line will include all elements of a tool table
   text line.
 
-* "'l'" spindle_load (TnM6). The tool data line includes only the 'T' and
+* "l" spindle_load (T__n__M6). The tool data line includes only the 'T' and
   'P' items identifying the relevant tool number and pocket number.
 
-* "'u'" spindle_unload (T0M6).  The tool data line includes only the 'T'
+* "u" spindle_unload (T0M6).  The tool data line includes only the 'T'
   and 'P' items identifying the relevant tool number and pocket number
 
 [NOTE]
@@ -131,7 +133,7 @@ applications may benefit by refreshing the tool data provided by the
 tool data reload ('g' command) from within G-code programs or by MDI.
 A reload operation is also typically provided by a Graphical User
 Interface (GUI) so that on-demand reloads can be requested.  For
-example, a python GUI application can use:
+example, a Python GUI application can use:
 
 [source,python]
 ----
@@ -180,7 +182,7 @@ stdout) for additional debugging information about interface activity.
 
 === Example program
 
-An example *db_program* (implemented as a python script) is provided
+An example *db_program* (implemented as a Python script) is provided
 with the simulation examples.  The program demonsrates the
 required operations to:
 
@@ -192,14 +194,14 @@ required operations to:
 
 === Python tooldb module
 
-The example program uses a LinuxCNC provided python module ('tooldb')
+The example program uses a LinuxCNC provided Python module ('tooldb')
 that manages the low-level details for communication and version
 verification.  This module uses callback functions specified by the
 *db_program* to respond to  the 'g' (get) command and the commands that
 indicate tool data changes ('p', 'l', 'u').
 
 The *db_program* uses the 'tooldb' module by implementing the
-following python code:
+following Python code:
 
 [source,python]
 ----
@@ -237,7 +239,7 @@ tooldb_loop()
 [NOTE]
 Use of 'tooldb' is not required -- it is provided as a demonstration
 of the required interface and as a convenience for implementing
-python-based applications that interface with an external database.
+Python-based applications that interface with an external database.
 
 == Simulation configs
 
@@ -250,24 +252,30 @@ Each sim config simulates a *db_program* implementing a database
 with 10 tools numbered 10--19.
 
 The *db_program* is provided by a single script (db.py) and symbolic
-links to it for alternative uses: db_ran.py and db_nonran.py.   (By
-default, the script implements random_toolchanger functionality.
+links to it for alternative uses: db_ran.py and db_nonran.py.
+By default, the script implements random_toolchanger functionality.
 Nonrandom toolchanger functions are substituted if the link name
-includes the text "'nonran'").
+includes the text "'nonran'".
 
-The sim configs demonstrate the use of the python 'tooldb' interface
+The sim configs demonstrate the use of the Python 'tooldb' interface
 module and implement a basic flat-file database that tracks tool time
 usage for multiple tools having equal diameters.  The database rules
 support selection of the tool having the lowest operating time.
 
 The sim configs use a primary task to monitor and respond to tool
-updates initiated from within LinuxCNC.  Separate, concurrent tasks
-show the code required when changes are initiated by the *db_program*
-and demonstrate methods for synchronizing LinuxCNC internal tooldata.
+updates initiated from within LinuxCNC.  A periodic task updates
+tool time usage at reguar intervals.  Separate, concurrent tasks
+are implemented as threads to demonstrate the code required when changes
+are initiated by the *db_program* and demonstrate methods for synchronizing
+LinuxCNC internal tooldata.
 Examples include:
 
 . updates of tool parameters
 . addition and removal of tool numbers
+
+A mutual exclusion lock is used to protect data from inconsistencies due
+to race conditions between LinuxCNC tooldata updates and the database
+application updates.
 
 === Notes
 

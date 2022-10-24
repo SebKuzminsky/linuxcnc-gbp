@@ -1,5 +1,5 @@
 ifneq ($(KERNELRELEASE),)
-COMPS := $(patsubst $(BASEPWD)/%,%,$(wildcard $(BASEPWD)/hal/components/*.comp $(BASEPWD)/hal/drivers/*.comp))
+COMPS := $(filter-out %/tpcomp.comp, $(patsubst $(BASEPWD)/%,%,$(wildcard $(BASEPWD)/hal/components/*.comp $(BASEPWD)/hal/drivers/*.comp)))
 include $(patsubst %.comp, $(BASEPWD)/objects/%.mak, $(COMPS))
 else
 CONVERTERS :=  \
@@ -12,6 +12,7 @@ COMP_MANPAGES := $(patsubst hal/components/%.comp, ../docs/man/man9/%.9, $(COMPS
 ifeq ($(BUILD_SYS),uspace)
 COMP_DRIVERS += hal/drivers/serport.comp
 COMP_DRIVERS += hal/drivers/mesa_7i65.comp
+COMP_DRIVERS += hal/drivers/mesa_uart.comp
 else
 COMP_DRIVERS := $(wildcard hal/drivers/*.comp)
 endif

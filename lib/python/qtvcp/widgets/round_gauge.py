@@ -9,7 +9,7 @@ from qtvcp.widgets.widget_baseclass import _HalWidgetBase, hal
 class Gauge(QtWidgets.QWidget, _HalWidgetBase):
     def __init__(self, parent=None):
         super(Gauge, self).__init__(parent)
-        self._threshold = 0.0
+        self._threshold = 0
         self._setpoint = QPointF(0, 0)
         self._num_ticks = 11
         self._max_value = 100
@@ -47,7 +47,7 @@ class Gauge(QtWidgets.QWidget, _HalWidgetBase):
             self.qpa[i] = QPointF(x, y)
 
     def paintEvent(self, event):
-        w = min(event.rect().width(), event.rect().height())
+        w = int(min(event.rect().width(), event.rect().height()))
         painter = QPainter(self)
         painter.setRenderHint(painter.Antialiasing)
         self.draw_background(painter, event, w)
