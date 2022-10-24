@@ -6155,6 +6155,62 @@ TO FILE</string>
                       </spacer>
                      </item>
                      <item>
+                      <widget class="PushButton" name="pushbutton_2">
+                       <property name="minimumSize">
+                        <size>
+                         <width>96</width>
+                         <height>50</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>96</width>
+                         <height>50</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>TEST BUTTON</string>
+                       </property>
+                       <property name="python_command_option" stdset="0">
+                        <bool>true</bool>
+                       </property>
+                       <property name="true_python_cmd_string" stdset="0">
+                        <string>PROGRAM_LOADER.load_test_button()</string>
+                       </property>
+                       <property name="false_python_cmd_string" stdset="0">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="PushButton" name="pushbutton">
+                       <property name="minimumSize">
+                        <size>
+                         <width>96</width>
+                         <height>50</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>96</width>
+                         <height>50</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>TEST LED</string>
+                       </property>
+                       <property name="python_command_option" stdset="0">
+                        <bool>true</bool>
+                       </property>
+                       <property name="true_python_cmd_string" stdset="0">
+                        <string>PROGRAM_LOADER.load_test_led()</string>
+                       </property>
+                       <property name="false_python_cmd_string" stdset="0">
+                        <string/>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
                       <widget class="ActionButton" name="actionbutton_lcnc_status_3">
                        <property name="sizePolicy">
                         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -6213,7 +6269,7 @@ TO FILE</string>
                         <double>0.300000000000000</double>
                        </property>
                        <property name="circle_diameter" stdset="0">
-                        <double>10.000000000000000</double>
+                        <number>10</number>
                        </property>
                        <property name="right_edge_offset" stdset="0">
                         <number>0</number>
@@ -7314,10 +7370,10 @@ OFF</string>
                    </size>
                   </property>
                   <property name="pin_name" stdset="0">
-                   <string>led-spindle-at-speed</string>
+                   <string/>
                   </property>
                   <property name="halpin_option" stdset="0">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="color">
                    <color>
@@ -7335,6 +7391,9 @@ OFF</string>
                   </property>
                   <property name="is_spindle_at_speed_status" stdset="0">
                    <bool>true</bool>
+                  </property>
+                  <property name="halpin_name" stdset="0">
+                   <string>spindle-is-at-speed</string>
                   </property>
                  </widget>
                 </item>
@@ -7415,6 +7474,87 @@ OFF</string>
                     <green>0</green>
                     <blue>0</blue>
                    </color>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <layout class="QHBoxLayout" name="horizontalLayout_69">
+                <item>
+                 <widget class="QLabel" name="label_43">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>24</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>24</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>EOFFSET LTD</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                  </property>
+                  <property name="margin">
+                   <number>0</number>
+                  </property>
+                  <property name="indent">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="StateLED" name="stateled">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>24</width>
+                    <height>24</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>24</width>
+                    <height>24</height>
+                   </size>
+                  </property>
+                  <property name="halpin_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="currentstate" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="flashing" stdset="0">
+                   <bool>true</bool>
+                  </property>
+                  <property name="pos_hard_limit_state" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="hard_limits_state" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="follow_halpin_state" stdset="0">
+                   <bool>true</bool>
+                  </property>
+                  <property name="halpin_name" stdset="0">
+                   <string>motion.eoffset-limited</string>
                   </property>
                  </widget>
                 </item>
@@ -8381,7 +8521,7 @@ BLOCK</string>
                   <double>0.200000000000000</double>
                  </property>
                  <property name="circle_diameter" stdset="0">
-                  <double>10.000000000000000</double>
+                  <number>10</number>
                  </property>
                  <property name="right_edge_offset" stdset="0">
                   <number>6</number>
@@ -8641,6 +8781,9 @@ SPINDLE</string>
                  <property name="indicator_HAL_pin_option" stdset="0">
                   <bool>false</bool>
                  </property>
+                 <property name="indicator_status_option" stdset="0">
+                  <bool>false</bool>
+                 </property>
                  <property name="checked_state_text_option" stdset="0">
                   <bool>true</bool>
                  </property>
@@ -8670,6 +8813,12 @@ PAUSED</string>
                  <property name="false_state_string" stdset="0">
                   <string>PAUSE
 SPINDLE</string>
+                 </property>
+                 <property name="is_paused_status" stdset="0">
+                  <bool>false</bool>
+                 </property>
+                 <property name="isAutoPauseSensitive" stdset="0">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -8837,7 +8986,7 @@ Z COMP</string>
                   </size>
                  </property>
                  <property name="text">
-                  <string>EOFFSET</string>
+                  <string>SPINDLE LIFT</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -8845,7 +8994,7 @@ Z COMP</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lbl_eoffset_value">
+                <widget class="QLineEdit" name="spindle_eoffset_value">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -8940,7 +9089,7 @@ Z COMP</string>
                 </widget>
                </item>
                <item>
-                <widget class="QLineEdit" name="lineEdit_eoffset">
+                <widget class="QLineEdit" name="z_comp_eoffset_value">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -8958,6 +9107,9 @@ Z COMP</string>
                    <width>80</width>
                    <height>30</height>
                   </size>
+                 </property>
+                 <property name="text">
+                  <string>000</string>
                  </property>
                  <property name="maxLength">
                   <number>10</number>
@@ -9598,7 +9750,7 @@ G30</string>
                     <double>0.300000000000000</double>
                    </property>
                    <property name="circle_diameter" stdset="0">
-                    <double>10.000000000000000</double>
+                    <number>10</number>
                    </property>
                    <property name="right_edge_offset" stdset="0">
                     <number>0</number>
@@ -14955,7 +15107,7 @@ ANGULAR</string>
                <number>2</number>
               </property>
               <property name="text">
-               <string>03:46:01 PM</string>
+               <string>08:56:24 PM</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>

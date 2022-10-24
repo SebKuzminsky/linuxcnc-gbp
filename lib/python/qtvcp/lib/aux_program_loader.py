@@ -29,7 +29,7 @@ class Aux_program_loader:
         if args:
             pass
         else:
-            p = os.popen('python3 {}'.format(os.path.join(PATH.LIBDIR, 'ripper/gcode_ripper.py')))
+            p = os.popen('python {}'.format(os.path.join(PATH.LIBDIR, 'ripper/gcode_ripper.py')))
 
     # opens halshow
     def load_halshow(self, *args):
@@ -63,6 +63,24 @@ class Aux_program_loader:
     # open linuxcnc standard tool edit program
     def load_tooledit(self, filepath):
         p = os.popen("tooledit %s" % (filepath))
+
+    def load_test_button(self, *args):
+        if args:
+            p = os.popen("qtvcp {} test_button".format(args), "w")
+        else:
+            p = os.popen("qtvcp test_button", "w")
+
+    def load_test_led(self, *args):
+        if args:
+            p = os.popen("qtvcp {} test_led".format(args), "w")
+        else:
+            p = os.popen("qtvcp test_led", "w")
+
+    def load_test_dial(self, *args):
+        if args:
+            p = os.popen("qtvcp {} test_dial".format(args), "w")
+        else:
+            p = os.popen("qtvcp test_dial", "w")
 
     def keyboard_onboard(self, args="", width="", height=""):
         try:

@@ -15,6 +15,7 @@ from qtvcp.lib.aux_program_loader import Aux_program_loader
 from qtvcp.core import Status, Action, Info, Path, Qhal
 from qtvcp import logger
 from shutil import copyfile
+from math import sqrt, ceil
 
 LOG = logger.getLogger(__name__)
 KEYBIND = Keylookup()
@@ -79,7 +80,7 @@ class HandlerClass:
         self.reload_tool = 0
         self.last_loaded_program = ""
         self.first_turnon = True
-        self.unit_label_list = ["ts_height", "tp_height", "zoffset_units", "max_probe_units"]
+        self.unit_label_list = ["ts_height", "tp_height", "zoffset_units", "max_probe_units", "retract_dist_units", "z_safe_travel_units"]
         self.lineedit_list = ["work_height", "touch_height", "sensor_height", "laser_x", "laser_y",
                               "sensor_x", "sensor_y", "camera_x", "camera_y",
                               "search_vel", "probe_vel", "max_probe", "eoffset_count"]
@@ -141,7 +142,6 @@ class HandlerClass:
         self.w.page_buttonGroup.buttonClicked.connect(self.main_tab_changed)
         self.w.filemanager.onUserClicked()    
         self.w.filemanager_usb.onMediaClicked()
-        self.w.widget_zaxis_offset.hide()
 
     # hide widgets for A axis if not present
         if "A" not in INFO.AVAILABLE_AXES:
@@ -202,10 +202,13 @@ class HandlerClass:
         # external offset control pins
         QHAL.newpin("eoffset-enable", QHAL.HAL_BIT, QHAL.HAL_OUT)
         QHAL.newpin("eoffset-clear", QHAL.HAL_BIT, QHAL.HAL_OUT)
+        QHAL.newpin("eoffset-spindle-count", QHAL.HAL_S32, QHAL.HAL_OUT)
         QHAL.newpin("eoffset-count", QHAL.HAL_S32, QHAL.HAL_OUT)
-        pin = QHAL.newpin("eoffset-value", QHAL.HAL_FLOAT, QHAL.HAL_IN)
+
+        pin = QHAL.newpin("eoffset-value", QHAL.HAL_S32, QHAL.HAL_IN)
         pin.value_changed.connect(self.eoffset_changed)
-        pin = QHAL.newpin("comp-count", Qhal.HAL_S32, Qhal.HAL_IN)
+
+        pin = QHAL.newpin("eoffset-zlevel-count", QHAL.HAL_S32, QHAL.HAL_IN)
         pin.value_changed.connect(self.comp_count_changed)
         QHAL.newpin("comp-on", Qhal.HAL_BIT, Qhal.HAL_OUT)
 
@@ -481,12 +484,11 @@ class HandlerClass:
         self.w.lbl_mb_errors.setText(str(errors))
 
     def eoffset_changed(self, data):
-        eoffset = "{:2.3f}".format(self.h['eoffset-value'])
-        self.w.lbl_eoffset_value.setText(eoffset)
+        self.w.z_comp_eoffset_value.setText(format(data*.001, '.3f'))
 
     def comp_count_changed(self):
         if self.w.btn_enable_comp.isChecked():
-            self.h['eoffset-count'] = self.h['comp-count']
+            self.h['eoffset-count'] = self.h['eoffset-zlevel-count']
 
     def dialog_return(self, w, message):
         rtn = message.get('RETURN')
@@ -653,48 +655,46 @@ class HandlerClass:
         # set external offsets to lift spindle
             self.h['eoffset-enable'] = self.w.chk_eoffsets.isChecked()
             fval = float(self.w.lineEdit_eoffset_count.text())
-            self.h['eoffset-count'] = int(fval)
+            self.h['eoffset-spindle-count'] = int(fval)
+            self.w.spindle_eoffset_value.setText(self.w.lineEdit_eoffset_count.text())
             self.h['spindle-inhibit'] = True
-            self.w.btn_enable_comp.setChecked(False)
-            self.w.widget_zaxis_offset.hide()
-            if not QHAL.hal.component_exists("compensation"):
+            #self.w.btn_enable_comp.setChecked(False)
+            #self.w.widget_zaxis_offset.hide()
+            if not QHAL.hal.component_exists("z_level_compensation"):
                 self.add_status("Z level compensation HAL component not loaded", CRITICAL)
                 return
-            self.h['comp-on'] = False
+            #self.h['comp-on'] = False
         else:
-            self.h['eoffset-count'] = 0
-            self.h['eoffset-clear'] = True
+            self.h['eoffset-spindle-count'] = 0
+            self.w.spindle_eoffset_value.setText('0')
+            #self.h['eoffset-clear'] = True
             self.h['spindle-inhibit'] = False
             if STATUS.is_auto_running():
             # instantiate warning box
                 info = "Wait for spindle at speed signal before resuming"
-                mess = {'NAME':'MESSAGE', 'ICON':'WARNING', 'ID':'_wait_resume_', 'MESSAGE':'CAUTION', 'MORE':info, 'TYPE':'OK'}
+                mess = {'NAME':'MESSAGE', 'ICON':'WARNING',
+                        'ID':'_wait_resume_', 'MESSAGE':'CAUTION',
+                        'NONBLOCKING':'True', 'MORE':info, 'TYPE':'OK'}
                 ACTION.CALL_DIALOG(mess)
 
     def btn_enable_comp_clicked(self, state):
         if state:
-            self.w.btn_pause_spindle.setChecked(False)
             fname = os.path.join(PATH.CONFIGPATH, "probe_points.txt")
             if not os.path.isfile(fname):
                 self.add_status(fname + " not found", CRITICAL)
                 self.w.btn_enable_comp.setChecked(False)
                 return
-            if not QHAL.hal.component_exists("compensation"):
+            if not QHAL.hal.component_exists("z_level_compensation"):
                 self.add_status("Z level compensation HAL component not loaded", CRITICAL)
                 self.w.btn_enable_comp.setChecked(False)
                 return
             self.h['comp-on'] = True
-            self.h['eoffset-scale'] = 0.001
-            self.h['eoffset-count'] = self.h['comp-count']
             self.add_status("Z level compensation ON")
-            self.w.widget_zaxis_offset.show()
         else:
-            self.w.widget_zaxis_offset.hide()
-            if not QHAL.hal.component_exists("compensation"):
+            if not QHAL.hal.component_exists("z_level_compensation"):
                 self.add_status("Z level compensation HAL component not loaded", CRITICAL)
                 return
             self.h['comp-on'] = False
-            self.h['eoffset-count'] = 0
             self.add_status("Z level compensation OFF", WARNING)
 
 
@@ -709,13 +709,11 @@ class HandlerClass:
             y = float(self.w.lineEdit_sensor_y.text())
         else:
             return
-        if not STATUS.is_metric_mode():
-            x = x / 25.4
-            y = y / 25.4
+
         ACTION.CALL_MDI("G90")
         ACTION.CALL_MDI_WAIT("G53 G0 Z0")
         command = "G53 G0 X{:3.4f} Y{:3.4f}".format(x, y)
-        ACTION.CALL_MDI_WAIT(command, 10)
+        ACTION.CALL_MDI_WAIT(command, self.calc_mdi_move_wait_time(x,y))
  
     def btn_ref_laser_clicked(self):
         x = float(self.w.lineEdit_laser_x.text())
@@ -744,9 +742,11 @@ class HandlerClass:
         if not STATUS.is_all_homed():
             self.add_status("Must be homed to perform tool touchoff", WARNING)
             return
-        # instantiate dialog box
+         
+         # instantiate dialog box   
+        unit = "mm" if INFO.MACHINE_IS_METRIC else "in"
         sensor = self.w.sender().property('sensor')
-        info = "Ensure tooltip is within {} mm of tool sensor and click OK".format(self.w.lineEdit_max_probe.text())
+        info = "Ensure tooltip is within {}{} of tool sensor and click OK".format(self.w.lineEdit_max_probe.text(), unit)
         mess = {'NAME':'MESSAGE', 'ID':sensor, 'MESSAGE':'TOOL TOUCHOFF', 'MORE':info, 'TYPE':'OKCANCEL'}
         ACTION.CALL_DIALOG(mess)
         
@@ -993,7 +993,7 @@ class HandlerClass:
                 self.add_status("Loaded PDF file : {}".format(fname))
 
     def disable_spindle_pause(self):
-        self.h['eoffset-count'] = 0
+        self.h['eoffset-spindle-count'] = 0
         self.h['spindle-inhibit'] = False
         if self.w.btn_pause_spindle.isChecked():
             self.w.btn_pause_spindle.setChecked(False)
@@ -1058,7 +1058,7 @@ class HandlerClass:
         else:
             self.add_status("Machine OFF")
         self.w.btn_pause_spindle.setChecked(False)
-        self.h['eoffset-count'] = 0
+        self.h['eoffset-spindle-count'] = 0
         for widget in self.onoff_list:
             self.w[widget].setEnabled(state)
 
@@ -1199,6 +1199,14 @@ class HandlerClass:
             self.add_status("Cannot switch pages while in AUTO mode", WARNING)
             self.w.main_tab_widget.setCurrentIndex(0)
             self.w.btn_main.setChecked(True)
+    
+    # calc wait time for mdi move based on dist and rapid speed, return seconds to wait
+    def calc_mdi_move_wait_time(self, dest_x, dest_y, wait_buffer_secs=1):
+        move_speed = (STATUS.stat.rapidrate * STATUS.get_max_velocity()) / 60
+        pos_cur,pos_rel,dtg, = STATUS.get_position()
+        move_dist = sqrt((dest_x - pos_cur[0]) ** 2 + (dest_y - pos_cur[1]) ** 2)
+        return ceil(move_dist / move_speed) + wait_buffer_secs
+
 
     #####################
     # KEY BINDING CALLS #

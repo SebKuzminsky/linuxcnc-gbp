@@ -381,6 +381,7 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
         self._is_on_sensitive = False
         self._is_idle_sensitive = False
         self._is_run_sensitive = False
+        self._is_auto_pause_sensitive = False
         self._is_manual_sensitive = False
         self._is_mdi_sensitive = False
         self._is_auto_sensitive = False
@@ -428,6 +429,10 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
             STATUS.connect('interp-run', lambda w: enable_logic_check(True))
             STATUS.connect('interp-paused', lambda w: self.setEnabled(False))
             STATUS.connect('interp-idle', lambda w: self.setEnabled(False))
+        elif self._is_auto_pause_sensitive:
+            STATUS.connect('interp-run', lambda w: enable_logic_check(False))
+            STATUS.connect('interp-paused', lambda w: self.setEnabled(True))
+            STATUS.connect('interp-idle', lambda w: self.setEnabled(False))
         if self._is_manual_sensitive or self._is_mdi_sensitive or self._is_auto_sensitive:
             STATUS.connect('mode-manual', lambda w: enable_logic_check(self._is_manual_sensitive))
             STATUS.connect('mode-mdi', lambda w: enable_logic_check(self._is_mdi_sensitive))
@@ -437,7 +442,7 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
         if not (self._is_idle_sensitive or self._is_run_sensitive or \
                 self._is_on_sensitive or self._is_all_homed_sensitive or \
                 self._is_manual_sensitive or self._is_mdi_sensitive or \
-                self._is_auto_sensitive):
+                self._is_auto_sensitive or self._is_auto_pause_sensitive):
             STATUS.connect('state-estop-reset', lambda w: self.setEnabled(True))
 
         # check for multiple selected enabled requests
@@ -446,6 +451,8 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
                 temp = True
                 if self._is_run_sensitive:
                     temp = temp and STATUS.is_interp_running()
+                if self._is_auto_pause_sensitive:
+                    temp = temp and STATUS.is_auto_paused()
                 if self._is_on_sensitive:
                     temp = temp and STATUS.machine_is_on()
                 if self._is_all_homed_sensitive:
@@ -462,6 +469,21 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
             else:
                 self.setEnabled(False)
 
+        self.connectSignals()
+
+    # Disconnect our standard signals
+    def disconnectSignals(self):
+        try:
+            self.toggled.disconnect()
+        except Exception: pass
+        try:
+            self.pressed.disconnect()
+            self.released.disconnect()
+        except Exception: pass
+
+    # done so we can adjust 'checkable' signals at run time
+    # ie delete all signals an re apply them
+    def connectSignals(self):
         def _update(state):
             self.setChecked(state)
             if self._HAL_pin is False:
@@ -1197,6 +1219,12 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
         return self._is_run_sensitive
     isRunSensitive = QtCore.pyqtProperty(bool, getisRunSensitive, setisRunSensitive)
 
+    def setisAutoPauseSensitive(self, data):
+        self._is_auto_pause_sensitive = data
+    def getisAutoPauseSensitive(self):
+        return self._is_auto_pause_sensitive
+    isAutoPauseSensitive = QtCore.pyqtProperty(bool, getisAutoPauseSensitive, setisAutoPauseSensitive)
+
     def setisManSensitive(self, data):
         self._is_manual_sensitive = data
     def getisManSensitive(self):
@@ -1228,14 +1256,21 @@ class PushButton(IndicatedPushButton, _HalWidgetBase):
 
     # make the super class (pushbutton) HAL pins
     # then the button pins
+    # this overrides the super class function
+    # but then calls it after to connect signals etc.
     def _hal_init(self):
-        super(PushButton, self)._hal_init()
         if self._pin_name_ == '':
             pname = self.HAL_NAME_
         else:
             pname = self._pin_name_
         self.hal_pin = self.HAL_GCOMP_.newpin(str(pname), hal.HAL_BIT, hal.HAL_OUT)
+        super(PushButton, self)._hal_init()
 
+    # done so we can adjust 'checkable' signals at run time
+    # ie delete all signals an re apply them
+    # this overrides the super class function
+    def connectSignals(self):
+        super().connectSignals()
         def _update(state):
             self.hal_pin.set(state)
 

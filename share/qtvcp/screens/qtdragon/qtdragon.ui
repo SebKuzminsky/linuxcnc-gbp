@@ -3015,7 +3015,7 @@ RESET</string>
                     <enum>QFrame::Raised</enum>
                    </property>
                    <property name="currentIndex">
-                    <number>0</number>
+                    <number>9</number>
                    </property>
                    <widget class="QWidget" name="main_tab_widgetPage1">
                     <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -5902,8 +5902,14 @@ TO FILE</string>
                            <verstretch>0</verstretch>
                           </sizepolicy>
                          </property>
+                         <property name="styleSheet">
+                          <string notr="true">QTabBar::tab{
+ min-height:36px;
+ min-width:80px;
+}</string>
+                         </property>
                          <property name="currentIndex">
-                          <number>1</number>
+                          <number>0</number>
                          </property>
                          <widget class="QWidget" name="tabHTML">
                           <attribute name="title">
@@ -7163,17 +7169,20 @@ TO FILE</string>
                            <set>Qt::AlignCenter</set>
                           </property>
                           <layout class="QVBoxLayout" name="verticalLayout_18">
+                           <property name="spacing">
+                            <number>4</number>
+                           </property>
                            <property name="leftMargin">
-                            <number>0</number>
+                            <number>4</number>
                            </property>
                            <property name="topMargin">
-                            <number>0</number>
+                            <number>12</number>
                            </property>
                            <property name="rightMargin">
-                            <number>0</number>
+                            <number>4</number>
                            </property>
                            <property name="bottomMargin">
-                            <number>0</number>
+                            <number>4</number>
                            </property>
                            <item>
                             <widget class="QWidget" name="widget_ext_offset" native="true">
@@ -7191,7 +7200,7 @@ TO FILE</string>
                                <number>0</number>
                               </property>
                               <property name="bottomMargin">
-                               <number>0</number>
+                               <number>4</number>
                               </property>
                               <item>
                                <widget class="QLabel" name="label_3">
@@ -7301,6 +7310,18 @@ TO FILE</string>
                         </item>
                         <item alignment="Qt::AlignHCenter">
                          <widget class="QLabel" name="silver_dragon">
+                          <property name="minimumSize">
+                           <size>
+                            <width>0</width>
+                            <height>1</height>
+                           </size>
+                          </property>
+                          <property name="sizeIncrement">
+                           <size>
+                            <width>0</width>
+                            <height>0</height>
+                           </size>
+                          </property>
                           <property name="text">
                            <string/>
                           </property>
@@ -7363,6 +7384,62 @@ TO FILE</string>
                          </spacer>
                         </item>
                         <item>
+                         <widget class="PushButton" name="pushbutton_2">
+                          <property name="minimumSize">
+                           <size>
+                            <width>96</width>
+                            <height>50</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>96</width>
+                            <height>50</height>
+                           </size>
+                          </property>
+                          <property name="text">
+                           <string>TEST BUTTON</string>
+                          </property>
+                          <property name="python_command_option" stdset="0">
+                           <bool>true</bool>
+                          </property>
+                          <property name="true_python_cmd_string" stdset="0">
+                           <string>PROGRAM_LOADER.load_test_button()</string>
+                          </property>
+                          <property name="false_python_cmd_string" stdset="0">
+                           <string/>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
+                         <widget class="PushButton" name="pushbutton">
+                          <property name="minimumSize">
+                           <size>
+                            <width>96</width>
+                            <height>50</height>
+                           </size>
+                          </property>
+                          <property name="maximumSize">
+                           <size>
+                            <width>96</width>
+                            <height>50</height>
+                           </size>
+                          </property>
+                          <property name="text">
+                           <string>TEST LED</string>
+                          </property>
+                          <property name="python_command_option" stdset="0">
+                           <bool>true</bool>
+                          </property>
+                          <property name="true_python_cmd_string" stdset="0">
+                           <string>PROGRAM_LOADER.load_test_led()</string>
+                          </property>
+                          <property name="false_python_cmd_string" stdset="0">
+                           <string/>
+                          </property>
+                         </widget>
+                        </item>
+                        <item>
                          <widget class="ActionButton" name="actionbutton_lcnc_status_3">
                           <property name="sizePolicy">
                            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -7421,7 +7498,7 @@ TO FILE</string>
                            <double>0.300000000000000</double>
                           </property>
                           <property name="circle_diameter" stdset="0">
-                           <double>10.000000000000000</double>
+                           <number>10</number>
                           </property>
                           <property name="right_edge_offset" stdset="0">
                            <number>0</number>
@@ -9749,7 +9826,7 @@ BLOCK</string>
                     <double>0.200000000000000</double>
                    </property>
                    <property name="circle_diameter" stdset="0">
-                    <double>10.000000000000000</double>
+                    <number>10</number>
                    </property>
                    <property name="right_edge_offset" stdset="0">
                     <number>6</number>
@@ -14222,7 +14299,7 @@ ZERO</string>
                   <double>0.300000000000000</double>
                  </property>
                  <property name="circle_diameter" stdset="0">
-                  <double>10.000000000000000</double>
+                  <number>10</number>
                  </property>
                  <property name="right_edge_offset" stdset="0">
                   <number>6</number>
@@ -14436,7 +14513,7 @@ ZERO</string>
                   <double>0.300000000000000</double>
                  </property>
                  <property name="circle_diameter" stdset="0">
-                  <double>10.000000000000000</double>
+                  <number>10</number>
                  </property>
                  <property name="right_edge_offset" stdset="0">
                   <number>6</number>
@@ -14648,7 +14725,7 @@ ZERO</string>
                   <double>0.300000000000000</double>
                  </property>
                  <property name="circle_diameter" stdset="0">
-                  <double>10.000000000000000</double>
+                  <number>10</number>
                  </property>
                  <property name="right_edge_offset" stdset="0">
                   <number>6</number>
@@ -14811,11 +14888,8 @@ ZERO</string>
                  <property name="toolTip">
                   <string>Spindle at speed</string>
                  </property>
-                 <property name="pin_name" stdset="0">
-                  <string/>
-                 </property>
                  <property name="halpin_option" stdset="0">
-                  <bool>false</bool>
+                  <bool>true</bool>
                  </property>
                  <property name="diameter">
                   <number>15</number>
@@ -14829,6 +14903,9 @@ ZERO</string>
                  </property>
                  <property name="is_spindle_at_speed_status" stdset="0">
                   <bool>true</bool>
+                 </property>
+                 <property name="halpin_name" stdset="0">
+                  <string>spindle-is-at-speed</string>
                  </property>
                 </widget>
                </item>
@@ -15376,7 +15453,7 @@ ZERO</string>
             <number>2</number>
            </property>
            <property name="text">
-            <string>07:26:30 PM</string>
+            <string>09:29:15 AM</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -16325,7 +16402,7 @@ ZERO</string>
   <slot>tab_utilities_changed()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="mode_buttonGroup"/>
   <buttongroup name="page_buttonGroup"/>
+  <buttongroup name="mode_buttonGroup"/>
  </buttongroups>
 </ui>

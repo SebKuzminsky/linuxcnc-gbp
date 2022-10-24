@@ -2,13 +2,14 @@
 #
 #  Michael Haberler 3/2011
 #
-#  originally based on the Highlight-mode file for gedit,
-#  written by Jan Van Gilsen <janvangilsen(at)gmail(dot)com>
+#  Originally based on the Highlight-mode file for gedit,
+#  written by Jan Van Gilsen <janvangilsen(at)gmail(dot)com>.
 #  Installation instructions can be found at:
 #  http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Highlighting_In_Gedit
 #  Version		: 0.3
 #  Last Edit	: 10Th Nov 2007, by Jan Van Gilsen
-#  Comment 	: added probing and rigid tapping G-codes (new in 2.2)
+#  Comment 	: Added probing and rigid tapping G-codes (new in 2.2)
+#  This file is used for the syntax highlighting in the HTML output of the documentation.
 
 
 environment comment delim '\([dD][eE][bB][uU][gG],' ")" begin
@@ -21,24 +22,24 @@ comment start ";"
 
 ignore = 'axes'
 
-# numbered parameters (#5xxx)
+# Numbered parameters (#5xxx)
 variable =  '#([0-9]{4})'
 
-# function parameter -  #1 .. #30
+# Function parameter -  #1 .. #30
 variable =  '#[0-9][0-9]?'
 
-# named parameters
+# Named parameters
 variable =  '#<([^\>]+)>'
 
-# math functions and boolean logic
+# Math functions and boolean logic
 function = "cos|tan|asin|acos|atan|exp|ln|sqrt|fup|fix|abs|or",
 	"xor|and|mod|gt|lt|ge|le|eq|ne|exists"
 	nonsensitive
 
-# operators
+# Operators
 function = '(([\/|\=\+\*])|(\])|(\[))'
 
-# line numbers
+# Line numbers
 comment = '^[n|N]([ |\t]*[0-9]){1,5}'
 
 # O-word lines and their keywords
@@ -67,13 +68,14 @@ keyword = $GCODE + '[0-5|7-8]'
 
 # M-Codes
 vardef MCODE = '[m|M]([ \t]*[0])*[ \t]*'
-keyword = $MCODE + '5[ \t]*[0-3]'
+keyword = $MCODE + '1[ \t]*[0-9][ \t]*[1-9]'
+keyword = $MCODE + '1[ \t]*[1-9][ \t]*0'
 keyword = $MCODE + '3[ \t]*0'
+keyword = $MCODE + '5[ \t]*[0-3]'
 keyword = $MCODE + '6[ \t]*0'
 keyword = $MCODE + '6[ \t]*[0-9]'
 keyword = $MCODE + '7[ \t]*[0-3]'
-keyword = $MCODE + '1[ \t]*[0-9][ \t]*[1-9]'
-keyword = $MCODE + '1[ \t]*[1-9][ \t]*0'
+keyword = $MCODE + '9[ \t]*[8-9]'
 keyword = $MCODE + '[0-9]'
 
 # Feeds & speeds

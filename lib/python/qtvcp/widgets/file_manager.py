@@ -136,38 +136,42 @@ class FileManager(QWidget, _HalWidgetBase):
 
         self.jumpButton = QToolButton()
         self.jumpButton.setText('User')
-        self.jumpButton.setSizePolicy(button_policy)
-        self.jumpButton.setMinimumSize(80, 40)
+        self.jumpButton.setSizePolicy(line_policy)
+        self.jumpButton.setMinimumSize(40, 40)
+        self.jumpButton.setMaximumSize(80, 40)
         self.jumpButton.setToolTip('Jump to User directory.\nLong press for Options.')
         self.jumpButton.clicked.connect(self.onJumpClicked)
 
         self.addButton = QPushButton()
-        self.addButton.setText('Add Jump')
-        self.addButton.setSizePolicy(button_policy)
-        self.addButton.setMinimumSize(80, 40)
+        self.addButton.setText('Add\n Jump')
+        self.addButton.setSizePolicy(line_policy)
+        self.addButton.setMinimumSize(40, 40)
+        self.addButton.setMaximumSize(80, 40)
         self.addButton.setToolTip('Add current directory to jump button list')
         self.addButton.clicked.connect(self.onActionClicked)
 
         self.delButton = QPushButton()
-        self.delButton.setText('Del Jump')
-        self.delButton.setSizePolicy(button_policy)
-        self.delButton.setMinimumSize(80, 40)
+        self.delButton.setText('Del\n Jump')
+        self.delButton.setSizePolicy(line_policy)
+        self.delButton.setMinimumSize(40, 40)
+        self.delButton.setMaximumSize(80, 40)
         self.delButton.setToolTip('Delete current directory from jump button list')
         self.delButton.clicked.connect(self.onActionClicked)
 
         self.loadButton = QPushButton()
         self.loadButton.setText('Load')
-        self.loadButton.setSizePolicy(button_policy)
-        self.loadButton.setMinimumSize(80, 40)
+        self.loadButton.setSizePolicy(line_policy)
+        self.loadButton.setMinimumSize(40, 40)
+        self.loadButton.setMaximumSize(80, 40)
         self.loadButton.setToolTip('Load selected file')
         self.loadButton.clicked.connect(self._getPathActivated)
 
         self.copy_control = QCheckBox()
-        self.copy_control.setText('Show Copy Controls')
+        self.copy_control.setText('Show Copy\n Controls')
         self.copy_control.setSizePolicy(box_policy)
-        self.copy_control.setMinimumSize(80, 40)
+        self.copy_control.setMinimumSize(40, 40)
         self.copy_control.stateChanged.connect(lambda state: self.showCopyControls(state))
-        
+
         self.settingMenu = QMenu(self)
         self.jumpButton.setMenu(self.settingMenu)
 
@@ -180,13 +184,13 @@ class FileManager(QWidget, _HalWidgetBase):
         hbox.insertStretch (4, stretch = 0)
         hbox.addWidget(self.cb)
 
-        windowLayout = QVBoxLayout()
-        windowLayout.addLayout(pasteBox)
-        windowLayout.addLayout(self.copyBox)
-        windowLayout.addWidget(self.list)
-        windowLayout.addWidget(self.table)
-        windowLayout.addLayout(hbox)
-        self.setLayout(windowLayout)
+        self.windowLayout = QVBoxLayout()
+        self.windowLayout.addLayout(pasteBox)
+        self.windowLayout.addLayout(self.copyBox)
+        self.windowLayout.addWidget(self.list)
+        self.windowLayout.addWidget(self.table)
+        self.windowLayout.addLayout(hbox)
+        self.setLayout(self.windowLayout)
         self.show()
 
     def _hal_init(self):
@@ -344,7 +348,7 @@ class FileManager(QWidget, _HalWidgetBase):
             self.listClicked(row)
 
         fname = self.currentPath
-        if fname is None: 
+        if fname is None:
             return
         if fname:
             self.load(fname)
@@ -492,7 +496,7 @@ class FileManager(QWidget, _HalWidgetBase):
     # This can be class patched to do something else
     def recordBookKeeping(self):
         fname = self.currentPath
-        if fname is None: 
+        if fname is None:
             return
         if self.PREFS_:
             self.PREFS_.putpref('last_loaded_directory', self.model.rootPath(), str, 'BOOK_KEEPING')
