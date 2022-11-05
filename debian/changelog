@@ -1,3 +1,14 @@
+linuxcnc (2.9.0~pre0+git20221105.ffb6bda926-1) UNRELEASED; urgency=medium
+
+  * d/changelog: remove duplicated entries
+  * New upstream version 2.9.0~pre0+git20221105.ffb6bda926
+  * Fix an old hm2 encoder index bug.
+  * Fix unloading when halscope crashes.
+  * Lots of improvements to docs & translations.
+  * Improved gmoccapy GUI and QtVCP.
+
+ -- Sebastian Kuzminsky <seb@highlab.com>  Sat, 05 Nov 2022 17:51:38 -0600
+
 linuxcnc (2.9.0~pre0+git20221023.7a5beabae0-1) unstable; urgency=medium
 
   * New upstream version 2.9.0_pre0+git20221023.7a5beabae0
