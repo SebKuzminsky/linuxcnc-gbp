@@ -1,0 +1,39 @@
+commit 37cc349c296e04fe274574210dbafcc3ad755c18
+Author: Petter Reinholdtsen <pere@hungry.com>
+Date:   Mon Nov 7 14:53:44 2022 +0100
+
+    Fix boost python detection on arm and hppa in ax_boost_base.m4.
+    
+    This should fix the failing build on Debian.
+    
+    Also reintroduce a typo fix in the file header that was lost in a recent
+    upgrade of the file version.
+    
+    The change has been emailed Thomas Porschberg to get it upstream.  Not sure
+    if it is going to work, as a comment on
+    <URL: http://randspringer.de/boost/index.html > make it sound like he want
+    to no longer maintain the file.
+
+diff --git a/src/m4/ax_boost_base.m4 b/src/m4/ax_boost_base.m4
+index 6c944b160f..b7d22d6701 100644
+--- a/src/m4/ax_boost_base.m4
++++ b/src/m4/ax_boost_base.m4
+@@ -10,7 +10,7 @@
+ #
+ #   Test for the Boost C++ libraries of a particular version (or newer)
+ #
+-#   If no path to the installed boost library is given the macro searchs
++#   If no path to the installed boost library is given the macro searches
+ #   under /usr, /usr/local, /opt, /opt/local and /opt/homebrew and evaluates
+ #   the $BOOST_ROOT environment variable. Further documentation is available
+ #   at <http://randspringer.de/boost/index.html>.
+@@ -123,7 +123,8 @@ AC_DEFUN([_AX_BOOST_BASE_RUNDETECT],[
+     dnl are almost assuredly the ones desired.
+     AS_CASE([${host_cpu}],
+       [i?86],[multiarch_libsubdir="lib/i386-${host_os}"],
+-      [armv7l],[multiarch_libsubdir="lib/arm-${host_os}"],
++      [armv?l],[multiarch_libsubdir="lib/arm-${host_os}"],
++      [hppa64],[multiarch_libsubdir="lib/hppa-${host_os}"],
+       [multiarch_libsubdir="lib/${host_cpu}-${host_os}"]
+     )
+ 
