@@ -1,3 +1,11 @@
+linuxcnc (2.9.0~pre0+git20221105.ffb6bda926-1.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Updated 0010-arm-hppa.patch from upstream to handle hppa1.1 cpu and to
+    exit build earlier if libboost-python is not found.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Tue, 08 Nov 2022 22:38:32 +0100
+
 linuxcnc (2.9.0~pre0+git20221105.ffb6bda926-1.1) unstable; urgency=medium
 
   * Non-maintainer upload.
