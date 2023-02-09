@@ -17,6 +17,9 @@ from . import logger
 log = logger.getLogger(__name__)
 # log.setLevel(logger.INFO) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL, VERBOSE
 
+# The order of these classes is importanr, otherwise - cirular imports.
+# the some of the later classes reference the earlier classes
+
 ################################################################
 # IStat class
 ################################################################
@@ -245,8 +248,11 @@ class Status(GStat):
         GObject.Object.__init__(self)
         self.__class__._instanceNum += 1
         super(GStat, self).__init__()
+
+        # set the default jog speeds before the forced update
         self.current_jog_rate = INI.DEFAULT_LINEAR_JOG_VEL
-        self.angular_jog_velocity = INI.DEFAULT_ANGULAR_JOG_VEL
+        self.current_angular_jog_rate = INI.DEFAULT_ANGULAR_JOG_VEL
+
         # can only have ONE error channel instance in qtvcp
         self.ERROR = linuxcnc.error_channel()
         self._block_polling = False
@@ -260,7 +266,7 @@ class Status(GStat):
     # to call this function
     # but when using MDI subprograms, the subprogram must be the only
     # polling instance.
-    # this is done by blocking the main screen polling untill the
+    # this is done by blocking the main screen polling until the
     # subprogram is done.
     def poll_error(self):
         if self._block_polling: return None
@@ -274,6 +280,20 @@ class Status(GStat):
         if name: print(name,'unblock')
         self._block_polling = False
 
+################################################################
+# PStat class
+################################################################
+from qtvcp.qt_pstat import _PStat as _PStatParent
+
+
+class Path(_PStatParent):
+    _instance = None
+    _instanceNum = 0
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = _PStatParent.__new__(cls, *args, **kwargs)
+        return cls._instance
 ################################################################
 # Lcnc_Action class
 ################################################################
@@ -306,17 +326,4 @@ class Tool(_TStatParent):
         return cls._instance
 
 
-################################################################
-# PStat class
-################################################################
-from qtvcp.qt_pstat import _PStat as _PStatParent
 
-
-class Path(_PStatParent):
-    _instance = None
-    _instanceNum = 0
-
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = _PStatParent.__new__(cls, *args, **kwargs)
-        return cls._instance

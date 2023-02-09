@@ -23,7 +23,6 @@ import sys, os
 import string
 from OpenGL.GL import *
 from OpenGL.GLU import *
-from OpenGL.GLUT import *
 BASE = os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), ".."))
 sys.path.insert(0, os.path.join(BASE, "lib", "python"))
 
@@ -272,6 +271,7 @@ def joints_mode():
     return s.motion_mode == linuxcnc.TRAJ_MODE_FREE
 
 def set_motion_teleop(value):
+    if running(): return
     # 1:teleop, 0: joint
     vars.teleop_mode.set(value)
     c.teleop_enable(value)
@@ -962,7 +962,9 @@ class LivePlotter:
 
 def running(do_poll=True):
     if do_poll: s.poll()
-    return s.task_mode == linuxcnc.MODE_AUTO and s.interp_state != linuxcnc.INTERP_IDLE
+    return ( (s.task_mode == linuxcnc.MODE_AUTO or s.task_mode == linuxcnc.MODE_MDI)
+             and s.interp_state != linuxcnc.INTERP_IDLE)
+
 
 def manual_tab_visible():
     page = root_window.tk.call(widgets.tabs, "raise")
@@ -977,6 +979,7 @@ initiated action (whether an MDI command or a jog) is acceptable.
 This means this function returns True when the mdi tab is visible."""
     if do_poll: s.poll()
     if s.task_state != linuxcnc.STATE_ON: return False
+    if running(): return 0
     return s.interp_state == linuxcnc.INTERP_IDLE or (s.task_mode == linuxcnc.MODE_MDI and s.queued_mdi_commands < vars.max_queued_mdi_commands.get())
 
 # If LinuxCNC is not already in one of the modes given, switch it to the
@@ -1813,10 +1816,10 @@ property_names = [
     ('name', _("Name:")), ('size', _("Size:")),
     ('tools', _("Tool order:")), ('g0', _("Rapid distance:")),
     ('g1', _("Feed distance:")), ('g', _("Total distance:")),
-    ('run', _("Run time:")), ('x', _("X bounds:")),
-    ('y', _("Y bounds:")), ('z', _("Z bounds:")),
-    ('a', _("A bounds:")), ('b', _("B bounds:")),
-    ('c', _("C bounds:"))
+    ('run', _("Run time:")),('toollist',_('Tool Change List:')),
+    ('x', _("X bounds:")),('y', _("Y bounds:")),
+    ('z', _("Z bounds:")),('a', _("A bounds:")),
+    ('b', _("B bounds:")),('c', _("C bounds:"))
 ]
 
 def dist(xxx_todo_changeme, xxx_todo_changeme1):
@@ -2072,6 +2075,7 @@ class TclCommands(nf.TclCommands):
                 b = max_extents[i]
                 if a != b:
                     props[c] = _("%(a)f to %(b)f = %(diff)f %(units)s").replace("%f", fmt) % {'a': a, 'b': b, 'diff': b-a, 'units': units}
+            props['toollist'] = o.canon.tool_list
         properties(root_window, _("G-Code Properties"), property_names, props)
 
     def launch_website(event=None):

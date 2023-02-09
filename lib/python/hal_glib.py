@@ -146,6 +146,7 @@ class _GStat(GObject.GObject):
         'current-tool-offset': (GObject.SignalFlags.RUN_FIRST , GObject.TYPE_NONE, (GObject.TYPE_PYOBJECT,)),
 
         'motion-mode-changed': (GObject.SignalFlags.RUN_FIRST , GObject.TYPE_NONE, (GObject.TYPE_INT,)),
+        'motion-type-changed': (GObject.SignalFlags.RUN_FIRST , GObject.TYPE_NONE, (GObject.TYPE_INT,)),
         'spindle-control-changed': (GObject.SignalFlags.RUN_FIRST , GObject.TYPE_NONE,
              (GObject.TYPE_INT, GObject.TYPE_BOOLEAN, GObject.TYPE_INT, GObject.TYPE_BOOLEAN)),
         'current-feed-rate': (GObject.SignalFlags.RUN_FIRST , GObject.TYPE_NONE, (GObject.TYPE_FLOAT,)),
@@ -250,6 +251,7 @@ class _GStat(GObject.GObject):
         self._status_active = False
         self.old = {}
         self.old['tool-prep-number'] = 0
+        self.previous_mode = self.MANUAL
         try:
             self.stat.poll()
             self.merge()
@@ -292,6 +294,7 @@ class _GStat(GObject.GObject):
         except RuntimeError:
              self.old['tool-prep-number'] = -1
         self.old['motion-mode'] = self.stat.motion_mode
+        self.old['motion-type'] = self.stat.motion_type
         self.old['spindle-or'] = self.stat.spindle[0]['override']
         self.old['feed-or'] = self.stat.feedrate
         self.old['rapid-or'] = self.stat.rapidrate
@@ -443,6 +446,7 @@ class _GStat(GObject.GObject):
         mode_old = old.get('mode', 0)
         mode_new = self.old['mode']
         if mode_new != mode_old:
+            self.previous_mode = mode_old
             self.emit(self.MODES[mode_new])
 
         interp_old = old.get('interp', 0)
@@ -504,6 +508,11 @@ class _GStat(GObject.GObject):
         motion_mode_new = self.old['motion-mode']
         if motion_mode_new != motion_mode_old:
             self.emit('motion-mode-changed', motion_mode_new)
+
+        motion_type_old = old.get('motion-type', None)
+        motion_type_new = self.old['motion-type']
+        if motion_type_new != motion_type_old:
+            self.emit('motion-type-changed', motion_type_new)
 
         # if the homed status has changed
         # check number of homed joints against number of available joints
@@ -846,6 +855,10 @@ class _GStat(GObject.GObject):
         motion_mode_new = self.old['motion-mode']
         self.emit('motion-mode-changed', motion_mode_new)
 
+        # Trajectory Motion type
+        motion_type_new = self.old['motion-type']
+        self.emit('motion-type-changed', motion_type_new)
+
         # Spindle requested speed
         spindle_spd_new = self.old['spindle-speed']
         self.emit('requested-spindle-speed-changed', spindle_spd_new)
@@ -938,6 +951,9 @@ class _GStat(GObject.GObject):
 
     def get_current_mode(self):
         return self.old['mode']
+
+    def get_previous_mode(self):
+        return self.previous_mode
 
     # linear - in machine units
     def set_jograte(self, upm):
@@ -1085,6 +1101,13 @@ class _GStat(GObject.GObject):
         except:
             return None
         return bool(self.stat.motion_mode == linuxcnc.TRAJ_MODE_FREE)
+
+    def is_world_mode(self):
+        try:
+            self.stat.poll()
+        except:
+            return None
+        return bool(self.stat.motion_mode == linuxcnc.TRAJ_MODE_TELEOP)
 
     def is_status_valid(self):
         return self._status_active

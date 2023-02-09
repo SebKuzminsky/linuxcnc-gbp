@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>677</width>
-    <height>402</height>
+    <width>706</width>
+    <height>388</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,8 +18,8 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>650</width>
-    <height>400</height>
+    <width>628</width>
+    <height>388</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -61,10 +61,16 @@
       </property>
       <item>
        <widget class="QWidget" name="widget_top" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="minimumSize">
          <size>
           <width>0</width>
-          <height>350</height>
+          <height>336</height>
          </size>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_14">
@@ -124,7 +130,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>80</height>
+                <height>0</height>
                </size>
               </property>
               <layout class="QGridLayout" name="gridLayout_5">
@@ -146,6 +152,82 @@
                <property name="verticalSpacing">
                 <number>2</number>
                </property>
+               <item row="5" column="0" colspan="2">
+                <widget class="QLabel" name="lbl_results_2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>INPUT</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="1">
+                <widget class="QLineEdit" name="input_xy_clearance">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>70</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>IBeamCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Distance to move before starting search</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="maxLength">
+                  <number>7</number>
+                 </property>
+                 <property name="frame">
+                  <bool>true</bool>
+                 </property>
+                 <property name="cursorPosition">
+                  <number>0</number>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
                <item row="12" column="0">
                 <widget class="QLabel" name="lab_z_2">
                  <property name="text">
@@ -159,96 +241,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="12" column="1">
-                <widget class="QLineEdit" name="input_z_clearance">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>80</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>IBeamCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Distance to move Z up or down during search</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="maxLength">
-                  <number>7</number>
-                 </property>
-                 <property name="frame">
-                  <bool>true</bool>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="15" column="1">
-                <widget class="QLineEdit" name="input_latch_return_dist">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>80</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>80</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                  </font>
-                 </property>
-                 <property name="cursor">
-                  <cursorShape>IBeamCursor</cursorShape>
-                 </property>
-                 <property name="toolTip">
-                  <string>Latch return distance</string>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="maxLength">
-                  <number>7</number>
-                 </property>
-                 <property name="frame">
-                  <bool>true</bool>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
                <item row="16" column="1">
                 <widget class="QLineEdit" name="input_tool_probe_height">
                  <property name="sizePolicy">
@@ -259,7 +251,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -294,8 +286,21 @@
                  </property>
                 </widget>
                </item>
-               <item row="14" column="1">
-                <widget class="QLineEdit" name="input_max_travel">
+               <item row="20" column="0">
+                <widget class="QLabel" name="label_tool_block_height_2">
+                 <property name="text">
+                  <string>BLOCK HT</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="margin">
+                  <number>4</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="1">
+                <widget class="QLineEdit" name="input_latch_return_dist">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -304,7 +309,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -323,7 +328,7 @@
                   <cursorShape>IBeamCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Maximum travel during search</string>
+                  <string>Latch return distance</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -333,34 +338,6 @@
                  </property>
                  <property name="frame">
                   <bool>true</bool>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="0" colspan="2">
-                <widget class="QLabel" name="lbl_results_2">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>INPUT</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -377,7 +354,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -412,8 +389,22 @@
                  </property>
                 </widget>
                </item>
-               <item row="10" column="1">
-                <widget class="QLineEdit" name="input_probe_vel">
+               <item row="22" column="1">
+                <widget class="LED" name="led_probe_function_chk">
+                 <property name="diameter">
+                  <number>19</number>
+                 </property>
+                 <property name="color">
+                  <color>
+                   <red>0</red>
+                   <green>255</green>
+                   <blue>0</blue>
+                  </color>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="1">
+                <widget class="QLineEdit" name="input_z_clearance">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -422,7 +413,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -441,7 +432,7 @@
                   <cursorShape>IBeamCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Probe velocity</string>
+                  <string>Distance to move Z up or down during search</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -454,6 +445,58 @@
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="lab_xy">
+                 <property name="text">
+                  <string>XY</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="margin">
+                  <number>4</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="lab_search_vel">
+                 <property name="text">
+                  <string>SEARCH</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="margin">
+                  <number>4</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="0">
+                <widget class="QLabel" name="lab_latch_rtrn_dist">
+                 <property name="text">
+                  <string>LATCH RTN</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="margin">
+                  <number>4</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="lab_probe_vel">
+                 <property name="text">
+                  <string>PROBE</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="margin">
+                  <number>4</number>
                  </property>
                 </widget>
                </item>
@@ -480,7 +523,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -524,21 +567,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="20" column="0">
-                <widget class="QLabel" name="label_tool_block_height_2">
-                 <property name="text">
-                  <string>BLOCK HT</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="margin">
-                  <number>4</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="20" column="1">
-                <widget class="QLineEdit" name="input_tool_block_height">
+               <item row="14" column="1">
+                <widget class="QLineEdit" name="input_max_travel">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -547,7 +577,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -566,7 +596,7 @@
                   <cursorShape>IBeamCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Tool block height</string>
+                  <string>Maximum travel during search</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -576,104 +606,6 @@
                  </property>
                  <property name="frame">
                   <bool>true</bool>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                </widget>
-               </item>
-               <item row="14" column="0">
-                <widget class="QLabel" name="lab_max_travel">
-                 <property name="text">
-                  <string>TRAVEL</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="margin">
-                  <number>4</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="21" column="1">
-                <widget class="LED" name="led_probe_function_chk">
-                 <property name="color">
-                  <color>
-                   <red>0</red>
-                   <green>255</green>
-                   <blue>0</blue>
-                  </color>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="0">
-                <widget class="QLabel" name="lab_length">
-                 <property name="text">
-                  <string>LENGTH</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="margin">
-                  <number>4</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="15" column="0">
-                <widget class="QLabel" name="lab_latch_rtrn_dist">
-                 <property name="text">
-                  <string>LATCH RTN</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="margin">
-                  <number>4</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="9" column="0">
-                <widget class="QLabel" name="lab_search_vel">
-                 <property name="text">
-                  <string>SEARCH</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="margin">
-                  <number>4</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="21" column="0">
-                <widget class="QLabel" name="lab_probe">
-                 <property name="minimumSize">
-                  <size>
-                   <width>0</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>16777215</width>
-                   <height>24</height>
-                  </size>
-                 </property>
-                 <property name="font">
-                  <font>
-                   <pointsize>10</pointsize>
-                   <weight>50</weight>
-                   <bold>false</bold>
-                  </font>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Plain</enum>
-                 </property>
-                 <property name="text">
-                  <string>PROBE</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -693,8 +625,47 @@
                  </property>
                 </widget>
                </item>
-               <item row="11" column="1">
-                <widget class="QLineEdit" name="input_xy_clearance">
+               <item row="6" column="0">
+                <widget class="QLabel" name="lab_ball_diam">
+                 <property name="text">
+                  <string>DIAMETER</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="margin">
+                  <number>4</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="lab_length">
+                 <property name="text">
+                  <string>LENGTH</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="margin">
+                  <number>4</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="14" column="0">
+                <widget class="QLabel" name="lab_max_travel">
+                 <property name="text">
+                  <string>TRAVEL</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="margin">
+                  <number>4</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="1">
+                <widget class="QLineEdit" name="input_probe_vel">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                    <horstretch>0</horstretch>
@@ -703,7 +674,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -722,7 +693,7 @@
                   <cursorShape>IBeamCursor</cursorShape>
                  </property>
                  <property name="toolTip">
-                  <string>Distance to move before starting search</string>
+                  <string>Probe velocity</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -732,9 +703,6 @@
                  </property>
                  <property name="frame">
                   <bool>true</bool>
-                 </property>
-                 <property name="cursorPosition">
-                  <number>0</number>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -751,7 +719,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -786,32 +754,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="10" column="0">
-                <widget class="QLabel" name="lab_probe_vel">
-                 <property name="text">
-                  <string>PROBE</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="margin">
-                  <number>4</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="lab_ball_diam">
-                 <property name="text">
-                  <string>DIAMETER</string>
-                 </property>
-                 <property name="alignment">
-                  <set>Qt::AlignCenter</set>
-                 </property>
-                 <property name="margin">
-                  <number>4</number>
-                 </property>
-                </widget>
-               </item>
                <item row="8" column="1">
                 <widget class="QLineEdit" name="input_rapid_vel">
                  <property name="sizePolicy">
@@ -822,7 +764,7 @@
                  </property>
                  <property name="minimumSize">
                   <size>
-                   <width>80</width>
+                   <width>70</width>
                    <height>24</height>
                   </size>
                  </property>
@@ -857,10 +799,118 @@
                  </property>
                 </widget>
                </item>
-               <item row="11" column="0">
-                <widget class="QLabel" name="lab_xy">
+               <item row="20" column="1">
+                <widget class="QLineEdit" name="input_tool_block_height">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>70</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                  </font>
+                 </property>
+                 <property name="cursor">
+                  <cursorShape>IBeamCursor</cursorShape>
+                 </property>
+                 <property name="toolTip">
+                  <string>Tool block height</string>
+                 </property>
                  <property name="text">
-                  <string>XY</string>
+                  <string/>
+                 </property>
+                 <property name="maxLength">
+                  <number>7</number>
+                 </property>
+                 <property name="frame">
+                  <bool>true</bool>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="22" column="0">
+                <widget class="QLabel" name="lab_probe">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>10</pointsize>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="text">
+                  <string>PROBE</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="21" column="1">
+                <widget class="StatusLabel" name="statuslabel_motiontype">
+                 <property name="minimumSize">
+                  <size>
+                   <width>70</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>80</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;200.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                 <property name="scaleText" stdset="0">
+                  <bool>false</bool>
+                 </property>
+                 <property name="motion_type_status" stdset="0">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="21" column="0">
+                <widget class="QLabel" name="label_tool_block_height_3">
+                 <property name="text">
+                  <string>MOTION</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -875,19 +925,6 @@
             </item>
            </layout>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item>
           <widget class="QStackedWidget" name="stackedWidget_probe_type">
@@ -907,12 +944,18 @@
             <enum>QFrame::WinPanel</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>3</number>
            </property>
            <widget class="QWidget" name="page_outside">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
              <property name="spacing">
-              <number>2</number>
+              <number>6</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -937,13 +980,13 @@
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>24</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
-                 <height>24</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="text">
@@ -953,6 +996,22 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>152</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QWidget" name="widget_outside_btns" native="true">
@@ -976,7 +1035,7 @@
                </property>
                <layout class="QGridLayout" name="gridLayout_3">
                 <property name="leftMargin">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <property name="topMargin">
                  <number>0</number>
@@ -990,7 +1049,265 @@
                 <property name="spacing">
                  <number>2</number>
                 </property>
-                <item row="1" column="1">
+                <item row="2" column="0">
+                 <spacer name="horizontalSpacer_2">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Expanding</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="3" column="3">
+                 <widget class="PushButton" name="pbtn_outside_xmyp">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="baseSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Outside Edges, Finish At Corner</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/X-Y+.png</normaloff>../images/probe_icons/X-Y+.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_outside_xmyp</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">outside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="PushButton" name="pbtn_outside_yp">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Outside Y Edge, Positive Direction, Finish At Edge</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/Y+.png</normaloff>../images/probe_icons/Y+.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_yp</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">outside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="2" column="3">
+                 <widget class="PushButton" name="pbtn_outside_xm">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Outside X Edge, Negative Direction, Finish At Edge</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/X-.png</normaloff>../images/probe_icons/X-.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_xm</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">outside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="PushButton" name="pbtn_outside_ym">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Outside Y Edge, Negative Direction, Finish At Edge</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/Y-.png</normaloff>../images/probe_icons/Y-.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_ym</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">outside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="2" column="2">
                  <widget class="PushButton" name="pbtn_outside_center">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1006,8 +1323,14 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="font">
@@ -1027,8 +1350,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -1049,218 +1372,6 @@
                  </widget>
                 </item>
                 <item row="2" column="1">
-                 <widget class="PushButton" name="pbtn_outside_yp">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Outside Y Edge, Positive Direction, Finish At Edge</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/Y+.png</normaloff>../images/probe_icons/Y+.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_yp</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">outside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="PushButton" name="pbtn_outside_xpyp">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Outside Edges, Finish At Corner</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/X+Y+.png</normaloff>../images/probe_icons/X+Y+.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_outside_xpyp</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">outside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="PushButton" name="pbtn_outside_xm">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Outside X Edge, Negative Direction, Finish At Edge</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/X-.png</normaloff>../images/probe_icons/X-.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_xm</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">outside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="PushButton" name="pbtn_outside_xmyp">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Outside Edges, Finish At Corner</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/X-Y+.png</normaloff>../images/probe_icons/X-Y+.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_outside_xmyp</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">outside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="1" column="0">
                  <widget class="PushButton" name="pbtn_outside_xp">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1276,8 +1387,14 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -1292,8 +1409,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -1313,60 +1430,7 @@
                   </attribute>
                  </widget>
                 </item>
-                <item row="0" column="1">
-                 <widget class="PushButton" name="pbtn_outside_ym">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Outside Y Edge, Negative Direction, Finish At Edge</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/Y-.png</normaloff>../images/probe_icons/Y-.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_ym</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">outside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="0" column="2">
+                <item row="1" column="3">
                  <widget class="PushButton" name="pbtn_outside_xmym">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1382,8 +1446,14 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -1398,8 +1468,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -1419,7 +1489,7 @@
                   </attribute>
                  </widget>
                 </item>
-                <item row="0" column="0">
+                <item row="1" column="1">
                  <widget class="PushButton" name="pbtn_outside_xpym">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1435,8 +1505,14 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -1451,8 +1527,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -1472,15 +1548,106 @@
                   </attribute>
                  </widget>
                 </item>
+                <item row="3" column="1">
+                 <widget class="PushButton" name="pbtn_outside_xpyp">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="sizeIncrement">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Outside Edges, Finish At Corner</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/X+Y+.png</normaloff>../images/probe_icons/X+Y+.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_outside_xpyp</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">outside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="2" column="4">
+                 <spacer name="horizontalSpacer">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Expanding</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_6">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Preferred</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>152</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
            <widget class="QWidget" name="Page_inside">
             <layout class="QVBoxLayout" name="verticalLayout">
              <property name="spacing">
-              <number>2</number>
+              <number>6</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -1505,13 +1672,13 @@
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>24</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
-                 <height>24</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="text">
@@ -1521,6 +1688,22 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>138</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QWidget" name="widget_inside_btns" native="true">
@@ -1544,13 +1727,13 @@
                </property>
                <layout class="QGridLayout" name="gridLayout">
                 <property name="leftMargin">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <property name="topMargin">
                  <number>0</number>
                 </property>
                 <property name="rightMargin">
-                 <number>0</number>
+                 <number>1</number>
                 </property>
                 <property name="bottomMargin">
                  <number>0</number>
@@ -1558,166 +1741,7 @@
                 <property name="spacing">
                  <number>2</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="PushButton" name="pbtn_inside_xmyp">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Outside Edges, Finish At Corner</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/inX-Y+.png</normaloff>../images/probe_icons/inX-Y+.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_inside_xmyp</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">inside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="PushButton" name="pbtn_inside_yp">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Inside Y Edge, Positive Direction, Finish At Edge</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/inY+.png</normaloff>../images/probe_icons/inY+.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_yp</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">inside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="0" column="2">
-                 <widget class="PushButton" name="pbtn_inside_xpyp">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Outside Edges, Finish At Corner</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/inX+Y+.png</normaloff>../images/probe_icons/inX+Y+.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_inside_xpyp</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">inside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="1" column="0">
+                <item row="2" column="1">
                  <widget class="PushButton" name="pbtn_inside_xm">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1733,8 +1757,8 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -1749,8 +1773,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -1770,60 +1794,7 @@
                   </attribute>
                  </widget>
                 </item>
-                <item row="2" column="0">
-                 <widget class="PushButton" name="pbtn_inside_xmym">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Outside Edges, Finish At Corner</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/inX-Y-.png</normaloff>../images/probe_icons/inX-Y-.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_inside_xmym</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">inside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="2" column="2">
+                <item row="3" column="3">
                  <widget class="PushButton" name="pbtn_inside_xpym">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1839,8 +1810,8 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -1855,8 +1826,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -1876,65 +1847,7 @@
                   </attribute>
                  </widget>
                 </item>
-                <item row="1" column="1">
-                 <widget class="PushButton" name="pbtn_inside_xy_hole">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>8</pointsize>
-                   </font>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe All Inside Edges, Finish In Center</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/inHole.png</normaloff>../images/probe_icons/inHole.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_xy_hole</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">inside_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="1" column="2">
+                <item row="2" column="3">
                  <widget class="PushButton" name="pbtn_inside_xp">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1950,8 +1863,8 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -1966,8 +1879,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -1987,7 +1900,65 @@
                   </attribute>
                  </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="2" column="2">
+                 <widget class="PushButton" name="pbtn_inside_xy_hole">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe All Inside Edges, Finish In Center</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/inHole.png</normaloff>../images/probe_icons/inHole.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_xy_hole</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">inside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="3" column="2">
                  <widget class="PushButton" name="pbtn_inside_ym">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -2003,8 +1974,8 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -2019,8 +1990,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -2040,15 +2011,269 @@
                   </attribute>
                  </widget>
                 </item>
+                <item row="3" column="1">
+                 <widget class="PushButton" name="pbtn_inside_xmym">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Outside Edges, Finish At Corner</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/inX-Y-.png</normaloff>../images/probe_icons/inX-Y-.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_inside_xmym</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">inside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="PushButton" name="pbtn_inside_xmyp">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Outside Edges, Finish At Corner</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/inX-Y+.png</normaloff>../images/probe_icons/inX-Y+.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_inside_xmyp</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">inside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="PushButton" name="pbtn_inside_xpyp">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Outside Edges, Finish At Corner</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/inX+Y+.png</normaloff>../images/probe_icons/inX+Y+.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_inside_xpyp</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">inside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="PushButton" name="pbtn_inside_yp">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Inside Y Edge, Positive Direction, Finish At Edge</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/inY+.png</normaloff>../images/probe_icons/inY+.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_yp</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">inside_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>5</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="2" column="4">
+                 <spacer name="horizontalSpacer_4">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>5</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>138</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
            <widget class="QWidget" name="page_skew">
             <layout class="QVBoxLayout" name="verticalLayout_6">
              <property name="spacing">
-              <number>2</number>
+              <number>6</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -2073,13 +2298,13 @@
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>24</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
-                 <height>24</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="text">
@@ -2089,6 +2314,22 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_8">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QWidget" name="widget_skew" native="true">
@@ -2124,12 +2365,12 @@
                  <number>0</number>
                 </property>
                 <property name="spacing">
-                 <number>2</number>
+                 <number>4</number>
                 </property>
-                <item row="0" column="0">
-                 <widget class="PushButton" name="pbtn_skew_xp">
+                <item row="1" column="2">
+                 <widget class="PushButton" name="pbtn_skew_xm">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -2142,8 +2383,158 @@
                   </property>
                   <property name="maximumSize">
                    <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/angleX-.png</normaloff>../images/probe_icons/angleX-.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>80</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_angle_xm</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">skew_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="PushButton" name="pbtn_skew_yp">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
                     <width>60</width>
                     <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/angleY+.png</normaloff>../images/probe_icons/angleY+.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>80</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_angle_yp</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">skew_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="0" column="2">
+                 <widget class="PushButton" name="pbtn_skew_ym">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/angleY-.png</normaloff>../images/probe_icons/angleY-.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>80</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_angle_ym</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">skew_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="PushButton" name="pbtn_skew_xp">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>60</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="text">
@@ -2155,8 +2546,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>80</width>
+                    <height>80</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -2177,164 +2568,56 @@
                  </widget>
                 </item>
                 <item row="1" column="0">
-                 <widget class="PushButton" name="pbtn_skew_yp">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
+                 <spacer name="horizontalSpacer_5">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
                   </property>
-                  <property name="minimumSize">
+                  <property name="sizeHint" stdset="0">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>1</width>
+                    <height>20</height>
                    </size>
                   </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/angleY+.png</normaloff>../images/probe_icons/angleY+.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_angle_yp</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">skew_buttonGroup</string>
-                  </attribute>
-                 </widget>
+                 </spacer>
                 </item>
-                <item row="0" column="1">
-                 <widget class="PushButton" name="pbtn_skew_ym">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
+                <item row="1" column="3">
+                 <spacer name="horizontalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
                   </property>
-                  <property name="minimumSize">
+                  <property name="sizeHint" stdset="0">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>1</width>
+                    <height>20</height>
                    </size>
                   </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/angleY-.png</normaloff>../images/probe_icons/angleY-.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_angle_ym</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">skew_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="PushButton" name="pbtn_skew_xm">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/angleX-.png</normaloff>../images/probe_icons/angleX-.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_angle_xm</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">skew_buttonGroup</string>
-                  </attribute>
-                 </widget>
+                 </spacer>
                 </item>
                </layout>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Expanding</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
            <widget class="QWidget" name="page_length">
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <property name="spacing">
-              <number>2</number>
+              <number>6</number>
              </property>
              <property name="leftMargin">
               <number>0</number>
@@ -2353,13 +2636,13 @@
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>24</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
                  <width>16777215</width>
-                 <height>24</height>
+                 <height>30</height>
                 </size>
                </property>
                <property name="text">
@@ -2369,6 +2652,19 @@
                 <set>Qt::AlignCenter</set>
                </property>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_9">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>2</height>
+                </size>
+               </property>
+              </spacer>
              </item>
              <item>
               <widget class="QWidget" name="widget_skew_measure" native="true">
@@ -2401,65 +2697,12 @@
                  <number>0</number>
                 </property>
                 <property name="bottomMargin">
-                 <number>0</number>
+                 <number>2</number>
                 </property>
                 <property name="spacing">
-                 <number>0</number>
+                 <number>4</number>
                 </property>
-                <item row="2" column="0">
-                 <widget class="PushButton" name="pbtn_outside_length_x">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Measure Outside Length of X, Finish in Center</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/outside_xl.png</normaloff>../images/probe_icons/outside_xl.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_outside_length_x</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">length_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="3" column="0">
+                <item row="3" column="1">
                  <widget class="PushButton" name="pbtn_outside_length_y">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -2469,14 +2712,14 @@
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>92</width>
+                    <height>92</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -2491,8 +2734,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>80</width>
+                    <height>100</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -2512,113 +2755,7 @@
                   </attribute>
                  </widget>
                 </item>
-                <item row="3" column="1">
-                 <widget class="PushButton" name="pbtn_inside_length_y">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Measure Inside Length of Y, Finish in Center</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/inside_yl.png</normaloff>../images/probe_icons/inside_yl.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_inside_length_y</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">length_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="PushButton" name="pbtn_down">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="maximumSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="toolTip">
-                   <string>Probe Z down</string>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="icon">
-                   <iconset>
-                    <normaloff>../images/probe_icons/down.png</normaloff>../images/probe_icons/down.png</iconset>
-                  </property>
-                  <property name="iconSize">
-                   <size>
-                    <width>60</width>
-                    <height>60</height>
-                   </size>
-                  </property>
-                  <property name="checkable">
-                   <bool>false</bool>
-                  </property>
-                  <property name="checked">
-                   <bool>false</bool>
-                  </property>
-                  <property name="indicator_option" stdset="0">
-                   <bool>false</bool>
-                  </property>
-                  <property name="probe" stdset="0">
-                   <string>probe_down</string>
-                  </property>
-                  <attribute name="buttonGroup">
-                   <string notr="true">length_buttonGroup</string>
-                  </attribute>
-                 </widget>
-                </item>
-                <item row="4" column="1">
+                <item row="4" column="2">
                  <widget class="PushButton" name="pbtn_measure_diam">
                   <property name="enabled">
                    <bool>false</bool>
@@ -2631,14 +2768,14 @@
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>92</width>
+                    <height>92</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -2653,8 +2790,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>80</width>
+                    <height>100</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -2671,7 +2808,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="2" column="2">
                  <widget class="PushButton" name="pbtn_inside_length_x">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -2681,14 +2818,14 @@
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>92</width>
+                    <height>92</height>
                    </size>
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>120</width>
+                    <height>120</height>
                    </size>
                   </property>
                   <property name="toolTip">
@@ -2703,8 +2840,8 @@
                   </property>
                   <property name="iconSize">
                    <size>
-                    <width>60</width>
-                    <height>60</height>
+                    <width>80</width>
+                    <height>100</height>
                    </size>
                   </property>
                   <property name="checkable">
@@ -2724,25 +2861,216 @@
                   </attribute>
                  </widget>
                 </item>
+                <item row="4" column="1">
+                 <widget class="PushButton" name="pbtn_down">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>92</width>
+                    <height>92</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Probe Z down</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/down.png</normaloff>../images/probe_icons/down.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>80</width>
+                    <height>100</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_down</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">length_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="PushButton" name="pbtn_outside_length_x">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>92</width>
+                    <height>92</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Measure Outside Length of X, Finish in Center</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/outside_xl.png</normaloff>../images/probe_icons/outside_xl.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>80</width>
+                    <height>100</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_outside_length_x</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">length_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="PushButton" name="pbtn_inside_length_y">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>92</width>
+                    <height>92</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>120</width>
+                    <height>120</height>
+                   </size>
+                  </property>
+                  <property name="toolTip">
+                   <string>Measure Inside Length of Y, Finish in Center</string>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="icon">
+                   <iconset>
+                    <normaloff>../images/probe_icons/inside_yl.png</normaloff>../images/probe_icons/inside_yl.png</iconset>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>80</width>
+                    <height>100</height>
+                   </size>
+                  </property>
+                  <property name="checkable">
+                   <bool>false</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                  <property name="indicator_option" stdset="0">
+                   <bool>false</bool>
+                  </property>
+                  <property name="probe" stdset="0">
+                   <string>probe_inside_length_y</string>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">length_buttonGroup</string>
+                  </attribute>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <spacer name="horizontalSpacer_7">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="3" column="3">
+                 <spacer name="horizontalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Preferred</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>2</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item>
           <widget class="QWidget" name="widget_offsets" native="true">
@@ -2792,11 +3120,17 @@
                <property name="spacing">
                 <number>2</number>
                </property>
-               <item row="2" column="0">
-                <widget class="QWidget" name="widget_y_offset" native="true">
-                 <layout class="QHBoxLayout" name="horizontalLayout_32">
+               <item row="4" column="0">
+                <widget class="QWidget" name="widget_a_offset" native="true">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <layout class="QVBoxLayout" name="verticalLayout_12">
                   <property name="spacing">
-                   <number>4</number>
+                   <number>2</number>
                   </property>
                   <property name="leftMargin">
                    <number>0</number>
@@ -2808,29 +3142,10 @@
                    <number>0</number>
                   </property>
                   <property name="bottomMargin">
-                   <number>0</number>
+                   <number>12</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_y">
-                    <property name="minimumSize">
-                     <size>
-                      <width>20</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>Y</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                    <property name="margin">
-                     <number>2</number>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLineEdit" name="input_adj_y">
+                   <widget class="PushButton" name="pbtn_set_z_2">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                       <horstretch>0</horstretch>
@@ -2840,49 +3155,7 @@
                     <property name="minimumSize">
                      <size>
                       <width>70</width>
-                      <height>24</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>70</width>
-                      <height>24</height>
-                     </size>
-                    </property>
-                    <property name="font">
-                     <font>
-                      <pointsize>10</pointsize>
-                     </font>
-                    </property>
-                    <property name="cursor">
-                     <cursorShape>IBeamCursor</cursorShape>
-                    </property>
-                    <property name="text">
-                     <string/>
-                    </property>
-                    <property name="maxLength">
-                     <number>7</number>
-                    </property>
-                    <property name="frame">
-                     <bool>true</bool>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="PushButton" name="pbtn_set_y">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>50</width>
-                      <height>40</height>
+                      <height>34</height>
                      </size>
                     </property>
                     <property name="maximumSize">
@@ -2892,11 +3165,10 @@
                      </size>
                     </property>
                     <property name="toolTip">
-                     <string>Set Y axis to offset value</string>
+                     <string>Set Z axis to offset value</string>
                     </property>
                     <property name="text">
-                     <string>SET
-Y</string>
+                     <string>SET  A</string>
                     </property>
                     <property name="checkable">
                      <bool>false</bool>
@@ -2906,43 +3178,6 @@ Y</string>
                     </property>
                     <property name="indicator_option" stdset="0">
                      <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QWidget" name="widget_a_offset" native="true">
-                 <layout class="QHBoxLayout" name="horizontalLayout_34">
-                  <property name="spacing">
-                   <number>4</number>
-                  </property>
-                  <property name="leftMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="topMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="rightMargin">
-                   <number>0</number>
-                  </property>
-                  <property name="bottomMargin">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <widget class="QLabel" name="label_adjust_angle">
-                    <property name="minimumSize">
-                     <size>
-                      <width>20</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="text">
-                     <string>A</string>
-                    </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -2991,44 +3226,6 @@ Y</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="PushButton" name="pbtn_set_z_2">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>50</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>50</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="toolTip">
-                     <string>Set Z axis to offset value</string>
-                    </property>
-                    <property name="text">
-                     <string>SET
-A</string>
-                    </property>
-                    <property name="checkable">
-                     <bool>false</bool>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                    <property name="indicator_option" stdset="0">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </widget>
                </item>
@@ -3037,16 +3234,31 @@ A</string>
                  <property name="orientation">
                   <enum>Qt::Vertical</enum>
                  </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Expanding</enum>
+                 </property>
                  <property name="sizeHint" stdset="0">
                   <size>
                    <width>20</width>
-                   <height>40</height>
+                   <height>55</height>
                   </size>
                  </property>
                 </spacer>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_adjust">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>37</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>70</width>
+                   <height>60</height>
+                  </size>
+                 </property>
                  <property name="font">
                   <font>
                    <pointsize>10</pointsize>
@@ -3061,7 +3273,8 @@ A</string>
                   <enum>QFrame::Plain</enum>
                  </property>
                  <property name="text">
-                  <string>ADJ OFFSET</string>
+                  <string>ADJ
+ OFFSET</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -3071,11 +3284,11 @@ A</string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="0">
-                <widget class="QWidget" name="widget_z_offset" native="true">
-                 <layout class="QHBoxLayout" name="horizontalLayout_33">
+               <item row="2" column="0">
+                <widget class="QWidget" name="widget_y_offset" native="true">
+                 <layout class="QVBoxLayout" name="verticalLayout_9">
                   <property name="spacing">
-                   <number>4</number>
+                   <number>2</number>
                   </property>
                   <property name="leftMargin">
                    <number>0</number>
@@ -3087,24 +3300,142 @@ A</string>
                    <number>0</number>
                   </property>
                   <property name="bottomMargin">
-                   <number>0</number>
+                   <number>12</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_z">
+                   <widget class="PushButton" name="pbtn_set_y">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
-                      <width>20</width>
-                      <height>0</height>
+                      <width>70</width>
+                      <height>34</height>
                      </size>
                     </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>50</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="toolTip">
+                     <string>Set Y axis to offset value</string>
+                    </property>
                     <property name="text">
-                     <string>Z</string>
+                     <string>SET  Y</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>false</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <property name="indicator_option" stdset="0">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="input_adj_y">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>70</width>
+                      <height>24</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>70</width>
+                      <height>24</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                     </font>
+                    </property>
+                    <property name="cursor">
+                     <cursorShape>IBeamCursor</cursorShape>
+                    </property>
+                    <property name="text">
+                     <string/>
+                    </property>
+                    <property name="maxLength">
+                     <number>7</number>
+                    </property>
+                    <property name="frame">
+                     <bool>true</bool>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
                     </property>
-                    <property name="margin">
-                     <number>2</number>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QWidget" name="widget_z_offset" native="true">
+                 <layout class="QVBoxLayout" name="verticalLayout_11">
+                  <property name="spacing">
+                   <number>2</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="topMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="rightMargin">
+                   <number>0</number>
+                  </property>
+                  <property name="bottomMargin">
+                   <number>12</number>
+                  </property>
+                  <item>
+                   <widget class="PushButton" name="pbtn_set_z">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>70</width>
+                      <height>34</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>50</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="toolTip">
+                     <string>Set Z axis to offset value</string>
+                    </property>
+                    <property name="text">
+                     <string>SET  Z</string>
+                    </property>
+                    <property name="checkable">
+                     <bool>false</bool>
+                    </property>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <property name="indicator_option" stdset="0">
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
@@ -3153,52 +3484,14 @@ A</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="PushButton" name="pbtn_set_z">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>50</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>50</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="toolTip">
-                     <string>Set Z axis to offset value</string>
-                    </property>
-                    <property name="text">
-                     <string>SET
-Z</string>
-                    </property>
-                    <property name="checkable">
-                     <bool>false</bool>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                    <property name="indicator_option" stdset="0">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QWidget" name="widget_x_offset" native="true">
-                 <layout class="QHBoxLayout" name="horizontalLayout_31">
+                 <layout class="QVBoxLayout" name="verticalLayout_5">
                   <property name="spacing">
-                   <number>4</number>
+                   <number>2</number>
                   </property>
                   <property name="leftMargin">
                    <number>0</number>
@@ -3210,24 +3503,42 @@ Z</string>
                    <number>0</number>
                   </property>
                   <property name="bottomMargin">
-                   <number>0</number>
+                   <number>12</number>
                   </property>
                   <item>
-                   <widget class="QLabel" name="label_x">
+                   <widget class="PushButton" name="pbtn_set_x">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
                     <property name="minimumSize">
                      <size>
-                      <width>20</width>
-                      <height>0</height>
+                      <width>70</width>
+                      <height>34</height>
                      </size>
                     </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>50</width>
+                      <height>40</height>
+                     </size>
+                    </property>
+                    <property name="toolTip">
+                     <string>Set X axis to offset value</string>
+                    </property>
                     <property name="text">
-                     <string>X</string>
+                     <string>SET  X</string>
                     </property>
-                    <property name="alignment">
-                     <set>Qt::AlignCenter</set>
+                    <property name="checkable">
+                     <bool>false</bool>
                     </property>
-                    <property name="margin">
-                     <number>2</number>
+                    <property name="checked">
+                     <bool>false</bool>
+                    </property>
+                    <property name="indicator_option" stdset="0">
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>
@@ -3279,44 +3590,6 @@ Z</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="PushButton" name="pbtn_set_x">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>50</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>50</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                    <property name="toolTip">
-                     <string>Set X axis to offset value</string>
-                    </property>
-                    <property name="text">
-                     <string>SET
-X</string>
-                    </property>
-                    <property name="checkable">
-                     <bool>false</bool>
-                    </property>
-                    <property name="checked">
-                     <bool>false</bool>
-                    </property>
-                    <property name="indicator_option" stdset="0">
-                     <bool>false</bool>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </widget>
                </item>
@@ -3327,20 +3600,13 @@ X</string>
           </widget>
          </item>
          <item>
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
           <widget class="QWidget" name="widget_results" native="true">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>120</width>
@@ -3366,7 +3632,7 @@ X</string>
             <item>
              <widget class="QLabel" name="lbl_results">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -3430,7 +3696,7 @@ X</string>
                <item>
                 <widget class="QLabel" name="lab_xn">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -3444,7 +3710,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -3461,7 +3733,7 @@ X</string>
                   <bool>true</bool>
                  </property>
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -3475,7 +3747,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>16777215</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -3533,6 +3811,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_xc">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -3542,7 +3826,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -3556,7 +3846,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_xc">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -3570,7 +3860,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -3628,6 +3924,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_xp">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -3637,7 +3939,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -3651,7 +3959,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_xp">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -3665,7 +3973,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -3723,6 +4037,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_lx">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -3732,7 +4052,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -3746,7 +4072,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_lx">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -3760,7 +4086,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -3818,6 +4150,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_yn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -3827,7 +4165,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -3841,7 +4185,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_ym">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -3849,13 +4193,19 @@ X</string>
                  <property name="minimumSize">
                   <size>
                    <width>70</width>
-                   <height>25</height>
+                   <height>24</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -3913,6 +4263,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_yc">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -3922,7 +4278,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -3936,7 +4298,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_yc">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -3944,13 +4306,19 @@ X</string>
                  <property name="minimumSize">
                   <size>
                    <width>70</width>
-                   <height>25</height>
+                   <height>24</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -3996,6 +4364,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_yp">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -4005,7 +4379,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -4019,7 +4399,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_yp">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -4027,13 +4407,19 @@ X</string>
                  <property name="minimumSize">
                   <size>
                    <width>70</width>
-                   <height>25</height>
+                   <height>24</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -4079,6 +4465,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_ly">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -4088,7 +4480,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -4102,7 +4500,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_ly">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -4110,13 +4508,19 @@ X</string>
                  <property name="minimumSize">
                   <size>
                    <width>70</width>
-                   <height>25</height>
+                   <height>24</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -4162,6 +4566,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_z">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -4171,7 +4581,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -4185,7 +4601,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_z">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -4193,13 +4609,19 @@ X</string>
                  <property name="minimumSize">
                   <size>
                    <width>70</width>
-                   <height>25</height>
+                   <height>24</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -4245,6 +4667,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_diam">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -4254,7 +4682,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -4268,7 +4702,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_d">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -4276,13 +4710,19 @@ X</string>
                  <property name="minimumSize">
                   <size>
                    <width>70</width>
-                   <height>25</height>
+                   <height>24</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -4328,6 +4768,12 @@ X</string>
                </property>
                <item>
                 <widget class="QLabel" name="lab_ang">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
                  <property name="minimumSize">
                   <size>
                    <width>0</width>
@@ -4337,7 +4783,13 @@ X</string>
                  <property name="maximumSize">
                   <size>
                    <width>16777215</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="text">
@@ -4351,7 +4803,7 @@ X</string>
                <item>
                 <widget class="QLineEdit" name="status_a">
                  <property name="sizePolicy">
-                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
@@ -4359,13 +4811,19 @@ X</string>
                  <property name="minimumSize">
                   <size>
                    <width>70</width>
-                   <height>25</height>
+                   <height>24</height>
                   </size>
                  </property>
                  <property name="maximumSize">
                   <size>
                    <width>70</width>
-                   <height>24</height>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="sizeIncrement">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
                   </size>
                  </property>
                  <property name="maxLength">
@@ -4429,6 +4887,12 @@ X</string>
          </property>
          <item>
           <widget class="QWidget" name="widget_set_angle" native="true">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>80</height>
+            </size>
+           </property>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <property name="spacing">
              <number>4</number>
@@ -4437,26 +4901,26 @@ X</string>
              <number>0</number>
             </property>
             <property name="topMargin">
-             <number>0</number>
+             <number>2</number>
             </property>
             <property name="rightMargin">
              <number>0</number>
             </property>
             <property name="bottomMargin">
-             <number>0</number>
+             <number>1</number>
             </property>
             <item>
              <widget class="QPushButton" name="pushButton">
               <property name="minimumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>70</width>
+                <height>46</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>100</width>
+                <height>60</height>
                </size>
               </property>
               <property name="text">
@@ -4474,14 +4938,14 @@ X</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>70</width>
+                <height>46</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>100</width>
+                <height>60</height>
                </size>
               </property>
               <property name="toolTip">
@@ -4515,14 +4979,14 @@ ANGLE</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>70</width>
+                <height>46</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>100</width>
+                <height>60</height>
                </size>
               </property>
               <property name="font">
@@ -4569,6 +5033,12 @@ MEASURE</string>
               <property name="indicator_size" stdset="0">
                <double>0.200000000000000</double>
               </property>
+              <property name="right_edge_offset" stdset="0">
+               <number>1</number>
+              </property>
+              <property name="top_edge_offset" stdset="0">
+               <number>0</number>
+              </property>
               <property name="corner_radius" stdset="0">
                <double>0.000000000000000</double>
               </property>
@@ -4587,14 +5057,14 @@ MEASURE</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>70</width>
+                <height>46</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>100</width>
+                <height>60</height>
                </size>
               </property>
               <property name="toolTip">
@@ -4629,6 +5099,9 @@ SKEW</string>
               <property name="indicator_size" stdset="0">
                <double>0.200000000000000</double>
               </property>
+              <property name="right_edge_offset" stdset="0">
+               <number>1</number>
+              </property>
               <property name="corner_radius" stdset="0">
                <double>0.000000000000000</double>
               </property>
@@ -4647,14 +5120,14 @@ SKEW</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>70</width>
+                <height>46</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>100</width>
+                <height>60</height>
                </size>
               </property>
               <property name="toolTip">
@@ -4695,11 +5168,20 @@ ZERO</string>
               <property name="circle_diameter" stdset="0">
                <number>10</number>
               </property>
+              <property name="right_edge_offset" stdset="0">
+               <number>1</number>
+              </property>
+              <property name="top_edge_offset" stdset="0">
+               <number>0</number>
+              </property>
               <property name="corner_radius" stdset="0">
                <double>0.000000000000000</double>
               </property>
               <property name="height_fraction" stdset="0">
                <double>0.100000000000000</double>
+              </property>
+              <property name="width_fraction" stdset="0">
+               <double>0.900000000000000</double>
               </property>
              </widget>
             </item>
@@ -4713,14 +5195,14 @@ ZERO</string>
               </property>
               <property name="minimumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>70</width>
+                <height>46</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>80</width>
-                <height>50</height>
+                <width>100</width>
+                <height>60</height>
                </size>
               </property>
               <property name="text">
@@ -4755,6 +5237,11 @@ ZERO</string>
    <class>LED</class>
    <extends>QWidget</extends>
    <header>qtvcp.widgets.led_widget</header>
+  </customwidget>
+  <customwidget>
+   <class>StatusLabel</class>
+   <extends>QLabel</extends>
+   <header>qtvcp.widgets.status_label</header>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -4841,7 +5328,12 @@ ZERO</string>
   <slot>input_next()</slot>
  </slots>
  <buttongroups>
-  <buttongroup name="inside_buttonGroup">
+  <buttongroup name="outside_buttonGroup">
+   <property name="exclusive">
+    <bool>false</bool>
+   </property>
+  </buttongroup>
+  <buttongroup name="length_buttonGroup">
    <property name="exclusive">
     <bool>false</bool>
    </property>
@@ -4851,12 +5343,7 @@ ZERO</string>
     <bool>false</bool>
    </property>
   </buttongroup>
-  <buttongroup name="outside_buttonGroup">
-   <property name="exclusive">
-    <bool>false</bool>
-   </property>
-  </buttongroup>
-  <buttongroup name="length_buttonGroup">
+  <buttongroup name="inside_buttonGroup">
    <property name="exclusive">
     <bool>false</bool>
    </property>

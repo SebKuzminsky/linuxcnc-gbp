@@ -298,6 +298,24 @@ class ToolBarActions():
             self._machineModeActiongroup.addAction(widget)
             self._machineModeActiongroup.setExclusive(True)
             function = (self.actOnAutoMode)
+        elif action == 'joint_mode':
+            STATUS.connect('state-off', lambda w: widget.setEnabled(False))
+            STATUS.connect('state-estop', lambda w: widget.setEnabled(False))
+            STATUS.connect('interp-idle', lambda w: widget.setEnabled(STATUS.machine_is_on()))
+            STATUS.connect('interp-run', lambda w: widget.setEnabled(False))
+            STATUS.connect('mode-auto', lambda w: widget.setChecked(True))
+            STATUS.connect('motion-mode-changed', lambda w,data: \
+                widget.setChecked(STATUS.is_joint_mode()))
+            function = (self.actOnJointMode)
+        elif action == 'axis_mode':
+            STATUS.connect('state-off', lambda w: widget.setEnabled(False))
+            STATUS.connect('state-estop', lambda w: widget.setEnabled(False))
+            STATUS.connect('interp-idle', lambda w: widget.setEnabled(STATUS.machine_is_on()))
+            STATUS.connect('interp-run', lambda w: widget.setEnabled(False))
+            STATUS.connect('mode-auto', lambda w: widget.setChecked(True))
+            STATUS.connect('motion-mode-changed', lambda w,data: \
+                widget.setChecked(STATUS.is_world_mode()))
+            function = (self.actOnAxisMode)
         elif not extFunction:
             LOG.warning('Unrecogzied action command: {}'.format(action))
 
@@ -394,12 +412,28 @@ class ToolBarActions():
         STATUS.emit('reload-display')
 
     def actOnProperties(self, widget, state=None):
+        # substitute nice looking text:
+        property_names = {
+            'name': "Name:", 'size': "Size:",
+    '       tools': "Tool order:", 'g0': "Rapid distance:",
+            'g1': "Feed distance:", 'g': "Total distance:",
+            'run': "Run time:",'machine_unit_sys':"Machine Unit System:",
+            'x': "X bounds:",'x_zero_rxy':'X @ Zero Rotation:',
+            'y': "Y bounds:",'y_zero_rxy':'Y @ Zero Rotation:',
+            'z': "Z bounds:",'z_zero_rxy':'Z @ Zero Rotation:',
+            'a': "A bounds:", 'b': "B bounds:",
+            'c': "C bounds:",'toollist':'Tool Change List:',
+            'gcode_units':"Gcode Units:"
+        }
+
         mess = ''
         if self.gcode_properties:
             for i in self.gcode_properties:
-                mess += '<b>%s</b>: %s<br>' % (i, self.gcode_properties[i])
-        else:
-            mess = 'No properties to display'
+                mess += '<span style=" font-size:16pt; font-weight:600; color:black;">%s </span>\
+<span style=" font-size:12pt; font-weight:600; color:#aa0000;">%s</span>\
+<br>'% (property_names.get(i), self.gcode_properties[i])
+
+        # pop a dialog of the properties
         msg = QtWidgets.QMessageBox()
         msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.setText(mess)
@@ -502,8 +536,16 @@ class ToolBarActions():
             ACTION.SHUT_SYSTEM_DOWN_PROMPT()
 
     def actOnAbout(self, widget, state=None):
-        msg = QtWidgets.QMessageBox()
+        # there should be a default dialog loaded from screenoptions
+        try:
+            info = ACTION.GET_ABOUT_INFO()
+            WIDGETS.aboutDialog_.showdialog()
+            return
+        except:
+            pass
 
+        # ok we will build one then
+        msg = QtWidgets.QMessageBox()
         mess = ''
         path = os.path.join(CONFIGDIR, 'README')
         if os.path.exists(path):
@@ -513,8 +555,8 @@ class ToolBarActions():
         else:
             msg.setWindowTitle("About")
             mess = 'This is a QtVCP based screen for Linuxcnc'
-        msg.setText(mess)
 
+        msg.setText(mess)
         msg.setIcon(QtWidgets.QMessageBox.Information)
         msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msg.show()
@@ -599,6 +641,12 @@ class ToolBarActions():
 
     def actOnAutoMode(self, widget, state=None):
         ACTION.SET_AUTO_MODE()
+
+    def actOnJointMode(self, widget, state=None):
+        ACTION.SET_MOTION_TELEOP(0)
+
+    def actOnAxisMode(self, widget, state=None):
+        ACTION.SET_MOTION_TELEOP(1)
 
     #########################################################
     # Sub menus

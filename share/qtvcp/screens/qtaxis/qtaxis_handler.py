@@ -97,6 +97,11 @@ class HandlerClass:
         KEYBIND.add_call('Key_ParenRight','on_keycall_spindleoverride',100)
         KEYBIND.add_call('Key_Underscore','on_keycall_spindleoverride',110)
 
+        KEYBIND.add_call('Key_Period','on_keycall_jograte',1)
+        KEYBIND.add_call('Key_Comma','on_keycall_jograte',0)
+        KEYBIND.add_call('Key_Greater','on_keycall_angular_jograte',1)
+        KEYBIND.add_call('Key_Less','on_keycall_angular_jograte',0)
+
         TOOLBAR.configure_submenu(self.w.menuRecent, 'recent_submenu')
         TOOLBAR.configure_submenu(self.w.menuHoming, 'home_submenu')
         TOOLBAR.configure_submenu(self.w.menuUnhome, 'unhome_submenu')
@@ -150,6 +155,8 @@ class HandlerClass:
         TOOLBAR.configure_action(self.w.actionVersaProbe,'', self.launch_versa_probe)
         TOOLBAR.configure_action(self.w.actionShowMessages, 'message_recall')
         TOOLBAR.configure_action(self.w.actionClearMessages, 'message_close')
+        TOOLBAR.configure_action(self.w.actionJointMode, 'joint_mode')
+        TOOLBAR.configure_action(self.w.actionAxisMode, 'axis_mode')
         self.w.actionQuickRef.triggered.connect(self.quick_reference)
         self.w.actionMachineLog.triggered.connect(self.launch_log_dialog)
         if not INFO.HOME_ALL_FLAG:
@@ -157,10 +164,12 @@ class HandlerClass:
             self.w.actionButton_home.set_home_select(True)
         self.make_corner_widgets()
         self.make_progressbar()
+        self.adjust_controls()
 
         if INFO.MACHINE_IS_LATHE:
             self.w.dro_label_g5x_y.setVisible(False)
             self.w.dro_label_g53_y.setVisible(False)
+
         self.restoreSettings()
         #QtWidgets.QApplication.instance().event_filter.focusIn.connect(self.focusInChanged)
 
@@ -404,6 +413,15 @@ class HandlerClass:
             self.w.gcode_editor.setMaximumHeight(500)
             self.w.frame.show()
             self.w.rightTab.show()
+
+    def adjust_controls(self):
+        if INFO.HAS_ANGULAR_JOINT:
+            self.w.widget_angular_jog.show()
+        else:
+            self.w.widget_angular_jog.hide()
+        print('trivial',INFO.IS_TRIVIAL_MACHINE)
+        if INFO.IS_TRIVIAL_MACHINE:
+            self.w.menuControlMode.menuAction().setVisible(False)
 
     def quick_reference(self):
         help1 = [
@@ -680,6 +698,20 @@ class HandlerClass:
     def on_keycall_spindleoverride(self,event,state,shift,cntrl,value):
         if state:
             ACTION.SET_SPINDLE_RATE(value)
+
+    def on_keycall_jograte(self,event,state,shift,cntrl,value):
+        if state:
+            if value == 1:
+                ACTION.SET_JOG_RATE_FASTER()
+            else:
+                ACTION.SET_JOG_RATE_SLOWER()
+
+    def on_keycall_angular_jograte(self,event,state,shift,cntrl,value):
+        if state:
+            if value == 1:
+                ACTION.SET_JOG_RATE_ANGULAR_FASTER()
+            else:
+                ACTION.SET_JOG_RATE_ANGULAR_SLOWER()
 
     def on_keycall_dollar(self,event,state,shift,cntrl):
         if state:

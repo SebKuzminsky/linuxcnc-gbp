@@ -63,6 +63,13 @@ TRIVIAL_BUILD=no
 endif
 endif
 
+# Used to enable x86 only HAL parts
+ifeq ($(shell uname -m),i686)
+X86ARCH = true
+endif
+ifeq ($(shell uname -m),x86_64)
+X86ARCH = true
+endif
 
 # Beautify output
 # ---------------------------------------------------------------------------
@@ -309,7 +316,7 @@ config.h: config.h.in config.status
 
 INFILES = \
         ../scripts/linuxcnc ../scripts/realtime \
-	../scripts/linuxcnc_info \
+	../scripts/linuxcnc_info ../scripts/setup_designer \
 	../scripts/haltcl ../scripts/rtapi.conf Makefile.inc Makefile.modinc \
 	../tcl/linuxcnc.tcl ../scripts/halrun ../scripts/rip-environment \
 	../scripts/linuxcncmkdesktop \
@@ -364,6 +371,7 @@ SRCHEADERS := \
     emc/motion/simple_tp.h \
     emc/motion/state_tag.h \
     emc/motion/usrmotintf.h \
+    emc/motion/axis.h \
     emc/nml_intf/canon.hh \
     emc/nml_intf/canon_position.hh \
     emc/nml_intf/emctool.h \
@@ -708,6 +716,7 @@ install-kernel-indep: install-dirs
 	$(EXE) $(filter-out ../bin/rtapi_app ../bin/linuxcnc_module_helper ../bin/pci_write ../bin/pci_read ../bin/test_rtapi_vsnprintf, $(filter ../bin/%,$(TARGETS))) $(DESTDIR)$(bindir)
 	$(EXE) ../scripts/linuxcnc $(DESTDIR)$(bindir)
 	$(EXE) ../scripts/linuxcnc_info $(DESTDIR)$(bindir)
+	$(EXE) ../scripts/setup_designer $(DESTDIR)$(bindir)
 	$(EXE) ../scripts/linuxcnc_var $(DESTDIR)$(bindir)
 	$(EXE) ../scripts/monitor-xhc-hb04 $(DESTDIR)$(bindir)
 	$(EXE) ../scripts/latency-test $(DESTDIR)$(bindir)
@@ -722,8 +731,9 @@ install-kernel-indep: install-dirs
 	$(EXE) ../bin/update_ini $(DESTDIR)$(bindir)
 	$(EXE) ../scripts/halreport $(DESTDIR)$(bindir)
 	$(FILE) $(filter ../lib/%.a ../lib/%.so.0,$(TARGETS)) $(DESTDIR)$(libdir)
-	cp --no-dereference $(filter ../lib/%.so, $(TARGETS)) $(DESTDIR)$(libdir)
+	cp --no-dereference $(wildcard ../lib/*.so) $(DESTDIR)$(libdir)
 	-ldconfig $(DESTDIR)$(libdir)
+	$(FILE) ../lib/linuxcnc/canterp.so $(DESTDIR)$(libdir)/linuxcnc
 	$(FILE) $(HEADERS) $(DESTDIR)$(includedir)/linuxcnc/
 	$(TREE) $(NC_FILES) $(DESTDIR)$(ncfilesdir)
 	$(EXE) ../nc_files/M101 $(DESTDIR)$(ncfilesdir)
@@ -801,6 +811,7 @@ install-python: install-dirs
 	$(EXE) ../bin/pyui $(DESTDIR)$(bindir)
 	$(EXE) ../bin/hal_input $(DESTDIR)$(bindir)
 	$(EXE) ../bin/mitsub_vfd $(DESTDIR)$(bindir)
+	$(EXE) ../bin/mqtt-publisher $(DESTDIR)$(bindir)
 	$(EXE) ../bin/z_level_compensation $(DESTDIR)$(bindir)
 	$(EXE) ../bin/pmx485 $(DESTDIR)$(bindir)
 	$(EXE) ../bin/sim-torch $(DESTDIR)$(bindir)
@@ -949,6 +960,10 @@ sampler-objs := hal/components/sampler.o $(MATHSTUB)
 # Subdirectory: hal/drivers
 obj-$(CONFIG_HAL_PARPORT) += hal_parport.o
 hal_parport-objs := hal/drivers/hal_parport.o $(MATHSTUB)
+ifeq ($(X86ARCH),true)
+obj-$(CONFIG_HAL_SPEAKER) += hal_speaker.o
+hal_speaker-objs := hal/drivers/hal_speaker.o $(MATHSTUB)
+endif
 ifneq ($(BUILD_SYS),uspace)
 obj-$(CONFIG_PCI_8255) += pci_8255.o
 pci_8255-objs := hal/drivers/pci_8255.o
@@ -964,8 +979,6 @@ obj-$(CONFIG_HAL_MOTENC) += hal_motenc.o
 hal_motenc-objs := hal/drivers/hal_motenc.o $(MATHSTUB)
 obj-$(CONFIG_HAL_AX521H) += hal_ax5214h.o
 hal_ax5214h-objs := hal/drivers/hal_ax5214h.o $(MATHSTUB)
-obj-$(CONFIG_HAL_SPEAKER) += hal_speaker.o
-hal_speaker-objs := hal/drivers/hal_speaker.o $(MATHSTUB)
 obj-$(CONFIG_HAL_SKELETON) += hal_skeleton.o
 hal_skeleton-objs := hal/drivers/hal_skeleton.o $(MATHSTUB)
 obj-$(CONFIG_OPTO_AC5) += opto_ac5.o
@@ -1216,6 +1229,7 @@ modules: $(patsubst %.o,../rtlib/%.so,$(obj-m))
 	$(Q)objcopy -j .rtapi_export -O binary objects/$*.tmp objects/$*.sym
 	$(Q)(echo '{ global : '; tr -s '\0' < objects/$*.sym | xargs -r0 printf '%s;\n' | grep .; echo 'local : * ; };') > objects/$*.ver
 	$(Q)$(CC) -shared -Bsymbolic $(LDFLAGS) -Wl,--version-script,objects/$*.ver -o $@ $^ -lm
+	$(Q)chmod -x $@
 
 RTFLAGS += -fno-strict-aliasing -fwrapv
 
@@ -1284,7 +1298,9 @@ endif
 ../rtlib/hal_ax5214h$(MODULE_EXT): $(addprefix objects/rt,$(hal_ax5214h-objs))
 ../rtlib/hal_ppmc$(MODULE_EXT): $(addprefix objects/rt,$(hal_ppmc-objs))
 ../rtlib/hal_skeleton$(MODULE_EXT): $(addprefix objects/rt,$(hal_skeleton-objs))
+ifeq ($(X86ARCH),true)
 ../rtlib/hal_speaker$(MODULE_EXT): $(addprefix objects/rt,$(hal_speaker-objs))
+endif
 ../rtlib/opto_ac5$(MODULE_EXT): $(addprefix objects/rt,$(opto_ac5-objs))
 ../rtlib/scope_rt$(MODULE_EXT): $(addprefix objects/rt,$(scope_rt-objs))
 ../rtlib/hal_lib$(MODULE_EXT): $(addprefix objects/rt,$(hal_lib-objs))

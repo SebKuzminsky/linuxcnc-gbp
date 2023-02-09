@@ -18,15 +18,16 @@
 import sys
 import os
 import json
-from PyQt5.QtCore import QProcess
+from PyQt5.QtCore import QProcess, QRegExp
 from PyQt5 import QtGui, QtWidgets, uic
 from qtvcp.widgets.widget_baseclass import _HalWidgetBase
-from qtvcp.core import Action, Status, Info
+from qtvcp.core import Action, Status, Info, Path
 from qtvcp import logger
 
 ACTION = Action()
 STATUS = Status()
 INFO = Info()
+PATH = Path()
 LOG = logger.getLogger(__name__)
 # Force the log level for this module
 #LOG.setLevel(logger.DEBUG) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
@@ -40,18 +41,18 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
         super(BasicProbe, self).__init__(parent)
         self.proc = None
         if INFO.MACHINE_IS_METRIC:
-            self.valid = QtGui.QDoubleValidator(-999.999, 999.999, 3)
+            self.valid = QtGui.QRegExpValidator(QRegExp('^[+-]?((\d+(\.\d{,4})?)|(\.\d{,4}))$'))
         else:
-            self.valid = QtGui.QDoubleValidator(-999.9999, 999.9999, 4)
+            self.valid = QtGui.QRegExpValidator(QRegExp('^[+-]?((\d+(\.\d{,3})?)|(\.\d{,3}))$'))
         self.setMinimumSize(600, 420)
         # load the widgets ui file
-        self.filename = os.path.join(INFO.LIB_PATH, 'widgets_ui', 'basic_probe.ui')
+        self.filename = PATH.find_widget_path('basic_probe.ui')
         try:
             self.instance = uic.loadUi(self.filename, self)
         except AttributeError as e:
             LOG.critical(e)
         # load the probe help file
-        self.filename = os.path.join(INFO.LIB_PATH, 'widgets_ui', 'basic_probe_help.ui')
+        self.filename = PATH.find_widget_path('basic_probe_help.ui')
         try:
             self.dialog = uic.loadUi(self.filename)
         except AttributeError as e:
@@ -102,6 +103,7 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
         self.cmb_probe_select.addItems(self.probe_list)
         self.stackedWidget_probe_buttons.setCurrentIndex(0)
         # define validators for all lineEdit widgets
+        self.lineEdit_probe_tool.setValidator(QtGui.QRegExpValidator(QRegExp('[0-9]{0,5}')))
         for i in self.parm_list:
             self['lineEdit_' + i].setValidator(self.valid)
 
@@ -112,6 +114,9 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
         STATUS.connect('state_estop', lambda w: self.setEnabled(False))
         STATUS.connect('interp-idle', lambda w: self.setEnabled(homed_on_status()))
         STATUS.connect('all-homed', lambda w: self.setEnabled(True))
+
+        # must directly initialize
+        self.statuslabel_motiontype.hal_init()
 
         if self.PREFS_:
             self.lineEdit_probe_tool.setText(self.PREFS_.getpref('Probe tool', '0', str, 'PROBE OPTIONS'))
