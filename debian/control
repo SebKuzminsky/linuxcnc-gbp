@@ -11,7 +11,6 @@ Build-Depends:
     asciidoc,
     ghostscript,
     imagemagick,
-    source-highlight,
     asciidoc-dblatex,
     autoconf,
     automake,
@@ -30,7 +29,7 @@ Build-Depends:
     libtirpc-dev,
     libusb-1.0-0-dev,
     libxmu-dev,
-    netcat,
+    netcat-traditional | netcat-openbsd | netcat,
     po4a,
     procps,
     psmisc,
@@ -45,12 +44,12 @@ Build-Depends:
 Build-Depends-Indep:
     dblatex (>= 0.2.12),
     dvipng,
+    fonts-dejavu,
     graphviz,
     groff,
     inkscape,
     python3-lxml,
-    w3c-linkchecker,
-    xsltproc,
+    source-highlight,
     texlive-extra-utils,
     texlive-font-utils,
     texlive-fonts-recommended,
@@ -61,7 +60,8 @@ Build-Depends-Indep:
     texlive-lang-polish,
     texlive-lang-spanish,
     texlive-latex-recommended,
-    fonts-dejavu,
+    w3c-linkchecker,
+    xsltproc,
     texlive-xetex,
 Standards-Version: 4.6.1
 Homepage: https://linuxcnc.org/
@@ -169,14 +169,17 @@ Recommends:
     python3-pyqt5.qtsvg,
     python3-pyqt5.qtopengl,
     python3-opencv,
-    python3-dbus,python3-espeak,
+    python3-dbus,
+    python3-espeak,
     python3-dbus.mainloop.pyqt5,
     python3-pyqt5.qtwebkit,
     espeak-ng,
     pyqt5-dev-tools,
     gstreamer1.0-tools,espeak,
-    sound-theme-freedesktop
-Suggests: mesaflash
+    sound-theme-freedesktop,
+    python3-poppler-qt5
+Suggests: mesaflash,
+    onboard
 Description: motion controller for CNC machines and robots
  LinuxCNC is a fully-realised CNC machine controller that can interpret
  machine-control programs (such as G-code), plan trajectories and finally
@@ -227,6 +230,7 @@ Description: motion controller for CNC machines and robots
 Package: linuxcnc-doc-de
 Provides: linuxcnc-doc
 Architecture: all
+Multi-Arch: foreign
 Depends: ${misc:Depends}
 Recommends: xdg-utils
 Suggests: pdf-viewer
