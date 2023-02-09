@@ -63,7 +63,7 @@ def use_pango_font(font, start, count, will_call_prepost=False):
         context.restore()
         w, h = int(w / Pango.SCALE), int(h / Pango.SCALE)
         GL.glNewList(base+i, GL.GL_COMPILE)
-        GL.glBitmap(0, 0, 0, 0, 0, h-d, ''.encode())
+        GL.glBitmap(1, 1, 0, 0, 0, h-d, bytearray([0]*4))
         #glDrawPixels(0, 0, 0, 0, 0, h-d, '');
         if not will_call_prepost:
             pango_font_pre()
@@ -74,7 +74,7 @@ def use_pango_font(font, start, count, will_call_prepost=False):
             except Exception as e:
                 print("glnav Exception ",e)
 
-        GL.glBitmap(0, 0, 0, 0, w, -h+d, ''.encode())
+        GL.glBitmap(1, 1, 0, 0, w, -h+d, bytearray([0]*4))
         if not will_call_prepost:
             pango_font_post()
         GL.glEndList()
@@ -817,6 +817,137 @@ class Hud(object):
         GL.glPopMatrix()
         GL.glMatrixMode(GL.GL_MODELVIEW)
 
+class HalHud(object):
+        '''head up display - draws a semi-transparent text box.
+        use HUD.strs for things that must be updated constantly,
+        and HUD.show("stuff") for one-shot things like error messages'''
+        def __init__(self):
+                self.showme = 0
+                self._font = 'monospace bold 16'
+                self.strs = []
+                self.messages = []
+                self.messages_top = []
+                self.fontbase = []
+                self.strings = []
+                self.formats = []
+                self.pinnames = []
+                self.background_color = (0,0.2,0,.5)
+                self.text_color = (0.9,0.9,0.0)
+                self.char_width = 13
+                self.char_height = 18
+
+        def add_pin(self, text,form,pinname):
+            self.strings.append(str(text))
+            self.formats.append(form)
+            self.pinnames.append(pinname)
+
+        def show_top(self, string):
+                self.showme = 1
+                self.messages_top += [str(string)]
+
+        def show(self, string):
+                self.showme = 1
+                self.messages += [str(string)]
+        
+        def hide(self):
+                self.showme = 0
+                
+        def clear(self):
+                self.messages = []
+
+        # changes the hud color and transparency
+        def set_background_color(self, r, g, b, a =.7):
+            self.background_color = (r, g, b, 1-a)
+
+        # changes the hud text color
+        def set_text_color(self, r, g, b):
+            self.text_color = (r, g, b)
+
+        def set_char_width(self, width):
+            self.char_width = width
+
+        def set_char_height(self, height):
+            self.char_height = height
+
+        def set_font(self, font):
+            self._font = font
+ 
+        def draw(self):
+                self.strs = []
+                # create the strings with the updated values using the corresponding list elements
+                for n in range(len(self.strings)):
+                    try:
+                        value = hal.get_value( self.pinnames[n])
+                    except:
+                        value = 0.0
+                    self.strs += [self.strings[n] +
+                                  str(self.formats[n].format(value))]
+
+                drawtext = self.messages_top + self.strs + self.messages
+                self.lines = len(drawtext)
+
+                # draw head-up-display
+                if ((self.showme == 0) or (self.lines == 0)):
+                        return
+                
+                GL.glMatrixMode(GL.GL_PROJECTION)
+                GL.glPushMatrix()
+                GL.glLoadIdentity()
+                
+                if not self.fontbase:
+                    self.fontbase, self._width, linespace = use_pango_font(self._font, 0, 128)
+
+                xmargin,ymargin = 5,5
+                ypos = float(self.app.winfo_height())
+                
+                GL.glOrtho(0.0, self.app.winfo_width(), 0.0, ypos, -1.0, 1.0)
+                GL.glMatrixMode(GL.GL_MODELVIEW)
+                GL.glPushMatrix()
+                GL.glLoadIdentity()
+                
+                #draw the text box
+                maxlen = max([len(p) for p in drawtext])
+                box_width = maxlen * self.char_width
+                GL.glDepthFunc(GL.GL_ALWAYS)
+                GL.glDepthMask(GL.GL_FALSE)
+                GL.glDisable(GL.GL_LIGHTING)
+                GL.glEnable(GL.GL_BLEND)
+                GL.glEnable(GL.GL_NORMALIZE)
+                GL.glBlendFunc(GL.GL_ONE, GL.GL_CONSTANT_ALPHA)
+                color = self.background_color
+                GL.glColor3f(color[0],color[1],color[2])
+                GL.glBlendColor(0,0,0,color[3]) #rgba, sets the transparency of the overlay using the 'a' value
+                GL.glBegin(GL.GL_QUADS)
+                GL.glVertex3f(0, ypos, 1) #upper left
+                GL.glVertex3f(0, ypos - 2*ymargin - self.char_height*len(drawtext), 1) #lower left
+                GL.glVertex3f(box_width+2*xmargin, ypos - 2*ymargin - self.char_height*len(drawtext), 1) #lower right
+                GL.glVertex3f(box_width+2*xmargin,  ypos , 1) #upper right
+                GL.glEnd()
+                GL.glDisable(GL.GL_BLEND)
+                GL.glEnable(GL.GL_LIGHTING)
+                
+                #fill the box with text
+                maxlen = 0
+                ypos -= self.char_height+ymargin
+                i=0
+                GL.glDisable(GL.GL_LIGHTING)
+                color = self.text_color
+                GL.glColor3f(color[0],color[1],color[2])
+                for string in drawtext:
+                        maxlen = max(maxlen, len(string))
+                        GL.glRasterPos2i(xmargin, int(ypos))
+                        for char in string:
+                                GL.glCallList(self.fontbase + ord(char))
+                        ypos -= self.char_height
+                        i = i + 1
+                GL.glDepthFunc(GL.GL_LESS)
+                GL.glDepthMask(GL.GL_TRUE)
+                GL.glEnable(GL.GL_LIGHTING)
+        
+                GL.glPopMatrix()
+                GL.glMatrixMode(GL.GL_PROJECTION)
+                GL.glPopMatrix()
+                GL.glMatrixMode(GL.GL_MODELVIEW)
 
 class Color(Collection):
     def __init__(self, color, parts):
@@ -994,12 +1125,11 @@ class HalToolCylinder(CylinderZ):
     IMPERIAL = 25.4
     MODEL_SCALING = IMPERIAL
 
-    def __init__(self, comp, *args):
+    def __init__(self, comp=None, *args):
         # get machine access so it can
         # change itself as it runs
         # specifically tool cylinder in this case.
         CylinderZ.__init__(self, *args)
-        self.comp = comp
 
     def coords(self):
         # get diameter and divide by 2 to get radius.
@@ -1026,7 +1156,7 @@ class HalToolCylinder(CylinderZ):
 # we use a triangle for the tool
 # since we need to visualize a lathe tool here
 class HalToolTriangle(TriangleXZ):
-    def __init__(self, comp, *args):
+    def __init__(self, comp=None, *args):
         # get machine access so it can
         # change itself as it runs
         # specifically tool cylinder in this case.

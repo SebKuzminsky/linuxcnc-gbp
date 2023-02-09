@@ -299,8 +299,7 @@ static PyObject *poll(pyStatChannel *s, PyObject *o) {
         initialized=1;
         if (tool_mmap_user()) {
           mmap_available = 0;
-          fprintf(stderr,"mmap tool data not available, continuing %s\n",
-                  __FILE__);
+          fprintf(stderr,"poll(): continuing without tool mmap data\n");
         }
     }
 #endif //}
@@ -327,7 +326,13 @@ static PyMemberDef Stat_members[] = {
 
 // task
     {(char*)"task_mode", T_INT, O(task.mode), READONLY},
-    {(char*)"task_state", T_INT, O(task.state), READONLY},
+    {(char*)"task_state", T_INT, O(task.state), READONLY,
+        "Current Task state.  Possible values:\n"
+        "    STATE_ESTOP: E-Stop is active.\n"
+        "    STATE_ESTOP_RESET: E-Stop is reset (cleared) but machine is off.\n"
+        "    STATE_OFF: Same as STATE_ESTOP_RESET, this one is not used.\n"
+        "    STATE_ON: Machine is out of E-Stop and is powered on.\n"
+    },
     {(char*)"exec_state", T_INT, O(task.execState), READONLY},
     {(char*)"interp_state", T_INT, O(task.interpState), READONLY},
     {(char*)"call_level", T_INT, O(task.callLevel), READONLY},
@@ -1435,7 +1440,14 @@ static PyMethodDef Command_methods[] = {
     {"teleop_enable", (PyCFunction)teleop, METH_VARARGS},
     {"traj_mode", (PyCFunction)set_traj_mode, METH_VARARGS},
     {"wait_complete", (PyCFunction)wait_complete, METH_VARARGS},
-    {"state", (PyCFunction)state, METH_VARARGS},
+    {"state", (PyCFunction)state, METH_VARARGS,
+        "state(NEW_STATE) - Set the machine E-Stop & Power-On state.\n"
+        "Possible values for `NEW_STATE` are:\n"
+        "    STATE_ESTOP: Power off and enter E-Stop mode.\n"
+        "    STATE_ESTOP_RESET: Reset (leave) E-Stop mode, but remain powered off.\n"
+        "    STATE_ON: Power on (only works from STATE_ESTOP_RESET state).\n"
+        "    STATE_OFF: Power off (only works from STATE_ON state).\n"
+    },
     {"mdi", (PyCFunction)mdi, METH_VARARGS},
     {"mode", (PyCFunction)mode, METH_VARARGS},
     {"feedrate", (PyCFunction)feedrate, METH_VARARGS},
@@ -1451,7 +1463,10 @@ static PyMethodDef Command_methods[] = {
     {"abort", (PyCFunction)emcabort, METH_NOARGS},
     {"task_plan_synch", (PyCFunction)task_plan_synch, METH_NOARGS},
     {"override_limits", (PyCFunction)override_limits, METH_NOARGS},
-    {"home", (PyCFunction)home, METH_VARARGS},
+    {"home", (PyCFunction)home, METH_VARARGS,
+        "home(JOINT) - Home the specified joint.\n"
+        "JOINT can be a valid joint number (0-9), or -1 to home all joints.\n"
+    },
     {"unhome", (PyCFunction)unhome, METH_VARARGS},
     {"jog", (PyCFunction)jog, METH_VARARGS,
         "jog(JOG_CONTINUOUS, joint_flag, index, speed)\n"
@@ -1824,10 +1839,12 @@ static PyObject *pygui_respect_offsets (PyObject *s, PyObject *o) {
     if(!PyArg_ParseTuple(o, "si",&coords, &roffsets.respect_offsets)) {
         return NULL;
     }
-    // GEOMETRY rotations only if letters (ABC) included in [TRAJ]COORDINATES
-    if (strchr(coords,'A')) roffsets.axis_mask |= AXIS_MASK_A;
-    if (strchr(coords,'B')) roffsets.axis_mask |= AXIS_MASK_B;
-    if (strchr(coords,'C')) roffsets.axis_mask |= AXIS_MASK_C;
+    if (roffsets.respect_offsets) {
+        // GEOMETRY rotations only if letters (ABC) included in [TRAJ]COORDINATES
+        if (strchr(coords,'A')) roffsets.axis_mask |= AXIS_MASK_A;
+        if (strchr(coords,'B')) roffsets.axis_mask |= AXIS_MASK_B;
+        if (strchr(coords,'C')) roffsets.axis_mask |= AXIS_MASK_C;
+    }
 
     Py_INCREF(Py_None);
     return Py_None;

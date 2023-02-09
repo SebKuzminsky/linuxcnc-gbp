@@ -608,18 +608,18 @@ coils are internal coils used to control program flow.
 * 'N.C. COIL' - A relay coil that inverses its contacts: When coil is
   energized, then its contact that is normally closed (short: N.C.) will be opened
   (turned off, false, etc) and the current flow is interrupted.
-* 'SET COIL' - A relay coil with latching contacts: When coil is energized
-  then its N.O. contact will be latched closed.
-* 'RESET COIL' - A relay coil with latching contacts: When coil is
-  energized then its N.O. contact will be latched open.
-* 'JUMP COIL' - A 'goto' coil: When coil is energized then the
-  ladder program jumps
-  to a rung (in the CURRENT section) - jump points are designated by a
-  rung label. (Add rung labels in the section display, top left label box.)
-* 'CALL COIL' - A 'gosub' coil: When coil is energized then the program
-  jumps to a
+* 'SET COIL' - A relay coil with latching contacts:
+  When coil is energized then its N.O. contact will be latched closed.
+* 'RESET COIL' - A relay coil with latching contacts:
+  When coil is energized then its N.O. contact will be latched open.
+* 'JUMP COIL' - A 'goto' coil:
+  When coil is energized then the ladder program jumps to a rung
+  (in the CURRENT section) - jump points are designated by a rung label.
+  (Add rung labels in the section display, top left label box.)
+* 'CALL COIL' - A 'gosub' coil:
+  When coil is energized then the program jumps to a
   subroutine section designated by a subroutine number - subroutines are
-  designated SR0 to SR9 (designate them in the section manager)
+  designated SR0 to SR9 (designate them in the section manager).
 
 [WARNING]
 If you use a N.C. contact with a N.C. coil the logic
@@ -908,10 +908,10 @@ Serial:
 * The IP address can be followed per the port number to use
   (xx.xx.xx.xx:pppp) else the port 9502 will be used per default.
 * 2 products have been used for tests: a Modbus/TCP one (Adam-6051,
-  http://www.advantech.com) and a serial Modbus/RTU one
+  https://www.advantech.com) and a serial Modbus/RTU one
   (http://www.ipac.ws).
 * See examples: adam-6051 and modbus_rtu_serial.
-* Web links: http://www.modbus.org and this interesting one:
+* Web links: https://www.modbus.org and this interesting one:
   http://www.iatips.com/modbus.html
 * MODBUS TCP SERVER INCLUDED
 * ClassicLadder has a Modbus/TCP server integrated. Default port is 9502.
@@ -923,7 +923,7 @@ Serial:
 
 More information on modbus protocol is available on the internet.
 
-http://www.modbus.org/[http://www.modbus.org/]
+https://www.modbus.org/[https://www.modbus.org/]
 
 === Communication Errors
 
@@ -935,9 +935,8 @@ error. A timer could be used to stop the machine if timed out, etc.
 == Debugging modbus problems
 
 A good reference for the protocol:
-http://www.modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf
-If you run linuxcnc/classocladder from a terminal, it will print
-the Modbus commands and slave responses.
+https://www.modbus.org/docs/Modbus_Application_Protocol_V1_1b.pdf.
+If you run linuxcnc/classicladder from a terminal, it will print the Modbus commands and slave responses.
 
 Here we set ClassicLadder to request slave 1,
 to read holding registers (function code 3) starting at address 8448 (0x2100).

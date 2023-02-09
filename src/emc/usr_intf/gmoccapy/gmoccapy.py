@@ -83,7 +83,7 @@ sys.excepthook = excepthook
 
 # constants
 #         # gmoccapy  #"
-_RELEASE = " 3.4.0"
+_RELEASE = " 3.4.1"
 _INCH = 0                         # imperial units are active
 _MM = 1                           # metric units are active
 
@@ -101,7 +101,7 @@ _BB_LOAD_FILE = 8
 #_BB_HOME_JOINTS will not be used, we will reorder the notebooks to get the correct page shown
 
 # Default button size for bottom buttons
-_DEFAULT_BB_SIZE = (85, 56)
+_DEFAULT_BB_SIZE = (90, 56)
 
 _TEMPDIR = tempfile.gettempdir()  # Now we know where the tempdir is, usually /tmp
 
@@ -155,10 +155,6 @@ class gmoccapy(object):
         gettext.install("gmoccapy", localedir=LOCALEDIR)
 
         # CSS styling
-        screen = Gdk.Screen.get_default()
-        provider = Gtk.CssProvider()
-        style_context = Gtk.StyleContext()
-        style_context.add_provider_for_screen(screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
         css = b"""
             button {
                 padding: 0;
@@ -167,11 +163,12 @@ class gmoccapy(object):
                 padding: 3px;
                 margin: 1px;
             }
-            #notification_close {
-                padding: 8px;
-            }
         """
+        screen = Gdk.Screen.get_default()
+        provider = Gtk.CssProvider()
         provider.load_from_data(css)
+        style_context = Gtk.StyleContext()
+        style_context.add_provider_for_screen(screen, provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         # needed components to communicate with hal and linuxcnc
         self.halcomp = hal.component("gmoccapy")
@@ -488,9 +485,6 @@ class gmoccapy(object):
         self.widgets.gcode_view.set_sensitive(False)
         self.widgets.ntb_user_tabs.remove_page(0)
 
-        if not self.get_ini_info.get_embedded_tabs()[2]:
-            self.widgets.tbtn_user_tabs.set_sensitive(False)
-
         # call the function to change the button status
         # so every thing is ready to start
         widgetlist = ["rbt_manual", "rbt_mdi", "rbt_auto", "btn_homing", "btn_touch", "btn_tool",
@@ -518,6 +512,44 @@ class gmoccapy(object):
         # CYCLE_TIME = time, in milliseconds, that display will sleep between polls
         cycle_time = self.get_ini_info.get_cycle_time()
         GLib.timeout_add( cycle_time, self._periodic )  # time between calls to the function, in milliseconds
+
+        # This allows sourcing an user defined file
+        rcfile = "~/.gmoccapyrc"
+        user_command_file = self.get_ini_info.get_user_command_file()
+        if user_command_file:
+            rcfile = user_command_file
+        rcfile = os.path.expanduser(rcfile)
+        if os.path.exists(rcfile):
+            try:
+                exec(compile(open(rcfile, "rb").read(), rcfile, 'exec'))
+            except:
+                tb = traceback.format_exc()
+                print(tb, file=sys.stderr)
+                self.notification.add_message(_("Error in ") + rcfile + "\n" \
+                    + _("Please check the console output."), ALERT_ICON)
+
+        # Custom css file, e.g.:
+        #     button:checked {
+        #         background: rgba(230,230,50,0.8);
+        #     }
+
+        css_file = "~/.gmoccapy_css"
+        user_css_file = self.get_ini_info.get_user_css_file()
+        if user_css_file:
+            css_file = user_css_file
+        css_file = os.path.expanduser(css_file)
+        if os.path.exists(css_file):
+            provider_custom = Gtk.CssProvider()
+            try:
+                provider_custom.load_from_path(css_file)
+                style_context.add_provider_for_screen(screen, provider_custom, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+            except:
+                tb = traceback.format_exc()
+                print(tb, file=sys.stderr)
+                self.notification.add_message(_("Error in ") + css_file + "\n" \
+                    + _("Please check the console output."), ALERT_ICON)
+
+
 
     def _get_ini_data(self):
         self.get_ini_info = getiniinfo.GetIniInfo()
@@ -771,6 +803,8 @@ class gmoccapy(object):
     def _new_button_with_predefined_image(self, name, size, image = None, image_name = None):
         btn = Gtk.Button()
         btn.set_size_request(*size)
+        btn.set_halign(Gtk.Align.CENTER)
+        btn.set_valign(Gtk.Align.CENTER)
         btn.set_property("name", name)
         try:
             if image:
@@ -794,6 +828,8 @@ class gmoccapy(object):
         image.set_size_request(72,48)
         btn = Gtk.Button.new()
         btn.set_size_request(*_DEFAULT_BB_SIZE)
+        btn.set_halign(Gtk.Align.CENTER)
+        btn.set_valign(Gtk.Align.CENTER)
         btn.set_property("name", name)
         try:
             if filepath:
@@ -965,6 +1001,9 @@ class gmoccapy(object):
         lbl.set_visible(True)
         lbl.set_justify(Gtk.Justification.CENTER)
         btn = Gtk.ToggleButton.new()
+        btn.set_size_request(*_DEFAULT_BB_SIZE)
+        btn.set_halign(Gtk.Align.CENTER)
+        btn.set_valign(Gtk.Align.CENTER)
         btn.add(lbl)
         btn.connect("toggled", self.on_tbtn_edit_offsets_toggled)
         btn.set_property("tooltip-text", _("Press to edit the offsets"))
@@ -1023,6 +1062,9 @@ class gmoccapy(object):
             lbl.show()
 
         btn = self.widgets.offsetpage1.wTree.get_object("zero_g92_button")
+        btn.set_size_request(*_DEFAULT_BB_SIZE)
+        btn.set_halign(Gtk.Align.CENTER)
+        btn.set_valign(Gtk.Align.CENTER)
         self.widgets.offsetpage1.buttonbox.remove(btn)
         btn.connect("clicked", self.on_btn_zero_g92_clicked)
         btn.set_property("tooltip-text", _("Press to reset all G92 offsets"))
@@ -1032,6 +1074,9 @@ class gmoccapy(object):
 
         if self.tool_measure_OK:
             btn = Gtk.Button.new_with_label(_(" Block\nHeight"))
+            btn.set_size_request(*_DEFAULT_BB_SIZE)
+            btn.set_halign(Gtk.Align.CENTER)
+            btn.set_valign(Gtk.Align.CENTER)
             btn.connect("clicked", self.on_btn_block_height_clicked)
             btn.set_property("tooltip-text", _("Press to enter new value for block height"))
             btn.set_property("name", "block_height")
@@ -1042,6 +1087,9 @@ class gmoccapy(object):
         lbl.set_visible(True)
         lbl.set_justify(Gtk.Justification.CENTER)
         btn = Gtk.Button.new()
+        btn.set_size_request(*_DEFAULT_BB_SIZE)
+        btn.set_halign(Gtk.Align.CENTER)
+        btn.set_valign(Gtk.Align.CENTER)
         btn.add(lbl)
         btn.connect("clicked", self._on_btn_set_selected_clicked)
         btn.set_property("tooltip-text", _("Press to set the selected coordinate system to be the active one"))
@@ -1256,6 +1304,8 @@ class gmoccapy(object):
             for direction in ["+","-"]:
                 name = "{0}{1}".format(str(axis), direction)
                 btn = Gtk.Button.new_with_label(name.upper())
+                btn.set_halign(Gtk.Align.CENTER)
+                btn.set_valign(Gtk.Align.CENTER)
                 btn.set_property("name", name)
                 btn.connect("pressed", self._on_btn_jog_pressed, name)
                 btn.connect("released", self._on_btn_jog_released, name)
@@ -1275,6 +1325,8 @@ class gmoccapy(object):
             for direction in ["+","-"]:
                 name = "{0}{1}".format(str(joint), direction)
                 btn = Gtk.Button.new_with_label(name.upper())
+                btn.set_halign(Gtk.Align.CENTER)
+                btn.set_valign(Gtk.Align.CENTER)
                 btn.set_property("name", name)
                 btn.connect("pressed", self._on_btn_jog_pressed, name)
                 btn.connect("released", self._on_btn_jog_released, name)
@@ -1331,6 +1383,9 @@ class gmoccapy(object):
                 if len(lbl) > 11:
                     lbl = lbl[0:10] + "\n" + lbl[11:20]
                 btn = Gtk.Button.new_with_label(lbl)
+                btn.set_size_request(*_DEFAULT_BB_SIZE)
+                btn.set_halign(Gtk.Align.CENTER)
+                btn.set_valign(Gtk.Align.CENTER)
                 btn.set_property("name","macro_{0}".format(pos))
             btn.set_property("tooltip-text", _("Press to run macro {0}".format(name)))
             btn.connect("clicked", self._on_btn_macro_pressed, name)
@@ -1810,6 +1865,8 @@ class gmoccapy(object):
 
         tab_names, tab_locations, tab_cmd = self.get_ini_info.get_embedded_tabs()
         if not tab_names:
+            self.widgets.tbtn_user_tabs.set_sensitive( False )
+            self.user_tabs_enabled = False
             print (_("**** GMOCCAPY INFO ****"))
             print (_("**** Invalid embedded tab configuration ****"))
             print (_("**** No tabs will be added! ****"))
@@ -1864,8 +1921,10 @@ class gmoccapy(object):
             # if no ntb_user_tabs in location is given
             if "ntb_user_tabs" in tab_locations:
                 self.widgets.tbtn_user_tabs.set_sensitive( True )
+                self.user_tabs_enabled = True
             else:
                 self.widgets.tbtn_user_tabs.set_sensitive( False )
+                self.user_tabs_enabled = False
 
             if "ntb_preview" in tab_locations:
                 self.widgets.ntb_preview.set_property( "show-tabs", True )
@@ -4269,7 +4328,7 @@ class gmoccapy(object):
 
         widgetlist = ["ntb_jog", "rbt_mdi","rbt_auto","tbtn_setup"]
 
-        if self.widgets.tbtn_user_tabs.get_sensitive():
+        if self.user_tabs_enabled:
             widgetlist.append("tbtn_user_tabs")
         self._sensitize_widgets( widgetlist, not state )
 
@@ -5239,8 +5298,6 @@ class gmoccapy(object):
     def on_btn_new_clicked(self, widget, data=None):
         tempfilename = os.path.join(_TEMPDIR, "temp.ngc")
         content = self.get_ini_info.get_RS274_start_code()
-        if content == None:
-            content = " "
         content += "\n\n\n\nM2"
         gcodefile = open(tempfilename, "w")
         gcodefile.write(content)

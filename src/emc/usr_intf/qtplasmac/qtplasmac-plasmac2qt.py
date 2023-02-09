@@ -48,9 +48,9 @@ class Converter(QMainWindow, object):
             self.mode = ''
             self.iniIn = ''
         if 'usr' in self.appPath:
-            self.simPath = '/usr/share/doc/linuxcnc/examples/sample-configs/by_machine/qtplasmac'
+            self.simPath = '/usr/share/doc/linuxcnc/examples/sample-configs/sim/qtplasmac'
         else:
-            self.simPath = self.appPath.replace('bin', 'configs/by_machine/qtplasmac')
+            self.simPath = self.appPath.replace('bin', 'configs/sim/qtplasmac')
         self.setFixedWidth(600)
         self.setFixedHeight(400)
         wid = QWidget(self)
@@ -61,9 +61,9 @@ class Converter(QMainWindow, object):
         self.setCentralWidget(wid)
         layout = QHBoxLayout()
         wid.setLayout(layout)
-        iconPath = 'share/qtvcp/images/qtplasmac/images/Chips_Plasma.png'
+        iconPath = 'share/icons/hicolor/scalable/apps/linuxcnc_alt/linuxcncicon_plasma.svg'
         appPath = os.path.realpath(os.path.dirname(sys.argv[0]))
-        iconBase = '/usr' if appPath == '/bin' else appPath.replace('/bin', '')
+        iconBase = '/usr' if appPath == '/usr/bin' else appPath.replace('/bin', '/debian/extras/usr')
         self.setWindowIcon(QIcon(os.path.join(iconBase, iconPath)))
         self.setWindowTitle('PlasmaC2Qt')
         vBox = QVBoxLayout()

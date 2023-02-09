@@ -29,17 +29,20 @@ WRITER = writer.Main()
 QHAL = Qhal()
 
 # constants for tab pages
+# probe is not actually a separate tab now
+# but there is a button for showing it in stack
+TAB_PROBE = -1
 TAB_MAIN = 0
 TAB_FILE = 1
 TAB_OFFSETS = 2
 TAB_TOOL = 3
 TAB_STATUS = 4
-TAB_PROBE = 10 # probe is not actually a separate tab now
 TAB_CAMVIEW = 5
 TAB_GCODES = 6
 TAB_SETUP = 7
 TAB_SETTINGS = 8
 TAB_UTILS = 9
+TAB_USER = 10
 
 # constants for (left side) stacked widget
 PAGE_UNCHANGED = -1
@@ -55,12 +58,18 @@ class HandlerClass:
         self.h = halcomp
         self.w = widgets
         self.gcodes = GCodes(widgets)
-        self.valid = QtGui.QDoubleValidator(-999.999, 999.999, 3)
+        # This validator precludes using comma as a decimal
+        self.valid = QtGui.QRegExpValidator(QtCore.QRegExp('-?[0-9]{0,6}[.][0-9]{0,3}'))
         self.styleeditor = SSE(widgets, paths)
         KEYBIND.add_call('Key_F4', 'on_keycall_F4')
         KEYBIND.add_call('Key_F12','on_keycall_F12')
         KEYBIND.add_call('Key_Pause', 'on_keycall_PAUSE')
-        KEYBIND.add_call('Key_Space', 'on_keycall_PAUSE')
+        KEYBIND.add_call('Key_Any', 'on_keycall_PAUSE')
+        KEYBIND.add_call('Key_Period','on_keycall_jograte',1)
+        KEYBIND.add_call('Key_Comma','on_keycall_jograte',0)
+        KEYBIND.add_call('Key_Greater','on_keycall_angular_jograte',1)
+        KEYBIND.add_call('Key_Less','on_keycall_angular_jograte',0)
+
         # some global variables
         self.factor = 1.0
         self.probe = None
@@ -86,7 +95,7 @@ class HandlerClass:
                               "search_vel", "probe_vel", "max_probe", "eoffset_count"]
         self.onoff_list = ["frame_program", "frame_tool", "frame_offsets", "frame_dro", "frame_override"]
         self.axis_a_list = ["label_axis_a", "dro_axis_a", "action_zero_a", "axistoolbutton_a",
-                            "action_home_a", "widget_jog_angular", "widget_increments_angular",
+                            "dro_button_stack_a", "widget_jog_angular", "widget_increments_angular",
                             "a_plus_jogbutton", "a_minus_jogbutton"]
 
         STATUS.connect('general', self.dialog_return)
@@ -106,6 +115,7 @@ class HandlerClass:
         STATUS.connect('actual-spindle-speed-changed',self.update_spindle)
         STATUS.connect('requested-spindle-speed-changed',self.update_spindle_requested)
         STATUS.connect('override-limits-changed', lambda w, state, data: self._check_override_limits(state, data))
+        STATUS.connect('graphics-gcode-properties', lambda w, d: self.update_gcode_properties(d))
 
         self.html = """<html>
 <head>
@@ -115,12 +125,13 @@ class HandlerClass:
 <h1>Setup Tab</h1>
 <p>If you select a file with .html as a file ending, it will be shown here..</p>
 <li><a href="http://linuxcnc.org/docs/devel/html/">Documents online</a></li>
-<li><a href="file://">Local files</a></li>
+<li><a href="file://%s">Local files</a></li>
 <img src="file://%s" alt="lcnc_swoop" />
 <hr />
 </body>
 </html>
-""" %(os.path.join(paths.IMAGEDIR,'lcnc_swoop.png'))
+"""%(  os.path.expanduser('~/linuxcnc'),
+        os.path.join(paths.IMAGEDIR,'lcnc_swoop.png'))
 
 
     def class_patch__(self):
@@ -140,8 +151,7 @@ class HandlerClass:
         self.w.btn_pause_spindle.setEnabled(False)
         self.w.btn_dimensions.setChecked(True)
         self.w.page_buttonGroup.buttonClicked.connect(self.main_tab_changed)
-        self.w.filemanager.onUserClicked()    
-        self.w.filemanager_usb.onMediaClicked()
+        self.w.filemanager_usb.showMediaDir(quiet = True)
 
     # hide widgets for A axis if not present
         if "A" not in INFO.AVAILABLE_AXES:
@@ -279,7 +289,7 @@ class HandlerClass:
         self.w.PREFS_.putpref('Inhibit display mouse selection', self.w.chk_inhibit_selection.isChecked(), bool, 'CUSTOM_FORM_ENTRIES')
 
     def init_widgets(self):
-        self.w.main_tab_widget.setCurrentIndex(0)
+        self.w.stackedWidget_mainTab.setCurrentIndex(0)
         self.w.chk_override_limits.setChecked(False)
         self.w.chk_override_limits.setEnabled(False)
         self.w.lbl_maxv_percent.setText("100 %")
@@ -346,7 +356,11 @@ class HandlerClass:
         self.w.gauge_spindle.set_max_reading(self.max_spindle_rpm / 1000)
         self.w.gauge_spindle.set_threshold(self.min_spindle_rpm)
         self.w.gauge_spindle.set_label("RPM")
-        
+
+        # hide user tab button if no user tabs
+        if self.w.stackedWidget_mainTab.count() == 10:
+            self.w.btn_user.hide()
+
     def init_probe(self):
         probe = INFO.get_error_safe_setting('PROBE', 'USE_PROBE', 'none').lower()
         if probe == 'versaprobe':
@@ -466,7 +480,7 @@ class HandlerClass:
         # that the current reported by the VFD is total current for all 3 phases
         # and that the synchronous motor spindle has a power factor of 0.9
         try:
-            power = float(self.h['spindle-volts'] * self.h['spindle-amps'] * 0.9) # V x I x PF
+            power = float(self.h['spindle-volts'] * self.h['spindle-amps'] * 0.9) # Watts = V x I x PF
             pc_power = (power / float(self.max_spindle_power)) * 100
             if pc_power > 100:
                 pc_power = 100
@@ -600,9 +614,14 @@ class HandlerClass:
     # main button bar
     def main_tab_changed(self, btn):
         index = btn.property("index")
-        if index == self.w.main_tab_widget.currentIndex():
+
+        if index == TAB_USER:
+            pass
+        elif index == self.w.stackedWidget_mainTab.currentIndex():
             self.w.stackedWidget_dro.setCurrentIndex(0)
+
         if index is None: return
+
         # adjust the stack widgets depending on modes
         self.adjust_stacked_widgets(index)
 
@@ -617,7 +636,7 @@ class HandlerClass:
 
     # program frame
     def btn_start_clicked(self, obj):
-        if self.w.main_tab_widget.currentIndex() != 0:
+        if self.w.stackedWidget_mainTab.currentIndex() != 0:
             return
         if not STATUS.is_auto_mode():
             self.add_status("Must be in AUTO mode to run a program", CRITICAL)
@@ -941,6 +960,10 @@ class HandlerClass:
     def btn_gripper_clicked(self):
         AUX_PRGM.load_gcode_ripper()
 
+    def btn_about_clicked(self):
+        info = ACTION.GET_ABOUT_INFO()
+        self.w.aboutDialog_.showdialog()
+
     #####################
     # GENERAL FUNCTIONS #
     #####################
@@ -956,7 +979,7 @@ class HandlerClass:
             self.w.cmb_gcode_history.setToolTip(fname)
             ACTION.OPEN_PROGRAM(fname)
             self.add_status("Loaded program file : {}".format(fname))
-            self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
+            self.w.stackedWidget_mainTab.setCurrentIndex(TAB_MAIN)
             self.w.filemanager.recordBookKeeping()
 
             # adjust ending to check for related HTML setup files
@@ -980,7 +1003,7 @@ class HandlerClass:
             try:
                 self.w.web_view.load(QtCore.QUrl.fromLocalFile(fname))
                 self.add_status("Loaded HTML file : {}".format(fname))
-                self.w.main_tab_widget.setCurrentIndex(TAB_SETUP)
+                self.w.stackedWidget_mainTab.setCurrentIndex(TAB_SETUP)
                 self.w.stackedWidget.setCurrentIndex(0)
                 self.w.btn_setup.setChecked(True)
             except Exception as e:
@@ -990,6 +1013,41 @@ class HandlerClass:
             if os.path.exists(fname):
                 self.PDFView.loadView(fname)
                 self.add_status("Loaded PDF file : {}".format(fname))
+
+    def update_gcode_properties(self, props ):
+        # substitute nice looking text:
+        property_names = {
+            'name': "Name:", 'size': "Size:",
+    '       tools': "Tool order:", 'g0': "Rapid distance:",
+            'g1': "Feed distance:", 'g': "Total distance:",
+            'run': "Run time:",'machine_unit_sys':"Machine Unit System:",
+            'x': "X bounds:",'x_zero_rxy':'X @ Zero Rotation:',
+            'y': "Y bounds:",'y_zero_rxy':'Y @ Zero Rotation:',
+            'z': "Z bounds:",'z_zero_rxy':'Z @ Zero Rotation:',
+            'a': "A bounds:", 'b': "B bounds:",
+            'c': "C bounds:",'toollist':'Tool Change List:',
+            'gcode_units':"Gcode Units:"
+        }
+
+        smallmess = mess = ''
+        if props:
+            for i in props:
+                smallmess += '<b>%s</b>: %s<br>' % (property_names.get(i), props[i])
+                mess += '<span style=" font-size:18pt; font-weight:600; color:black;">%s </span>\
+<span style=" font-size:18pt; font-weight:600; color:#aa0000;">%s</span>\
+<br>'% (property_names.get(i), props[i])
+
+        # put the details into the properties page
+        self.w.textedit_properties.setText(mess)
+        return
+        # pop a dialog of the properties
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setText(smallmess)
+        msg.setWindowTitle("Gcode Properties")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg.show()
+        retval = msg.exec_()
 
     def disable_spindle_pause(self):
         self.h['eoffset-spindle-count'] = 0
@@ -1017,6 +1075,7 @@ class HandlerClass:
             self.add_status("Touchoff routine is already running", WARNING)
 
     def kb_jog(self, state, joint, direction, fast = False, linear = True):
+        ACTION.SET_MANUAL_MODE()
         if not STATUS.is_man_mode() or not STATUS.machine_is_on():
             self.add_status('Machine must be ON and in Manual mode to jog', WARNING)
             return
@@ -1046,7 +1105,7 @@ class HandlerClass:
     def enable_auto(self, state):
         if state is True:
             self.w.btn_main.setChecked(True)
-            self.w.main_tab_widget.setCurrentIndex(TAB_MAIN)
+            self.w.stackedWidget_mainTab.setCurrentIndex(TAB_MAIN)
             if self.probe is not None:
                 self.probe.hide()
             self.w.stackedWidget_dro.setCurrentIndex(0)
@@ -1145,7 +1204,8 @@ class HandlerClass:
                     TAB_GCODES: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
                     TAB_SETUP: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
                     TAB_SETTINGS: (TAB_MAIN,PAGE_GCODE,SHOW_DRO),
-                    TAB_UTILS: (TAB_MAIN,PAGE_GCODE,SHOW_DRO) }
+                    TAB_UTILS: (TAB_MAIN,PAGE_GCODE,SHOW_DRO),
+                    TAB_USER: (requestedIndex,PAGE_UNCHANGED,IGNORE) }
         else:
             seq = {TAB_MAIN: (requestedIndex,PAGE_GCODE,SHOW_DRO),
                     TAB_FILE: (requestedIndex,PAGE_GCODE,IGNORE),
@@ -1157,9 +1217,11 @@ class HandlerClass:
                     TAB_GCODES: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
                     TAB_SETUP: (requestedIndex,PAGE_UNCHANGED,IGNORE),
                     TAB_SETTINGS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
-                    TAB_UTILS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO) }
+                    TAB_UTILS: (requestedIndex,PAGE_UNCHANGED,SHOW_DRO),
+                    TAB_USER: (requestedIndex,PAGE_UNCHANGED,IGNORE) }
 
         rtn =  seq.get(requestedIndex)
+
         # if not found (None) use defaults
         if rtn is None:
             main_index = requestedIndex
@@ -1189,6 +1251,14 @@ class HandlerClass:
             else:
                 self.w.stackedWidget.setCurrentIndex(PAGE_GCODE)
 
+        # toggle home/tool offsets buttons in DRO section
+        if main_index == TAB_TOOL:
+            num = 1
+        else:
+            num = 0
+        for i in INFO.AVAILABLE_AXES:
+            self.w['dro_button_stack_%s'%i.lower()].setCurrentIndex(num)
+
         # adjust the stacked widget
         if stacked_index > PAGE_UNCHANGED:
             self.w.stackedWidget.setCurrentIndex(stacked_index)
@@ -1197,14 +1267,22 @@ class HandlerClass:
             self.w.btn_gcode_edit.setChecked(False)
             self.w.btn_gcode_edit_clicked(False)
 
-        # set main tab to adjusted index
-        self.w.main_tab_widget.setCurrentIndex(main_index)
+        # user tabs cycle between all user tabs
+        main_current = self.w.stackedWidget_mainTab.currentIndex()
+        if main_index == TAB_USER and main_current >= TAB_USER:
+                next = main_current +1
+                if next == self.w.stackedWidget_mainTab.count():
+                    next = TAB_USER
+                self.w.stackedWidget_mainTab.setCurrentIndex(next)
+        else:
+            # set main tab to adjusted index
+            self.w.stackedWidget_mainTab.setCurrentIndex(main_index)
 
         # if indexes don't match then request is disallowed
         # give a warning and reset the button check
         if main_index != requestedIndex and not main_index in(TAB_CAMVIEW,TAB_GCODES,TAB_SETUP):
             self.add_status("Cannot switch pages while in AUTO mode", WARNING)
-            self.w.main_tab_widget.setCurrentIndex(0)
+            self.w.stackedWidget_mainTab.setCurrentIndex(0)
             self.w.btn_main.setChecked(True)
     
     # calc wait time for mdi move based on dist and rapid speed, return seconds to wait
@@ -1236,8 +1314,23 @@ class HandlerClass:
             ACTION.SET_MACHINE_HOMING(-1)
 
     def on_keycall_PAUSE(self,event,state,shift,cntrl):
+        print(state,STATUS.is_auto_mode(),self.use_keyboard())
         if state and STATUS.is_auto_mode() and self.use_keyboard():
             ACTION.PAUSE()
+
+    def on_keycall_jograte(self,event,state,shift,cntrl,value):
+        if state and self.use_keyboard():
+            if value == 1:
+                ACTION.SET_JOG_RATE_FASTER()
+            else:
+                ACTION.SET_JOG_RATE_SLOWER()
+
+    def on_keycall_angular_jograte(self,event,state,shift,cntrl,value):
+        if state and self.use_keyboard():
+            if value == 1:
+                ACTION.SET_JOG_RATE_ANGULAR_FASTER()
+            else:
+                ACTION.SET_JOG_RATE_ANGULAR_SLOWER()
 
     def on_keycall_XPOS(self,event,state,shift,cntrl):
         if self.use_keyboard():

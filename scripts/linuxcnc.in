@@ -22,6 +22,12 @@ if test "xyes" = "x@RUN_IN_PLACE@"; then
     fi
 fi
 
+# Force pyopengl (python3-opengl) to use its GLX backend, even
+# if we're running on Wayland where it would normally use EGL.
+if [[ ! -v LINUXCNC_OPENGL_PLATFORM || "${LINUXCNC_OPENGL_PLATFORM}" == "glx" ]]; then
+    export PYOPENGL_PLATFORM="x11"
+fi
+
 ################################################################################
 # 0. Values that come from configure
 ################################################################################
@@ -94,7 +100,7 @@ program_available () {
 usage () {
     P=${0##*/}
     cat <<EOF
-$P: Run LINUXCNC
+$P: Run LinuxCNC
 
 Usage:
   $ $P -h
@@ -112,7 +118,11 @@ Usage:
 Options:
     -d: Turn on "debug" mode
     -v: Turn on "verbose" mode
-    -k: Continue in the presence of errors in .hal files
+    -r: Disable redirection of stdout and stderr to ~/linuxcnc_print.txt and
+        ~/linuxcnc_debug.txt when stdin is not a tty.
+        Used when running linuxcnc tests non-interactively.
+    -l: Use the last-used INI file
+    -k: Continue in the presence of errors in HAL files
     -t "tpmodulename [parameters]"
             specify custom trajectory_planning_module
             overrides optional INI setting [TRAJ]TPMOD
@@ -133,29 +143,30 @@ EOF
 ################################################################################
 while getopts "dvlhkrH:t:m:" opt
 do
-	case "$opt" in
-	d)
-		# enable echoing of script and command output
-		if tty -s; then
-		    DEBUG_FILE=/dev/fd/2
-		    echo "Debug mode on" >$DEBUG_FILE
-		fi
-		set -x;;
-	v)
-		# enable printing of verbose messages
-		if tty -s; then
-		    PRINT_FILE=/dev/fd/1
-		    echo "Verbose mode on" >$PRINT_FILE
-		fi;;
-        r)
-                RUNTESTS=yes
-                ;;
-	l)
-		USE_LAST_INIFILE=1;;
-        k)      DASHK=-k;;
-	h)
-		usage
-		exit 0;;
+    case "$opt" in
+    d)
+        # enable echoing of script and command output
+        if tty -s; then
+            DEBUG_FILE=/dev/fd/2
+            echo "Debug mode on" >$DEBUG_FILE
+        fi
+        set -x;;
+    v)
+        # enable printing of verbose messages
+        if tty -s; then
+            PRINT_FILE=/dev/fd/1
+            echo "Verbose mode on" >$PRINT_FILE
+        fi;;
+    r)
+        RUNTESTS=yes
+        ;;
+    l)
+        USE_LAST_INIFILE=1;;
+    k)
+        DASHK=-k;;
+    h)
+        usage
+        exit 0;;
     H)  # -H dirname: prepend dirname to HALLIB_PATH
         if [ -d $OPTARG ]; then
             HALLIB_PATH=$(cd $OPTARG;pwd):$HALLIB_PATH
@@ -175,10 +186,10 @@ do
         # and be located in: $LINUXCNC_RTLIB_DIR
         HOMEMOD=$OPTARG
         ;;
-	*)
-		usage
-		exit 1
-	esac
+    *)
+        usage
+        exit 1
+    esac
 done
 shift $(($OPTIND-1))
 
@@ -592,7 +603,7 @@ function KillTaskWithTimeout() {
     fi
     local NPROCS
     for KILL_PID in $KILL_PIDS ; do
-        if $PS -o comm= $KILL_PID | $GREP -q '<defunct>'; then
+        if $PS -o stat= -o comm= $KILL_PID | $GREP -q '^Z'; then
             echo "Skipping defunct task $KILL_TASK, PID=$KILL_PID" >>$PRINT_FILE
             continue
         fi
@@ -602,7 +613,7 @@ function KillTaskWithTimeout() {
 	# wait and see if it disappears
 	while [ $WAIT -gt 1 ] ; do
 	    # see if it's still alive
-            NPROCS=$($PS -o comm= $KILL_PID | $GREP -v '<defunct>' | wc -l)
+            NPROCS=$($PS -o stat= -o comm= $KILL_PID | $GREP -v '^Z' | wc -l)
             if [ $NPROCS -gt 0 ]; then
 		WAIT=$(($WAIT-1))
 		sleep .1
@@ -618,7 +629,7 @@ function KillTaskWithTimeout() {
 	    # wait and see if it disappears
 	    while [ $WAIT -gt 1 ] ; do
 		# see if it's still alive
-                NPROCS=$($PS -o comm= $KILL_PID | $GREP -v '<defunct>' | wc -l)
+                NPROCS=$($PS -o stat= -o comm= $KILL_PID | $GREP -v '^Z' | wc -l)
                 if [ $NPROCS -gt 0 ]; then
 		    WAIT=$(($WAIT-1))
 		    sleep .1

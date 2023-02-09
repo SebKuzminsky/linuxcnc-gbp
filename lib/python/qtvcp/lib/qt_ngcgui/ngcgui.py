@@ -22,6 +22,7 @@ import hashlib
 import datetime
 import shutil
 from PyQt5 import QtGui, QtWidgets, QtCore, uic
+from PyQt5.QtCore import QRegExp
 from PyQt5.QtWidgets import QFileDialog, QHBoxLayout, QVBoxLayout, QLabel, QWidget, QLineEdit, QMessageBox
 from qtvcp.core import Action, Info, Path
 from qtvcp import logger
@@ -30,7 +31,7 @@ ACTION = Action()
 INFO = Info()
 PATH = Path()
 LOG = logger.getLogger(__name__)
-LOG.setLevel(logger.DEBUG) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
+#LOG.setLevel(logger.DEBUG) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 INTERP_SUB_PARAMS = 30
@@ -149,12 +150,14 @@ class OnePg(QWidget):
         return lbl
 
     def new_lineedit(self, key, data):
+        # QRegExp('^[+-]?((\d+(\.\d{,4})?)|(\.\d{,4}))$' allows max 4 digits after the decimal
+        valid = QtGui.QRegExpValidator(QRegExp('^[+-]?((\d+(\.\d{,4})?)|(\.\d{,4}))$'))
         lineedit = QLineEdit(str(data))
         lineedit.parm_no = key
-        lineedit.setMaxLength(8)
-        lineedit.setFixedWidth(60)
+        lineedit.setMaxLength(10)
+        lineedit.setFixedWidth(70)
         lineedit.setFixedHeight(30)
-        lineedit.setValidator(QtGui.QDoubleValidator(-99999, 99999, 2))
+        lineedit.setValidator(valid)
         if data is None or data == '':
             lineedit.setStyleSheet("border: 2px solid red;")
         lineedit.editingFinished.connect(self.parm_edited)
@@ -475,7 +478,7 @@ class NgcGui(QtWidgets.QWidget):
 
     ###################################################################
     #Function to automatically add preconfigured NGCGUI files form the Linuxcnc INI as tabs in NGCGUI for QTVCP
-    #The funtion is called by the Ngcgui class constructor and relies on the following INI enteries
+    #The function is called by the Ngcgui class constructor and relies on the following INI entries
     #NGCGUI_SUBFILE : name of the NGCGUI file (including extension) to be automatically loaded
     #NGCGUI_SUBFILE_PATH : path of the directory where the files can be found, relative to the root of the launched Linuxcnc INI
     ###################################################################
@@ -495,12 +498,14 @@ class NgcGui(QtWidgets.QWidget):
         # sort through sub list and add the pages.
         for curr_ngcfile in INFO.NGC_SUB:
            curr_fname = os.path.join(abs_ngc_sub_path,curr_ngcfile)
-           LOG.debug("Adding NGCGUI:[]".format(curr_fname))
+           LOG.debug("Adding NGCGUI:{}".format(curr_fname))
            self.add_page()
            mpage = self.tabWidget.currentWidget()
            mindex = self.tabWidget.currentIndex()
            mpage.update_onepage('sub', curr_fname)
            self.tabWidget.setTabText(mindex, curr_ngcfile)    
+        index = self.tabWidget.currentIndex()
+        self.tab_changed(index)
 
     def add_page(self):
         page = OnePg(self, '', '', '') # create new blank page
@@ -911,7 +916,7 @@ def get_file_open(caption):
     options = QFileDialog.Options()
     options |= QFileDialog.DontUseNativeDialog
     _filter = "GCode Files (*.ngc *.nc)"
-    _dir = INFO.SUB_PATH
+    _dir = os.path.abspath(INFO.NGC_SUB_PATH)
     fname, _ =  dialog.getOpenFileName(None, caption, _dir, _filter, options=options)
     return fname
 
@@ -920,7 +925,7 @@ def get_file_save(caption):
     options = QFileDialog.Options()
     options |= QFileDialog.DontUseNativeDialog
     _filter = "GCode Files (*.ngc)"
-    _dir = INFO.SUB_PATH
+    _dir = os.path.abspath(INFO.NGC_SUB_PATH)
     fname, _ =  dialog.getSaveFileName(None, caption, _dir, _filter, options=options)
     return fname
 

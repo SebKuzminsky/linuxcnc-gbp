@@ -1,4 +1,5 @@
 import os
+import math
 import subprocess
 from time import sleep
 from PyQt5.QtWidgets import (QApplication, QTabWidget, QStackedWidget,
@@ -14,10 +15,11 @@ from . import logger
 LOG = logger.getLogger(__name__)
 # LOG.setLevel(logger.DEBUG) # One of DEBUG, INFO, WARNING, ERROR, CRITICAL
 
-from qtvcp.core import Status, Info
+from qtvcp.core import Status, Info, Path
 
 INFO = Info()
 STATUS = Status()
+PATH = Path()
 TOUCHPLATE_SUBPROGRAM = os.path.abspath(os.path.join(
             os.path.dirname(__file__), 'lib/touchoff_subprogram.py'))
 
@@ -57,6 +59,9 @@ class _Lcnc_Action(object):
                 self.cmd.state(linuxcnc.STATE_OFF)
         elif state in (state,linuxcnc.STATE_ON,linuxcnc.STATE_ESTOP_OFF):
             self.cmd.state(state)
+
+    def TOGGLE_TELEOP_MODE(self):
+        self.SET_MOTION_TELEOP(not (STATUS.is_world_mode()))
 
     def SET_MOTION_TELEOP(self, value):
         # 1:teleop, 0: joint
@@ -400,11 +405,37 @@ class _Lcnc_Action(object):
     def SET_SPINDLE_RATE(self, rate, number=0):
         self.cmd.spindleoverride(rate / 100.0, number)
 
+    # machine units per minute
     def SET_JOG_RATE(self, rate):
         STATUS.set_jograte(float(rate))
 
+    # keyboard shortcut uses it
+    def SET_JOG_RATE_FASTER(self, divs=30):
+        nrate = self._step_jograte(STATUS.get_jograte(),
+            INFO.MIN_LINEAR_JOG_VEL, INFO.MAX_LINEAR_JOG_VEL, 1, divs)
+        STATUS.set_jograte(nrate)
+
+    # keyboard shortcut uses it
+    def SET_JOG_RATE_SLOWER(self, divs=30):
+        nrate = self._step_jograte(STATUS.get_jograte(),
+            INFO.MIN_LINEAR_JOG_VEL, INFO.MAX_LINEAR_JOG_VEL, -1, divs)
+        STATUS.set_jograte(nrate)
+
+    # degrees per minute
     def SET_JOG_RATE_ANGULAR(self, rate):
         STATUS.set_jograte_angular(float(rate))
+
+    # keyboard shortcut uses it
+    def SET_JOG_RATE_ANGULAR_FASTER(self, divs=30):
+        nrate = self._step_jograte(STATUS.get_jograte_angular(),
+            INFO.MIN_ANGULAR_JOG_VEL, INFO.MAX_ANGULAR_JOG_VEL, 1, divs)
+        STATUS.set_jograte_angular(float(nrate))
+
+    # keyboard shortcut uses it
+    def SET_JOG_RATE_ANGULAR_SLOWER(self, divs=30):
+        nrate = self._step_jograte(STATUS.get_jograte_angular(),
+            INFO.MIN_ANGULAR_JOG_VEL, INFO.MAX_ANGULAR_JOG_VEL, -1, divs)
+        STATUS.set_jograte_angular(float(nrate))
 
     def SET_JOG_INCR(self, incr, text):
         STATUS.set_jog_increments(incr, text)
@@ -719,6 +750,9 @@ class _Lcnc_Action(object):
     def SET_ERROR_MESSAGE(self, msg):
         self.cmd.error_msg(msg)
 
+    def SET_TEMPARARY_MESSAGE(self, msg):
+        STATUS.emit('error', STATUS.TEMPARARY_MESSAGE, msg)
+
     def TOUCHPLATE_TOUCHOFF(self, search_vel, probe_vel, max_probe,
             z_offset, retract_distance, z_safe_travel):
         if self.proc is not None:
@@ -798,9 +832,39 @@ class _Lcnc_Action(object):
         else:
             widget.setGraphicsEffect(None)
 
+    # search for INFO or README file
+    def GET_ABOUT_INFO(self):
+        mess = ''
+        path = PATH.ABOUT
+        if not os.path.exists(path):
+            path = os.path.join(PATH.CONFIGPATH, 'README')
+            if not os.path.exists(path):
+                return "This is a Pyqt5/QtVCP based screen for Linuxcnc\n No ABOUT or README found."
+
+        for line in open(path):
+            mess += line
+        return mess
+
     ######################################
     # Action Helper functions
     ######################################
+
+    # adjust the jog rate by one aproximate division of the
+    # min/max range on an exponential scale.
+    # cut off at the upper and lower jog rates as per the INI
+    def _step_jograte(self, jograte, minrate, maxrate, inc, divs):
+        rate = jograte - minrate
+        if rate < 0:
+            rate = 0
+        rate = math.log(rate + 1)
+        one = math.log(maxrate - minrate + 1) / divs
+        now = round(rate/one)
+        nrate = int(math.exp((now + inc) * one)) + minrate + 1
+        if nrate > int(maxrate):
+            nrate = int(maxrate)
+        if nrate < int(minrate):
+            nrate = int(minrate)
+        return float(nrate)
 
     # In free (joint) mode we use the plain joint number.
     # In axis mode we convert the joint number to the equivalent
