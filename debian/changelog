@@ -1,5 +1,6 @@
 linuxcnc (2.9.0~pre1+git20230208.f1270d6ed7-1) unstable; urgency=medium
 
+  * New upstream version 2.9.0~pre1+git20230208.f1270d6ed7 (Closes: #1023651).
   * Fix motion error for some full-circle spirals.
   * Fix issue with arc moves immediately after homing.
   * Fix realtime thread priorities.
