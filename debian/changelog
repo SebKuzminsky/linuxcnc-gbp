@@ -1,4 +1,4 @@
-linuxcnc (2.9.0~pre1+git20230208.f1270d6ed7-1) UNRELEASED; urgency=medium
+linuxcnc (2.9.0~pre1+git20230208.f1270d6ed7-1) unstable; urgency=medium
 
   * Fix motion error for some full-circle spirals.
   * Fix issue with arc moves immediately after homing.
@@ -35,8 +35,9 @@ linuxcnc (2.9.0~pre1+git20230208.f1270d6ed7-1) UNRELEASED; urgency=medium
   * Fix some lintian issues.
   * Fix debian/copyright.
   * Fix build on arm and hppa64.
+  * d/patches: disable the boost m4 patch, no longer needed
 
- -- Sebastian Kuzminsky <seb@highlab.com>  Thu, 09 Feb 2023 14:42:17 -0700
+ -- Sebastian Kuzminsky <seb@highlab.com>  Thu, 09 Feb 2023 21:33:18 -0700
 
 linuxcnc (2.9.0~pre0+git20221105.ffb6bda926-1.2) unstable; urgency=medium
 
