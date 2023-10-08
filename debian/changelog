@@ -14,7 +14,7 @@ linuxcnc (2.9.1-1) unstable; urgency=medium
   * docs: minor changes to suit sim configs
 
 
- -- Andy Pugh <andy@bodgesoc.org>  Sun, 08 Oct 2023 15:13:00 +0100
+ -- Andy Pugh <andy@bodgesoc.org>  Sun, 08 Oct 2023 15:16:06 +0100
 
 linuxcnc (2.9.0) unstable; urgency=medium
 
