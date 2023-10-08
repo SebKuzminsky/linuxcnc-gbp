@@ -121,6 +121,10 @@ class HAL_Gremlin(gremlin.Gremlin, _EMC_ActionBase):
                 os.putenv('INI_FILE_NAME',ini_filename)
                 os.environ['INI_FILE_NAME'] = ini_filename
                 os.chdir(os.path.dirname(ini_filename))
+        if not ini_filename:
+            self.lathe_option = False
+            self.initialised = False
+            return
         inifile = linuxcnc.ini(ini_filename)
         gremlin.Gremlin.__init__(self, inifile)
         self._reload_filename = None
@@ -147,7 +151,6 @@ class HAL_Gremlin(gremlin.Gremlin, _EMC_ActionBase):
                #AttributeError: 'NoneType' object has no attribute 'gl_end'
             print('hal_gremlin: continuing after',detail)
         self.gstat.emit('graphics-gcode-properties',self.gcode_properties)
-        print(self.gcode_properties)
 
     def do_get_property(self, property):
         name = property.name.replace('-', '_')

@@ -24,7 +24,7 @@ parser Hal:
     token END: ";;"
     token PARAMDIRECTION: "rw|r"
     token PINDIRECTION: "in|out|io"
-    token TYPE: "float|bit|signed|unsigned|u32|s32"
+    token TYPE: "float|bit|signed|unsigned|u32|s32|port"
     token NAME: "[a-zA-Z_][a-zA-Z0-9_]*"
     token STARREDNAME: "[*]*[a-zA-Z_][a-zA-Z0-9_]*"
     token HALNAME: "[#a-zA-Z_][-#a-zA-Z0-9_.]*"
@@ -1222,7 +1222,7 @@ def main():
             elif f.endswith(".py") and mode == INSTALL:
                 lines = open(f).readlines()
                 if lines[0].startswith("#!"): del lines[0]
-                lines[0] = "#!%s\n" % sys.executable
+                lines.insert(0, "#!%s\n" % sys.executable)
                 outfile = os.path.join(BINDIR, basename)
                 try: os.unlink(outfile)
                 except os.error: pass

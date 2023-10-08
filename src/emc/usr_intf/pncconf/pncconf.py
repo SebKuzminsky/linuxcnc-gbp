@@ -329,73 +329,111 @@ class App:
 
     def buid_config(self):
         base = self.build_base()
-        self.d.save(base)
-        #self.write_readme(base)
-        self.INI.write_inifile(base)
-        self.HAL.write_halfile(base)
-        # qtplasmac specific
-        if self.d.frontend == _PD._QTPLASMAC:
-            # copy M190 file
-            if BASE == "/usr":
-                m190Path = os.path.join(BASE, 'share/doc/linuxcnc/examples/sample-configs/sim/qtplasmac/M190')
-            else:
-                m190Path = os.path.join(BASE, 'configs/sim/qtplasmac/M190')
-            shutil.copy(m190Path, os.path.join(base, 'M190'))
-            # different looking tool table for qtplasmac
-
-            dest = os.path.join(base, "tool.tbl")
-            if not os.path.exists(dest):
-                file = open(dest, "w")
-                print("T0 P1 X0 Y0 ;torch", file=file)
-                print("T1 P2 X0 Y0 ;scribe", file=file)
-                file.close()
-
-        # _not_ qtplasmac
-        else:
-            dest = os.path.join(base, "tool.tbl")
-            print (base,'\ncopy:',dest,os.path.exists(dest))
-            if not os.path.exists(dest):
-                print('copied')
-                # different looking tool table for qtplasmac
-                file = open(dest, "w")
-                if self.d.axes == 2:# lathe
-                    if self.d.units == _PD._METRIC:
-                        print("T1 P1 D3 Z+3 I+95.000000 J+155.000000 Q1 ; Sample Tool", file=file)
-                        print("T2 P2 D3 I+85.000000 J+25.000000 Q2 ; Sample Tool", file=file)
-                        print("T3 P3 D3 I+275.000000 J+335.000000 Q3 ; Sample Tool", file=file)
-                        print("T4 P4 D3 I+265.000000 J+205.000000 Q4 ; Sample Tool", file=file)
-                    else:
-                        print("T1 P1 D0.100000 Z+0.100000 I+95.000000 J+155.000000 Q1 ; Sample Tool", file=file)
-                        print("T2 P2 D0.100000 I+85.000000 J+25.000000 Q2 ; Sample Tool", file=file)
-                        print("T3 P3 D0.100000 I+275.000000 J+335.000000 Q3 ; Sample Tool", file=file)
-                        print("T4 P4 D0.100000 I+265.000000 J+205.000000 Q4 ; Sample Tool", file=file)
-                        print("T5 P5 D0.100000 I+210.000000 J+150.000000 Q5 ; Sample Tool", file=file)
-                        print("T6 P6 D0.100000 X+0.500000 Z+0.500000 I+120.000000 J+60.000000 Q6 ; Sample Tool", file=file)
-                        print("T7 P7 D0.100000 I-30.000000 J+30.000000 Q7 ; Sample Tool", file=file)
-                        print("T8 P8 D0.100000 I+240.000000 J+300.000000 Q8 ; Sample Tool", file=file)
+        if self.validate_database():
+            self.d.save(base)
+            #self.write_readme(base)
+            self.INI.write_inifile(base)
+            self.HAL.write_halfile(base)
+            # qtplasmac specific
+            if self.d.frontend == _PD._QTPLASMAC:
+                # copy M190 file
+                if BASE == "/usr":
+                    m190Path = os.path.join(BASE, 'share/doc/linuxcnc/examples/sample-configs/sim/qtplasmac/M190')
                 else:
-                    if self.d.units == _PD._METRIC:
-                        print("T1 P1 Z0.511 D3 ;3mm end mill Sample Tool", file=file)
-                        print("T2 P4 Z0.1 D1.5 ;1.5mm  end mill Sample Tool", file=file)
-                        print("T3 P3 Z1.273 D5 ;5mm tap drill Sample Tool", file=file)
-                        print("T4 P2 Z10 D16 ;16 mm Sample Tool", file=file)
-                        print("T5 P5 Z25 D25 ;25mm er Sample Tool", file=file)
+                    m190Path = os.path.join(BASE, 'configs/sim/qtplasmac/M190')
+                shutil.copy(m190Path, os.path.join(base, 'M190'))
+                # different looking tool table for qtplasmac
+
+                dest = os.path.join(base, "tool.tbl")
+                if not os.path.exists(dest):
+                    file = open(dest, "w")
+                    print("T0 P1 X0 Y0 ;torch", file=file)
+                    print("T1 P2 X0 Y0 ;scribe", file=file)
+                    file.close()
+
+            # _not_ qtplasmac
+            else:
+                dest = os.path.join(base, "tool.tbl")
+                print (base,'\ncopy:',dest,os.path.exists(dest))
+                if not os.path.exists(dest):
+                    print('copied')
+                    # different looking tool table for qtplasmac
+                    file = open(dest, "w")
+                    if self.d.axes == 2:# lathe
+                        if self.d.units == _PD._METRIC:
+                            print("T1 P1 D3 Z+3 I+95.000000 J+155.000000 Q1 ; Sample Tool", file=file)
+                            print("T2 P2 D3 I+85.000000 J+25.000000 Q2 ; Sample Tool", file=file)
+                            print("T3 P3 D3 I+275.000000 J+335.000000 Q3 ; Sample Tool", file=file)
+                            print("T4 P4 D3 I+265.000000 J+205.000000 Q4 ; Sample Tool", file=file)
+                        else:
+                            print("T1 P1 D0.100000 Z+0.100000 I+95.000000 J+155.000000 Q1 ; Sample Tool", file=file)
+                            print("T2 P2 D0.100000 I+85.000000 J+25.000000 Q2 ; Sample Tool", file=file)
+                            print("T3 P3 D0.100000 I+275.000000 J+335.000000 Q3 ; Sample Tool", file=file)
+                            print("T4 P4 D0.100000 I+265.000000 J+205.000000 Q4 ; Sample Tool", file=file)
+                            print("T5 P5 D0.100000 I+210.000000 J+150.000000 Q5 ; Sample Tool", file=file)
+                            print("T6 P6 D0.100000 X+0.500000 Z+0.500000 I+120.000000 J+60.000000 Q6 ; Sample Tool", file=file)
+                            print("T7 P7 D0.100000 I-30.000000 J+30.000000 Q7 ; Sample Tool", file=file)
+                            print("T8 P8 D0.100000 I+240.000000 J+300.000000 Q8 ; Sample Tool", file=file)
                     else:
-                        print("T1 P1 Z0.511 D0.125 ;1/8 end mill Sample Tool", file=file)
-                        print("T2 P2 Z0.1 D0.0625 ;1/16 end mill Sample Tool", file=file)
-                        print("T3 P3 Z1.273 D0.201 ;#7 tap drill Sample Tool", file=file)
-                        print("T4 P4 Z0 D2 ; 2 inch mill Sample Tool", file=file)
+                        if self.d.units == _PD._METRIC:
+                            print("T1 P1 Z0.511 D3 ;3mm end mill Sample Tool", file=file)
+                            print("T2 P4 Z0.1 D1.5 ;1.5mm  end mill Sample Tool", file=file)
+                            print("T3 P3 Z1.273 D5 ;5mm tap drill Sample Tool", file=file)
+                            print("T4 P2 Z10 D16 ;16 mm Sample Tool", file=file)
+                            print("T5 P5 Z25 D25 ;25mm er Sample Tool", file=file)
+                        else:
+                            print("T1 P1 Z0.511 D0.125 ;1/8 end mill Sample Tool", file=file)
+                            print("T2 P2 Z0.1 D0.0625 ;1/16 end mill Sample Tool", file=file)
+                            print("T3 P3 Z1.273 D0.201 ;#7 tap drill Sample Tool", file=file)
+                            print("T4 P4 Z0 D2 ; 2 inch mill Sample Tool", file=file)
 
-                file.close()
+                    file.close()
 
-        if self.warning_dialog(self._p.MESS_QUIT,False):
-            Gtk.main_quit()
+            if self.warning_dialog(self._p.MESS_QUIT,False):
+                Gtk.main_quit()
 
     def save(self):
         base = self.build_base()
         self.d.save(base)
 
 # helper functions
+
+    def validate_database(self):
+        ''' validate various parameters before writing data '''
+        changes = ''
+        # validate home_sequences
+        changed = False
+        seq = []
+        if self.d.axes == 0: myAxes = 'xyz'
+        elif self.d.axes == 1: myAxes = 'xyza'
+        elif self.d.axes == 2: myAxes = 'xz'
+        for axis in myAxes: seq.append(self.d[axis + "homesequence"])
+        mini = min(seq)
+        if mini != 0: # first home sequence must be 0
+            for n in range(len(seq)):
+                seq[n] -= mini
+            changed = True
+        order = list(set(seq)) # used sequence numbers must be consecutive
+        if len(order) > 1:
+            for n in range(1, len(order)):
+                if order[n] > order[n-1] + 1:
+                    for s in range(len(seq)):
+                        if seq[s] == order[n]:
+                            seq[s] = order[n-1] + 1
+                    order[n] = order[n-1] + 1
+                    changed = True
+        if changed:
+            for n in range(len(seq)):
+                if seq[n] != self.d[myAxes[n] + "homesequence"]:
+                    change = f'{myAxes[n]} axis home sequence changed from {self.d[myAxes[n] + "homesequence"]+1} to {seq[n]+1}'
+                    changes += change + '\n'
+                self.widgets[myAxes[n] + "homesequence"].set_active(seq[n])
+                self.d[myAxes[n] + "homesequence"] = seq[n]
+
+        if changes:
+            self.warning_dialog(changes, True)
+            return False
+        return True
 
     def get_discovery_meta(self):
         self.widgets.boarddiscoverydialog.set_title(_("Discovery metadata update"))
@@ -1852,7 +1890,7 @@ Discovery option requires the advanced options checked on this page."""%self._p.
                 self.widgets[key].set_active(False)
             else:
                 self.widgets[key].set_active(True)
-                self.widgets[key+"button"].set_color(gdk.color_parse(data))
+                self.widgets[key+"button"].set_color(Gdk.color_parse(data))
         self.widgets.touchyforcemax.set_active(bool(prefs.getpref('window_force_max')))
 
     def set_touchy_preference(self, value, default, type):
@@ -2140,10 +2178,10 @@ Clicking 'existing custom program' will avoid this warning. "),False):
             dbg('Looking for firmware data %s'%self.d["mesa%d_firmware"% boardnum])
             found = False
             search = 0
-            model = self.widgets["mesa%d_firmware"% boardnum].get_model()
-            for search,item in enumerate(model):
-                dbg('%d,%s'%(search,model[search][0]))
-                if model[search][0]  == self.d["mesa%d_firmware"% boardnum]:
+            combo_model = self.widgets["mesa%d_firmware"% boardnum].get_model()
+            for search,item in enumerate(combo_model):
+                dbg('%d,%s'%(search,combo_model[search][0]))
+                if combo_model[search][0]  == self.d["mesa%d_firmware"% boardnum]:
                     self.widgets["mesa%d_firmware"% boardnum].set_active(search)
                     found = True
                     dbg('found firmware # %d'% search)
@@ -2152,9 +2190,10 @@ Clicking 'existing custom program' will avoid this warning. "),False):
                 dbg('firmware not found')
                 cur_firm = self.d['mesa%d_currentfirmwaredata'% boardnum][_PD._FIRMWARE]
                 dbg('looking for: %s'% cur_firm )
+                combo = self.widgets["mesa%d_firmware"% boardnum]
                 #self.widgets["mesa%d_firmware"% boardnum].set_active(0)
                 self._p.MESA_FIRMWAREDATA.append(self.d['mesa%d_currentfirmwaredata'% boardnum])
-                model.append((cur_firm,))
+                combo.append_text(cur_firm)
                 self.init_mesa_options(boardnum)
                 return
             else:
@@ -3038,7 +3077,7 @@ Clicking 'existing custom program' will avoid this warning. "),False):
                         self.widgets[ptype].set_sensitive(0)
                         self.widgets[p].set_model(self.d._notusedsignaltree)
                         self.widgets[p].set_active(0)
-                        return 'ERROR: more then maximium channels'
+                        return 'ERROR: more then maximum channels'
 
                     #print("**** INFO: SMART SERIAL ENCODER:",firmptype," compnum = ",compnum," channel = ",channelnum)
                     #print("sserial channel:%d"% numofsserialchannels)
@@ -4311,7 +4350,7 @@ Clicking 'existing custom program' will avoid this warning. "),False):
             w[axis+"homesearchvel"].set_text("%d" % (d[axis+"homesearchvel"]*60))
             w[axis+"homelatchvel"].set_text("%d" % (d[axis+"homelatchvel"]*60))
             w[axis+"homefinalvel"].set_text("%d" % (d[axis+"homefinalvel"]*60))
-            w[axis+"homesequence"].set_text("%d" % abs(d[axis+"homesequence"]))
+            set_active("homesequence")
             set_active("searchdir")
             set_active("latchdir")
             set_active("usehomeindex")
@@ -4502,7 +4541,7 @@ Clicking 'existing custom program' will avoid this warning. "),False):
             d[axis + "homesearchvel"] = (get_value(w[axis + "homesearchvel"])/60)
             d[axis + "homelatchvel"] = (get_value(w[axis + "homelatchvel"])/60)
             d[axis + "homefinalvel"] = (get_value(w[axis + "homefinalvel"])/60)
-            d[axis+"homesequence"] = (abs(get_value(w[axis+"homesequence"])))
+            get_active("homesequence")
             get_active("searchdir")
             get_active("latchdir")
             get_active("usehomeindex")

@@ -300,11 +300,16 @@ class Lcnc_3dGraphics(QGLWidget,  glcanon.GlCanonDraw, glnav.GlNavBase):
         self.dro_deg = "% 9.2f"
         self.dro_vel = "   Vel:% 9.2F"
         self._font = 'monospace bold 16'
+        self._fontLarge = 'monospace bold 22'
+        self._largeFontState = False
         self.addTimer()
         self._buttonList = [Qt.LeftButton,
                             Qt.MiddleButton,
                             Qt.RightButton]
         self._invertWheelZoom = False
+
+        # base units of config. updated by subclass (gcode_graphics)
+        self.mach_units = 'Metric'
 
     # add a 100ms timer to poll linuxcnc stats
     # this may be overridden in sub widgets
@@ -337,7 +342,6 @@ class Lcnc_3dGraphics(QGLWidget,  glcanon.GlCanonDraw, glnav.GlNavBase):
             self.display_loaded = True
 
     def load(self,filename = None):
-        linuxcnc.command().task_plan_synch()
         s = self.stat
         s.poll()
         if not filename and s.file:
@@ -456,19 +460,17 @@ class Lcnc_3dGraphics(QGLWidget,  glcanon.GlCanonDraw, glnav.GlNavBase):
             lines = sum(1 for line in open(loaded_file))
             props['size'] = "%(size)s bytes\n%(lines)s gcode lines" % {'size': size, 'lines': lines}
 
-            if self.metric_units:
-                conv = 1
-                units = "mm"
-                fmt = "%.3f"
-                mach = 'Metric'
-            else:
-                conv = 1/25.4
+            # report props in gcode's units
+            if 200 in canon.state.gcodes:
                 units = "in"
                 fmt = "%.4f"
-                mach = 'Imperial'
+                conv = 1/25.4
+            else:
+                units = "mm"
+                fmt = "%.3f"
+                conv = 1
 
             mf = max_speed
-            #print canon.traverse[0]
 
             g0 = sum(dist(l[1][:3], l[2][:3]) for l in canon.traverse)
             g1 = (sum(dist(l[1][:3], l[2][:3]) for l in canon.feed) +
@@ -499,15 +501,25 @@ class Lcnc_3dGraphics(QGLWidget,  glcanon.GlCanonDraw, glnav.GlNavBase):
                 e = max_extents_zero_rxy[i]
                 props[c] = "%f to %f = %f %s".replace("%f", fmt) % (a, b, b-a, units)
                 props[c + '_zero_rxy'] = "%f to %f = %f %s".replace("%f", fmt) % ( d, e, e-d, units)
-            props['machine_unit_sys'] = mach
+            props['machine_unit_sys'] = self.mach_units
 
-            if 200 in canon.state.gcodes:
-                gcode_units = "in"
-            else:
-                gcode_units = "mm"
-            props['gcode_units'] = gcode_units
+            props['gcode_units'] = units
 
         self.gcode_properties = props
+
+    def set_font(self, large=None):
+        # set to None to reset the DRO font
+        if large is None: large = self._largeFontState
+        if large:
+            font = self._fontLarge
+            self._largeFontState = True
+        else:
+            font = self._font
+            self._largeFontState = False
+        self.font_base, width, linespace = glnav.use_pango_font(font, 0, 128)
+        self.font_linespace = linespace
+        self.font_charwidth = width
+        self.update()
 
     # setup details when window shows
     def realize(self):
@@ -523,10 +535,7 @@ class Lcnc_3dGraphics(QGLWidget,  glcanon.GlCanonDraw, glnav.GlNavBase):
         except:
             return
         self._current_file = None
-
-        self.font_base, width, linespace = glnav.use_pango_font(self._font, 0, 128)
-        self.font_linespace = linespace
-        self.font_charwidth = width
+        self.set_font(False)
         glcanon.GlCanonDraw.realize(self)
         if s.file: self.load()
 
@@ -1214,11 +1223,21 @@ class Lcnc_3dGraphics(QGLWidget,  glcanon.GlCanonDraw, glnav.GlNavBase):
 #############
     def setfont(self, font):
         self._font = font
+        self.set_font()
     def getfont(self):
         return self._font
     def resetfont(self):
         self._font = 'monospace bold 16'
     dro_font = pyqtProperty(str, getfont, setfont, resetfont)
+
+    def setfontlarge(self, font):
+        self._fontLarge = font
+        self.set_font()
+    def getfontlarge(self):
+        return self._fontLarge
+    def resetfontlarge(self):
+        self._fontLarge = 'monospace bold 22'
+    dro_large_font = pyqtProperty(str, getfontlarge, setfontlarge, resetfontlarge)
 
 ###########
 # Testing

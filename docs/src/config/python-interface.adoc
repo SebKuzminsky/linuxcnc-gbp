@@ -2,7 +2,7 @@
 :toc:
 
 [[cha:python-interface]]
-= Python Interface
+= The LinuxCNC Python module
 
 :ini: {basebackend@docbook:'':ini}
 :hal: {basebackend@docbook:'':hal}
@@ -15,8 +15,7 @@ a Python API for talking to LinuxCNC.
 constants are located in src/emc/usr_intf/axis/extensions/emcmodule.cc
 ////
 
-== The `linuxcnc` Python module
-
+== Introduction
 User interfaces control LinuxCNC activity by sending
 NML messages to the LinuxCNC task controller, and monitor results by
 observing the LinuxCNC status structure, as well as the error reporting channel.
@@ -510,7 +509,7 @@ For each joint, the following dictionary keys are available:
   current velocity.
 
 [[sec:the-spindle-dictionary]]
-== The `spindle` dictionary
+=== The `spindle` dictionary
 
 *brake*:: '(returns integer)' -
   value of the spindle brake flag.
@@ -653,7 +652,7 @@ c.tool_offset(toolno, z_offset,  x_offset, diameter, frontangle, backangle, orie
   sends a operator error message to the screen. (max 254 characters)
 
 `feedrate(float)`::
-  set the feedrate.
+  set the feedrate override, 1.0 = 100%.
 
 `flood(int)`::
   turn on/off flooding.

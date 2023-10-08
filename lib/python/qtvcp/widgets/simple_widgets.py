@@ -411,7 +411,8 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
             self.hal_pin_led.value_changed.connect(lambda data: self.indicator_update(data))
         elif self._ind_status:
             self._init_state_change()
-        self._globalParameter = {'__builtins__' : None, 'INSTANCE':self.QTVCP_INSTANCE_,
+        self._globalParameter = {'__builtins__' : None, 'MAIN_INSTANCE':self.QTVCP_INSTANCE_,
+                                    'INSTANCE':self.THIS_INSTANCE_,
                                  'PROGRAM_LOADER':AUX_PRGM, 'ACTION':ACTION, 'HAL':hal, 'print':print}
         self._localsParameter = {'dir': dir, 'True':True, 'False':False}
 
@@ -616,8 +617,8 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
                 except AttributeError as e:
                     LOG.error('({} called exec in error:{}'.format(self.objectName(),e))
                     LOG.warning('   Command was {}'.format(self.true_python_command))
-                    LOG.warning('   List of objects:')
-                    print(dir(self.QTVCP_INSTANCE_))
+                    LOG.verbose('   List of objects:')
+                    LOG.verbose(dir(self.QTVCP_INSTANCE_))
             else:
                 try:
                     exec(self.false_python_command, self._globalParameter, self._localsParameter)
@@ -627,8 +628,8 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
                 except AttributeError as e:
                     LOG.error('({} called exec in error:{}'.format(self.objectName(),e))
                     LOG.warning('   Command was {}'.format(self.false_python_command))
-                    LOG.warning('   List of objects:')
-                    print(dir(self.QTVCP_INSTANCE_))
+                    LOG.verbose('   List of objects:')
+                    LOG.verbose(dir(self.QTVCP_INSTANCE_))
 
     # callback to toggle text when button is toggled
     def toggle_text(self, state=None):
@@ -662,9 +663,9 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
                 rect = p.window()
                 top_right = rect.topRight() - QtCore.QPoint(self._right_edge_offset,-self._top_edge_offset)
                 if self.width() < self.height():
-                    size = self.width() * self._size
+                    size = int(self.width() * self._size)
                 else:
-                    size = self.height() * self._size
+                    size = int(self.height() * self._size)
 
                 gradient = QtGui.QLinearGradient(top_right- QtCore.QPoint(size, 0), top_right)
                 gradient.setColorAt(0, QtCore.Qt.white)
@@ -704,10 +705,10 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
                 grad.setColorAt(.5, QtCore.Qt.white)
                 grad.setColorAt(.8, color)
                 p.setBrush(QtGui.QBrush(grad))
-                p.drawRoundedRect(topLeft.x()+(self.width()*((1-self._w_fraction)/2)) + self._top_edge_offset,
-                                    topLeft.y()+self._right_edge_offset,
-                                    self.width()*self._w_fraction+2,
-                                    self.height()*self._h_fraction,
+                p.drawRoundedRect(int(topLeft.x()+(self.width()*((1-self._w_fraction)/2)) + self._top_edge_offset),
+                                    int(topLeft.y()+self._right_edge_offset),
+                                    int(self.width()*self._w_fraction+2),
+                                    int(self.height()*self._h_fraction),
                                     self._corner_radius, self._corner_radius)
 
 
@@ -725,10 +726,10 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
                 grad.setColorAt(.5, QtCore.Qt.white)
                 grad.setColorAt(.8, color)
                 p.setBrush(QtGui.QBrush(grad))
-                p.drawRoundedRect(topRight.x()- self.width()*self._w_fraction-self._right_edge_offset,
-                                    topRight.y()+(self.height()*((1-self._h_fraction)/2)) + self._top_edge_offset,
-                                    self.width()*self._w_fraction,
-                                    self.height()*self._h_fraction,
+                p.drawRoundedRect(int(topRight.x()- self.width()*self._w_fraction-self._right_edge_offset),
+                                    int(topRight.y()+(self.height()*((1-self._h_fraction)/2)) + self._top_edge_offset),
+                                    int(self.width()*self._w_fraction),
+                                    int(self.height()*self._h_fraction),
                                     self._corner_radius, self._corner_radius)
 
     def set_indicator(self, data):
@@ -838,7 +839,7 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
         self.update()
 
     def set_right_edge_offset(self, data):
-        self._right_edge_offset = data
+        self._right_edge_offset = int(data)
         self.update()
     def get_right_edge_offset(self):
         return self._right_edge_offset
@@ -847,7 +848,7 @@ class IndicatedPushButton(QtWidgets.QPushButton, _HalWidgetBase):
         self.update()
 
     def set_top_edge_offset(self, data):
-        self._top_edge_offset = data
+        self._top_edge_offset = int(data)
         self.update()
     def get_top_edge_offset(self):
         return self._top_edge_offset
@@ -1336,7 +1337,7 @@ class ScaledLabel(QtWidgets.QLabel):
         dh = event.size().height() - event.oldSize().height() # height change
         fs = max(f.pointSizeF(), .5)
         while True:
-            f.setPointSize(fs)
+            f.setPointSize(int(fs))
             #gives bigger text
             #br =  QtGui.QFontMetrics(f).tightBoundingRect(self.textSample())
             # then this

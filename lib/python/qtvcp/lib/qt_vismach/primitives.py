@@ -63,7 +63,7 @@ def use_pango_font(font, start, count, will_call_prepost=False):
         context.restore()
         w, h = int(w / Pango.SCALE), int(h / Pango.SCALE)
         GL.glNewList(base+i, GL.GL_COMPILE)
-        GL.glBitmap(1, 1, 0, 0, 0, h-d, bytearray([0]*4))
+        GL.glBitmap(1, 0, 0, 0, 0, h-d, bytearray([0]*4))
         #glDrawPixels(0, 0, 0, 0, 0, h-d, '');
         if not will_call_prepost:
             pango_font_pre()
@@ -74,7 +74,7 @@ def use_pango_font(font, start, count, will_call_prepost=False):
             except Exception as e:
                 print("glnav Exception ",e)
 
-        GL.glBitmap(1, 1, 0, 0, w, -h+d, bytearray([0]*4))
+        GL.glBitmap(1, 0, 0, 0, w, -h+d, bytearray([0]*4))
         if not will_call_prepost:
             pango_font_post()
         GL.glEndList()
@@ -186,9 +186,9 @@ class Track(Collection):
 
     def map_coords(self, tx, ty, tz, transform):
         # now we have to transform them to the world frame
-        wx = tx * transform[0] + ty * transform[4] + tz * transform[8] + transform[12]
-        wy = tx * transform[1] + ty * transform[5] + tz * transform[9] + transform[13]
-        wz = tx * transform[2] + ty * transform[6] + tz * transform[10] + transform[14]
+        wx = tx*transform[0][0]+ty*transform[1][0]+tz*transform[2][0]+transform[3][0]
+        wy = tx*transform[0][1]+ty*transform[1][1]+tz*transform[2][1]+transform[3][1]
+        wz = tx*transform[0][2]+ty*transform[1][2]+tz*transform[2][2]+transform[3][2]
         return ([wx, wy, wz])
 
     def apply(self):

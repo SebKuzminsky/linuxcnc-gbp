@@ -66,7 +66,7 @@ class OnePg(QWidget):
                 self.make_fileset()
                 self.create_parms()
             except Exception as detail:
-                print("update_onepage exception: {}".format(detail))
+                LOG.exception(detail)
                 return False
         elif ftype == 'pst':
             self.pst_file = fname
@@ -391,10 +391,13 @@ class SaveSection():
         tmpsdata = []
         for key, val in list(sub_info.ndict.items()):
             name, value, comment = val
+            # TODO entries of 'None' are converted to 0 to avoid error
+            # is this an ok thing to do?
+            value = 0 if value is None else value
             try:
                 v = float(value)
             except Exception as detail:
-                print("SaveSection Exception: {}".format(detail))
+                LOG.exception(detail)
                 mypg.textEdit_status.append("Entry for parm {} is not a number <{}>".format(key, value))
             if value is None: value = 0
             self.parmlist.append(str(value))
@@ -497,13 +500,25 @@ class NgcGui(QtWidgets.QWidget):
 
         # sort through sub list and add the pages.
         for curr_ngcfile in INFO.NGC_SUB:
-           curr_fname = os.path.join(abs_ngc_sub_path,curr_ngcfile)
-           LOG.debug("Adding NGCGUI:{}".format(curr_fname))
-           self.add_page()
-           mpage = self.tabWidget.currentWidget()
-           mindex = self.tabWidget.currentIndex()
-           mpage.update_onepage('sub', curr_fname)
-           self.tabWidget.setTabText(mindex, curr_ngcfile)    
+            curr_fname = os.path.join(abs_ngc_sub_path,curr_ngcfile)
+            LOG.debug("Adding NGCGUI:{}".format(curr_fname))
+
+            # check if file exists on system    
+            if not os.path.exists(curr_fname):
+                LOG.warning("The ngc_sub path does not exist: {}".format(curr_fname))
+                continue
+
+            # check if file is in linuxcnc's list of paths from INI
+            rtn = self.check_linuxcnc_paths(curr_fname)
+            if rtn == '':
+                LOG.warning("The ngc_sub path is not in a known path from the INI: {}".format(curr_fname))
+                continue
+
+            self.add_page()
+            mpage = self.tabWidget.currentWidget()
+            mindex = self.tabWidget.currentIndex()
+            mpage.update_onepage('sub', curr_fname)
+            self.tabWidget.setTabText(mindex, curr_ngcfile)    
         index = self.tabWidget.currentIndex()
         self.tab_changed(index)
 
@@ -535,10 +550,20 @@ class NgcGui(QtWidgets.QWidget):
         else:
             self.textEdit_status.append("Unknown file type")
             return
+
         fname = get_file_open(title)
         if fname == '':
             self.textEdit_status.append(error)
             return
+
+        # make sure linuxcnc it's self can find the path
+        rtn = self.check_linuxcnc_paths(fname)
+        if rtn == '':
+            self.textEdit_status.append("Path is not in linuxcnc's designated search folders")
+            return
+        else:
+            fname = rtn
+
         if ftype == 'pre':
             self.pre_file = fname
             self.lineEdit_preamble.setText(os.path.basename(fname))
@@ -789,6 +814,23 @@ class NgcGui(QtWidgets.QWidget):
         """ Convenience function to move the tabs frame to another layout"""
         newLayout.addWidget(self.frame_tabs)
 
+    # This could be overridden to actually fix the path
+    def check_linuxcnc_paths(self, fname):
+        if INFO.is_in_known_paths(fname):
+            return self.check_linuxcnc_paths_pass(fname)
+        else:
+            return self.check_linuxcnc_paths_fail(fname)
+
+    # can be overridden
+    # return fname to continue
+    def check_linuxcnc_paths_pass(self, fname):
+        return fname
+
+    # can be overridden
+    # return '' to fail
+    def check_linuxcnc_paths_fail(self, fname):
+        return ''
+
 ##################
 # Global functions
 ##################
@@ -956,12 +998,12 @@ def save_a_copy(fname, archive_dir='/tmp/old_ngc'):
             os.mkdir(archive_dir)
         shutil.copyfile(fname, os.path.join(archive_dir, dt() + '_' + os.path.basename(fname)))
     except IOError as msg:
-        print("save_a_copy: IOError copying file to {}".format(archive_dir))
-        print(msg)
+        LOG.error("save_a_copy: IOError copying file to {}".format(archive_dir))
+        LOG.exception(msg)
     except Exception as detail:
-        print("Save a copy Exception: {}".format(detail))
+        LOG.exception("Save a copy Exception: {}".format(detail))
         sys.exit(1)
-    
+
     #############################
     # Testing                   #
     #############################
