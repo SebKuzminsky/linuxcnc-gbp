@@ -109,7 +109,7 @@ static int Ini_init(pyIniFile *self, PyObject *a, PyObject *k) {
         self->i = new IniFile();
 
     if (!self->i->Open(inifile)) {
-        PyErr_Format( error, "inifile.open() failed");
+        PyErr_Format( error, "inifile.open(%s) failed", inifile);
         return -1;
     }
     return 0;
@@ -744,7 +744,9 @@ static PyGetSetDef Stat_getsetlist[] = {
     {(char*)"din", (getter)Stat_din},
     {(char*)"dout", (getter)Stat_dout},
     {(char*)"gcodes", (getter)Stat_activegcodes},
-    {(char*)"homed", (getter)Stat_homed},
+    {(char*)"homed", (getter)Stat_homed, (setter)NULL,
+        (char*)"An array of integers indicating the 'homed' status of each joint (0 or 1)."
+    },
     {(char*)"limit", (getter)Stat_limit},
     {(char*)"mcodes", (getter)Stat_activemcodes},
     {(char*)"misc_error", (getter)Stat_misc_error},

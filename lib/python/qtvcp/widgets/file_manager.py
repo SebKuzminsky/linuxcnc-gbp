@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import (QApplication, QFileSystemModel, QWidget, QVBoxLayou
                              QMenu, QAction, QLineEdit, QCheckBox, QTableView, QHeaderView)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import (QModelIndex, QDir, Qt, pyqtSlot,
-                    QItemSelectionModel, QItemSelection)
+                    QItemSelectionModel, QItemSelection, pyqtProperty)
 
 from qtvcp.widgets.widget_baseclass import _HalWidgetBase
 from qtvcp.core import Status, Action, Info
@@ -40,6 +40,8 @@ class FileManager(QWidget, _HalWidgetBase):
         self.width = 640
         self.height = 480
         self._last = 0
+        self._doubleClick = False
+        self._showListView = False
 
         if INFO.PROGRAM_PREFIX is not None:
             self.user_path = os.path.expanduser(INFO.PROGRAM_PREFIX)
@@ -111,16 +113,12 @@ class FileManager(QWidget, _HalWidgetBase):
         self.list = QListView()
         self.list.setModel(self.model)
         self.list.resize(640, 480)
-        self.list.clicked[QModelIndex].connect(self.listClicked)
-        self.list.activated.connect(self._getPathActivated)
         self.list.setAlternatingRowColors(True)
         self.list.hide()
 
         self.table = QTableView()
         self.table.setModel(self.model)
         self.table.resize(640, 480)
-        self.table.clicked[QModelIndex].connect(self.listClicked)
-        self.table.activated.connect(self._getPathActivated)
         self.table.setAlternatingRowColors(True)
 
         header = self.table.horizontalHeader()
@@ -228,6 +226,8 @@ class FileManager(QWidget, _HalWidgetBase):
         if not None in(sect,order):
             self.table.horizontalHeader().setSortIndicator(sect,order)
 
+        self.connectSelection()
+
     # when qtvcp closes this gets called
     # record jump list paths
     def _hal_cleanup(self):
@@ -281,6 +281,8 @@ class FileManager(QWidget, _HalWidgetBase):
             self.currentPath = dir_path
             self.textLine.setText(self.currentPath)
             return
+        else:
+            self.currentPath = None
         root_index = self.model.setRootPath(dir_path)
         self.list.setRootIndex(root_index)
         self.table.setRootIndex(root_index)
@@ -351,7 +353,7 @@ class FileManager(QWidget, _HalWidgetBase):
             row = self.list.selectionModel().currentIndex()
         else:
             row = self.table.selectionModel().currentIndex()
-            self.listClicked(row)
+        self.listClicked(row)
 
         fname = self.currentPath
         if fname is None:
@@ -507,6 +509,48 @@ class FileManager(QWidget, _HalWidgetBase):
         if self.PREFS_:
             self.PREFS_.putpref('last_loaded_directory', self.model.rootPath(), str, 'BOOK_KEEPING')
             self.PREFS_.putpref('RecentPath_0', fname, str, 'BOOK_KEEPING')
+
+    def connectSelection(self):
+        try:
+            self.list.disconnect()
+            self.table.disconnect()
+            self.list.activated.connect(self._getPathActivated)
+            self.table.activated.connect(self._getPathActivated)
+        except:
+            pass
+        # choose double click or single click for folder selection
+        if self._doubleClick:
+            self.list.doubleClicked[QModelIndex].connect(self.listClicked)
+            self.table.doubleClicked[QModelIndex].connect(self.listClicked)
+        else:
+            self.list.clicked[QModelIndex].connect(self.listClicked)
+            self.table.clicked[QModelIndex].connect(self.listClicked)
+
+    ######################
+    # Properties
+    ######################
+
+    # Double Click folder selection
+    def setDoubleClickSelection(self, state):
+        self._doubleClick = state
+        self.connectSelection()
+    def getDoubleClickSelection(self):
+        return self._doubleClick
+    def resetDoubleClickSelection(self, state):
+        self._doubleClick = False
+        self.connectSelection()
+    doubleClickSelection = pyqtProperty(bool, getDoubleClickSelection, setDoubleClickSelection,  resetDoubleClickSelection)
+
+    # list/table view selection
+    def setShowListView(self, state):
+        self._showListView = state
+        self.showList(state)
+    def getShowListView(self):
+        return self._showListView
+    def resetShowListView(self, state):
+        self._showListView = False
+        self.showList(False)
+    showListView = pyqtProperty(bool, getShowListView, setShowListView,  resetShowListView)
 
 if __name__ == "__main__":
     import sys

@@ -1311,22 +1311,29 @@ typedef struct {
 
 typedef struct {
     rtapi_u32 clock_freq;
-    rtapi_u32 bitrate;
+    rtapi_u32 tx_bitrate;
+    rtapi_u32 rx_bitrate;
     rtapi_u32 tx_fifo_count_addr;
     rtapi_u32 tx_bitrate_addr;
     rtapi_u32 tx_addr;
     rtapi_u32 tx_mode_addr;
+    rtapi_u32 tx_mode;
     rtapi_u32 rx_fifo_count_addr;
     rtapi_u32 rx_bitrate_addr;
     rtapi_u32 rx_addr;
     rtapi_u32 rx_mode_addr;
+    rtapi_u32 rx_mode;
     char name[HAL_NAME_LEN+1];
 } hm2_pktuart_instance_t;
 
 typedef struct {
     int version;
+    int tx_version;
+    int rx_version;
     int num_instances;
     hm2_pktuart_instance_t *instance;
+    rtapi_u32 *tx_status_reg;
+    rtapi_u32 *rx_status_reg;
     rtapi_u8 instances;
     rtapi_u8 num_registers;
     struct rtapi_heap *heap;
@@ -1881,7 +1888,10 @@ void hm2_pktuart_write(hostmot2_t *hm2);
 void hm2_pktuart_force_write(hostmot2_t *hm2); // ?? 
 void hm2_pktuart_prepare_tram_write(hostmot2_t *hm2, long period); //??
 void hm2_pktuart_process_tram_read(hostmot2_t *hm2, long period);  //  ??
-int hm2_pktuart_setup(char *name, int bitrate, rtapi_s32 tx_mode, rtapi_s32 rx_mode, int txclear, int rxclear);
+int hm2_pktuart_setup(char *name, unsigned int bitrate, rtapi_s32 tx_mode, rtapi_s32 rx_mode, int txclear, int rxclear);
+int hm2_pktuart_setup_rx(char *name, unsigned int bitrate, unsigned int filter_hz, unsigned int parity, int frame_delay, bool rx_enable, bool rx_mask);
+int hm2_pktuart_setup_tx(char *name, unsigned int bitrate, unsigned int parity, int frame_delay, bool drive_enable, bool drive_auto, int enable_delay);
+void hm2_pktuart_reset(char *name);
 int hm2_pktuart_send(char *name,  unsigned char data[], rtapi_u8 *num_frames, rtapi_u16 frame_sizes[]);
 int hm2_pktuart_read(char *name, unsigned char data[],  rtapi_u8 *num_frames, rtapi_u16 *max_frame_length, rtapi_u16 frame_sizes[]);
 

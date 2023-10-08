@@ -294,8 +294,8 @@ class ScreenOptions(QtWidgets.QWidget, _HalWidgetBase):
     # be able to pass the preference object to the widgets
     def _pref_init(self):
         if self.use_pref_file:
-            # we prefer INI settings
-            if INFO.PREFERENCE_PATH:
+            # we prefer INI settings for screens
+            if INFO.PREFERENCE_PATH and INFO.IS_SCREEN:
                 self.pref_filename = INFO.PREFERENCE_PATH
                 LOG.debug('Switching to Preference File Path from INI: {}'.format(INFO.PREFERENCE_PATH))
             # substitute for keywords
@@ -391,10 +391,7 @@ class ScreenOptions(QtWidgets.QWidget, _HalWidgetBase):
                 answer = True
             # system shutdown
             if answer == QtWidgets.QMessageBox.DestructiveRole:
-                self.QTVCP_INSTANCE_.settings.sync()
                 self.QTVCP_INSTANCE_.shutdown()
-                self.QTVCP_INSTANCE_.panel_.shutdown()
-                STATUS.shutdown()
                 try:
                     HANDLER = self.QTVCP_INSTANCE_.handler_instance
                     if 'system_shutdown_request__' in dir(HANDLER):
@@ -411,10 +408,7 @@ class ScreenOptions(QtWidgets.QWidget, _HalWidgetBase):
             elif answer:
                 if self.PREFS_ and self.play_sounds and self.shutdown_play_sound:
                     STATUS.emit('play-sound', self.shutdown_exit_sound_type)
-                self.QTVCP_INSTANCE_.settings.sync()
                 self.QTVCP_INSTANCE_.shutdown()
-                self.QTVCP_INSTANCE_.panel_.shutdown()
-                STATUS.shutdown()
                 event.accept()
             # cancel
             elif answer == False:
@@ -723,6 +717,7 @@ class ScreenOptions(QtWidgets.QWidget, _HalWidgetBase):
         if not STATUS.is_limits_override_set():
             ACTION.TOGGLE_LIMITS_OVERRIDE()
         ACTION.SET_MACHINE_STATE(True)
+        ACTION.SET_MANUAL_MODE()
 
     def effect(self, data, text, color):
         if self.use_focus_blur:

@@ -42,7 +42,6 @@ The board interfaces with the computer via PCI, Ethernet, SPI, or EPP, and inter
 such as servos and stepper motors via I/O pins on the board.
 
 Each I/O pin can be configured, at board-driver load time, to serve one of two purposes:
-either as a particular I/O pin of a particular Module instance (encoder, pwmgen, stepgen etc),
 Either as a particular I/O pin of a particular Module instance (encoder, pwmgen, stepgen etc), or as a general purpose digital I/O pin.
 By default all Module instances are enabled, and all the board's pins are used by the Module instances.
 
@@ -724,7 +723,7 @@ The first three pins are the high side drivers, the second three are their compl
 The enable bit is intended to control the servo amplifier.
 The input bit is a fault bit, typically wired to over-current detection.
 When set the PWM generator is disabled.  The three phase duty-cycles are individually controllable from \-Scale to +Scale.
-Note that 0 corresponds to a 50% duty cycle and this is the inialization value.
+Note that 0 corresponds to a 50% duty cycle and this is the initialization value.
 
 Pins:
 
@@ -871,7 +870,7 @@ Sets the master RC PWM frequency. Maximum is 1 kHz, minimum is .01 Hz. Defaults 
 
 .TP
 (float rw) width
-Sets the per channel pulse width in (ms/scale)
+Sets the per channel pulse width in (ms/scale).
 
 .TP
 (float rw) offset
@@ -882,7 +881,7 @@ This would be set to 1.5 ms for 1-2 ms servos for a 0 center position.
 (float rw) scale
 Sets the per channel pulse width scaling.
 For example, setting the scale to 90 and the offset to 1.5 ms would result in a position range of +-45 degrees
-and scale in degrees for 1-2 ms servos with a full motion range of 90 degrees
+and scale in degrees for 1-2 ms servos with a full motion range of 90 degrees.
 
 .SS stepgen
 
@@ -1089,7 +1088,7 @@ The mapping from IONum to connector and pin-on-that-connector is written to the 
 and it is documented in Mesa's manual for the Anything I/O boards.
 
 So, for example, the HAL pin that has the current inverted input value read from GPIO 012 of the second 7I43 board is:
-hm2_7i43.1.gpio.012.in\-not (this assumes that the firmware in that board is configured so that this HAL object is available)
+hm2_7i43.1.gpio.012.in\-not (this assumes that the firmware in that board is configured so that this HAL object is available).
 
 The HAL parameter that controls whether the last GPIO of the first 5I22 is an input or an output is:
 hm2_5i22.0.gpio.095.is_output (this assumes that the firmware in that board is configured so that this HAL object is available).
@@ -1123,7 +1122,7 @@ Only full GPIO pins have this parameter.
 (bit r/w) is_opendrain
 This parameter only has an effect if the "is_output" parameter is True.
 If this parameter is False, the GPIO behaves as a normal output pin:
-the IO pin on the connector is driven to the value specified by the "out" HAL pin (possibly inverted), and the value of the "in" and "in_not" HAL pins is undefined.
+The IO pin on the connector is driven to the value specified by the "out" HAL pin (possibly inverted), and the value of the "in" and "in_not" HAL pins is undefined.
 If this parameter is True, the GPIO behaves as an open-drain pin.
 Writing 0 to the "out" HAL pin drives the IO pin low, writing 1 to the "out" HAL pin puts the IO pin in a high-impedance state.
 In this high-impedance state the IO pin floats (weakly pulled high), and other devices can drive the value;

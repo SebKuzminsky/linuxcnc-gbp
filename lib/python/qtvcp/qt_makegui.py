@@ -93,6 +93,7 @@ class _VCPWindow(QtWidgets.QMainWindow):
         self.PREFS_ = None
         self.originalCloseEvent_ = self.closeEvent
         self._halWidgetList = []
+        self._VCPWindowList = []
         self.settings = QtCore.QSettings('QtVcp', path.BASENAME)
         log.info('Qsettings file path: yellow<{}>'.format(self.settings.fileName()))
         # make an instance with embedded variables so they
@@ -109,7 +110,7 @@ class _VCPWindow(QtWidgets.QMainWindow):
     def keyPressEvent(self, e):
         self.keyPressTrap(e)
 
-    def keyreleaseEvent(self, e):
+    def keyReleaseEvent(self, e):
         self.keyReleaseTrap(e)
 
     # These can get class patched by xembed library to catch events
@@ -119,14 +120,17 @@ class _VCPWindow(QtWidgets.QMainWindow):
     def keyReleaseTrap(self, e):
         return False
 
+    # call closing function on main and embedded windows.
     def shutdown(self):
-        if self.has_closing_handler:
-            log.debug('Calling handler file Closing_cleanup__ function.')
-            self.handler_instance.closing_cleanup__()
+        for i in (self._VCPWindowList):
+            if 'closing_cleanup__' in dir(i):
+                log.debug('Calling handler file Closing_cleanup__ function of {}.'.format(i))
+                i.closing_cleanup__()
 
     def sync_qsettings(self):
         try:
             self.settings.sync()
+            log.debug('Qsettings sync called:')
         except Exception as e:
             log.debug('Error with Qsettings sync function:\n {}'.format(e))
 
@@ -343,17 +347,18 @@ Python Error:\n {}'''.format(str(e))
     # this is the function that is injected into the handler file to read an override file
     # this will be called from qtvcp.py later
     def call_user_command_(self, klass, rcfile = "~/.qtvcprc"):
-        #user_command_file = inifile.find("DISPLAY", "USER_COMMAND_FILE") or ""
-        #if user_command_file:
-        #    rcfile = user_command_file
+        # substitute for any keywords
+        rcfile.replace('CONFIGFOLDER',self.PATHS.CONFIGPATH)
+        rcfile.replace('WORKINGFOLDER',self.PATHS.WORKINGDIR)
         rcfile = os.path.expanduser(rcfile)
+
         if os.path.exists(rcfile):
             log.info('Handler Override file found at: yellow<{}>'.format(rcfile))
             try:
                 local = {'self': klass, 'rcfile': rcfile}
                 exec(compile(open(rcfile, "rb").read(), rcfile, 'exec'),local)
             except Exception as e:
-                log.warning(e)
+                log.exception(e)
         else:
             log.info('No Handler Override file at: yellow<{}>'.format(rcfile))
 

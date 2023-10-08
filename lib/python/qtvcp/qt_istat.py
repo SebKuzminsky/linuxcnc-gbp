@@ -43,6 +43,9 @@ class _IStat(object):
         self.PREFERENCE_PATH = '~/.Preferences'
         self.SUB_PATH = None
         self.SUB_PATH_LIST = []
+        self.USER_M_PATH = None
+        self.USER_M_PATH_LIST = []
+
         self.MACRO_PATH_LIST = []
         self.IMAGE_PATH = IMAGEDIR
         self.LIB_PATH = os.path.join(HOME, "share", "qtvcp")
@@ -71,6 +74,8 @@ class _IStat(object):
         self.MIN_SPINDLE_OVERRIDE = 0.5
         self.TITLE = ""
         self.ICON = ""
+        # this is updated in qtvcp.py on startup
+        self.IS_SCREEN = False
 
         self.update()
 
@@ -96,8 +101,9 @@ class _IStat(object):
         else:
             self.USER_COMMAND_FILE = None
 
-        self.SUB_PATH = (self.INI.find("RS274NGC", "SUBROUTINE_PATH")) or None
         self.STARTUP_CODES = (self.INI.find('RS274NGC', 'RS274NGC_STARTUP_CODE') ) or None
+
+        self.SUB_PATH = (self.INI.find("RS274NGC", "SUBROUTINE_PATH")) or None
         if self.SUB_PATH is not None:
             for mpath in (self.SUB_PATH.split(':')):
                 self.SUB_PATH_LIST.append(mpath)
@@ -107,6 +113,12 @@ class _IStat(object):
             self.MACRO_PATH = mpath or None
         else:
             self.MACRO_PATH = None
+
+        self.USER_M_PATH = (self.INI.find("RS274NGC", "USER_M_PATH")) or None
+        if self.USER_M_PATH is not None:
+            for mpath in (self.USER_M_PATH.split(':')):
+                self.USER_M_PATH_LIST.append(mpath)
+
         self.INI_MACROS = self.INI.findall("DISPLAY", "MACRO")
 
         self.NGC_SUB_PATH = (self.INI.find("DISPLAY","NGCGUI_SUBFILE_PATH")) or None
@@ -221,7 +233,7 @@ class _IStat(object):
         for j in range(jointcount):
             seq = self.INI.find("JOINT_" + str(j), "HOME_SEQUENCE")
             if seq is None:
-                seq = -1
+                seq = 0
                 self.HOME_ALL_FLAG = 0
             self.JOINT_SEQUENCE_LIST[j] = int(seq)
         # joint sequence/type
@@ -253,7 +265,7 @@ class _IStat(object):
             if flag:
                 templist.append(temp)
         # remove duplicates
-        self.JOINT_SYNCH_LIST = list(set(tuple(sorted(sub)) for sub in templist))
+        self.JOINT_SYNC_LIST = list(set(tuple(sorted(sub)) for sub in templist))
 
         # This is a list of joints that are related to a joint.
         #ie. JOINT_RELATIONS_LIST(0) will give a list of joints that go with joint 0
@@ -264,8 +276,12 @@ class _IStat(object):
         for j in range(jointcount):
             temp = []
             for hj, hs in list(self.JOINT_SEQUENCE_LIST.items()):
+                # the absolute numbers must be equal first
                 if abs(int(hs)) == abs(int(self.JOINT_SEQUENCE_LIST.get(j))):
-                    temp.append(hj)
+                    # theN one has to be negative to signal syncing
+                    if int(hs) <0 or int(self.JOINT_SEQUENCE_LIST.get(j)) < 0:
+                        temp.append(hj)
+            # If empty list: no synced joints, just add the jointcount number
             if temp == []:
                 temp.append(j)
             self.JOINT_RELATIONS_LIST[j] = temp
@@ -502,7 +518,8 @@ class _IStat(object):
     ###################
     # helper functions
     ###################
-
+    # return a found string or else None by default, anything else by option
+    # since this is used in this file there are some workarounds for plasma machines
     def get_error_safe_setting(self, heading, detail, default=None):
         result = self.INI.find(heading, detail)
         if result:
@@ -513,6 +530,22 @@ class _IStat(object):
                 return default
             else:
                 log.warning('INI Parsing Error, No {} Entry in {}, Using: {}'.format(detail, heading, default))
+            return default
+
+    # return a found float or else None by default, anything else by option
+    def get_safe_float(self, heading, detail, default=None):
+        try:
+            result = float(self.INI.find(heading, detail))
+            return result
+        except:
+            return default
+
+    # return a found integer or else None by default, anything else by option
+    def get_safe_int(self, heading, detail, default=None):
+        try:
+            result = int(self.INI.find(heading, detail))
+            return result
+        except:
             return default
 
     def convert_machine_to_metric(self, data):
@@ -626,6 +659,35 @@ class _IStat(object):
     def get_jnum_from_axisnum(self, axisnum):
         joint = self.TRAJCO.index( "xyzabcuvw"[axisnum] )
         return joint
+
+    # check to see if file name plus paths from
+    # SUBROUTINE_PATH, USER_M_PATH or PROGRAM_PREFIX from INI
+    # is an existing path (meaning linuxcnc can find it)
+    # fname should just be the filename
+    # returns the full path or None
+    def check_known_paths(self,fname, prefix = True, sub=True, user_m=True):
+        fname = os.path.split(fname)[1]
+        if prefix:
+            path = os.path.join(self.PROGRAM_PREFIX,fname)
+            if os.path.exists(path): return path
+        if sub:
+            for i in self.SUB_PATH_LIST:
+                path = os.path.expanduser(os.path.join(i,fname))
+                if os.path.exists(path):
+                    return path
+        if user_m:
+            for i in self.USER_M_PATH_LIST:
+                path = os.path.expanduser(os.path.join(i,fname))
+                if os.path.exists(path):
+                    return path
+        return None
+
+    # same as above but just return True or False
+    def is_in_known_paths(self,fname, prefix = True, sub=True, user_m=True):
+        fname = os.path.split(fname)[1]
+        if self.check_known_paths(fname,prefix,sub,user_m) is None:
+            return False
+        return True
 
     def __getitem__(self, item):
         return getattr(self, item)

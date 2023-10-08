@@ -107,6 +107,7 @@ Defining a code involves the following steps:
 - Decide if and how results are handled.
 - Decide about the execution sequence.
 
+[[sub:remap:sec:builtin-remaps]]
 === Builtin Remaps
 
 Please note that currently only some existing codes can be redefined, while there are many 'free' codes that may be available for remapping.
@@ -240,6 +241,7 @@ A detailed discussion of REMAP parameters is found in the reference section belo
 
 == Configuring Remapping
 
+[[sub:remap:sec:remap-statement]]
 === The REMAP statement
 
 To remap a code, define it using the `REMAP` option in `RS274NG` section of your INI file.
@@ -299,7 +301,7 @@ Note that while many combinations of argspec options are possible, not all of th
 
 `argspec=`__<words>__ `ngc=`__<procname>__ `modalgroup=`___<group>__::
   The recommended way to call an NGC procedure with a standard argspec parameter conversion.
-  Used if argspec is good enough. Note it's not good enough for remapping the `Tx` and `M6`/`M61` tool change codes.
+  Used if argspec is good enough. Note, it is not good enough for remapping the `Tx` and `M6`/`M61` tool change codes.
 
 `prolog=`__<pythonprolog>__ `ngc=`__<procname>__ `epilog=`__<pythonepilog>__ `modalgroup=`__<group>__::
   Call a Python prolog function to take any preliminary steps, then call the NGC procedure.
@@ -389,7 +391,7 @@ and `m400.ngc` looks as follows:
 [source,{ngc}]
 ----------------------------------------------------------------------------------
 o<m400> sub
-(P is required since it's uppercase in the argspec)
+(P is required since it is uppercase in the argspec)
 (debug, P word=#<P>)
 (the q argspec is optional since its lowercase in the argspec. Use as follows:)
 o100 if [EXISTS[#<q>]]
@@ -401,7 +403,7 @@ M2
 
 - Executing `M400` will fail with the message `user-defined M400: missing: P`.
 - Executing `M400 P123` will display `P word=123.000000`.
-- Executing `M400 P123 Q456` will display `P word=123.000000` and `Q word set: 456.000000`
+- Executing `M400 P123 Q456` will display `P word=123.000000` and `Q word set: 456.000000`.
 
 .Example for positional parameter passing to NGC procedures
 
@@ -456,7 +458,7 @@ Try this with out with:
 
 You'll notice the gradual introduction of the embedded Python environment - see <<remap:programming-embedded-python,here>> for details.
 Note that with Python remapping functions,
-it make no sense to have Python prolog or epilog functions since it's executing a Python function in the first place.
+it make no sense to have Python prolog or epilog functions since it is executing a Python function in the first place.
 
 .Advanced example: Remapped codes in pure Python
 
@@ -719,8 +721,8 @@ def change_prolog(self, **words):
         self.params["current_pocket"] = self.current_pocket
         self.params["selected_pocket"] = self.selected_pocket
         return INTERP_OK
-    except Exception, e:
-        return "M6/change_prolog: %s" % (e)
+    except Exception as e:
+        return "M6/change_prolog: {}".format(e)
 ---------------------------------------------------------------------
 
 You will find that most prolog functions look very similar:
@@ -850,8 +852,8 @@ If you're confident with the  <<remap:interpreter-action-on-t,default implementa
 But remapping is also a way to work around deficiencies in the current implementation, for instance to not block until the "tool-prepared" pin is set.
 
 What you could do, for instance, is:
-- In a remapped T, just set the equivalent of the "tool-prepare" pin, but *not* wait for "tool-prepared" here.
-- In the corresponding remapped M6, wait for the "tool-prepared" at the very beginning of the O-word procedure.
+- In a remapped T, just set the equivalent of the `tool-prepare` pin, but *not* wait for `tool-prepared` here.
+- In the corresponding remapped M6, wait for the `tool-prepared` at the very beginning of the O-word procedure.
 
 Again, the `iocontrol` tool-prepare/tool-prepared pins would be unused and replaced by `motion.*` pins, so those would pins must be looped:
 
@@ -928,6 +930,7 @@ def prepare_epilog(self, **words):
 The functions 'prepare_prolog' and 'prepare_epilog' are part of the _standard glue_ provided by 'nc_files/remap_lib/python-stdglue/stdglue.py'.
 This module is intended to cover most standard remapping situations in a common way.
 
+[[sub:remap:sec:error-handling]]
 === Error handling: dealing with abort
 
 The built in tool change procedure has some precautions for dealing with a program abort, e.g., by hitting escape in AXIS during a change.
@@ -1029,7 +1032,7 @@ NOTE: INI and HAL variable expansion is optional and can be disabled in the <<su
 
 If more fine grained recovery action is needed, use the idiom laid out in the previous example:
 
-- Define an epilog function, even if it's just to signal an error condition,
+- Define an epilog function, even if it is just to signal an error condition,
 - pass a negative value from the handler to signal the error,
 - inspect the return value in the epilog function,
 - take any recovery action needed,
@@ -1037,8 +1040,7 @@ If more fine grained recovery action is needed, use the idiom laid out in the pr
 
 This error message will be displayed in the UI, and returning INTERP_ERROR will cause this error handled like any other runtime error.
 
-Note that both `(abort,` __<msg>__ `)` and returning INTERP_ERROR from an epilog will cause any ON_ABORT handler to be called as well if defined
-(see previous section).
+Note that both `(abort,` __<msg>__ `)` and returning INTERP_ERROR from an epilog will cause any ON_ABORT handler to be called as well if defined (see previous section).
 
 == Remapping other existing codes: S, M0, M1, M60
 
@@ -1173,7 +1175,7 @@ The namespace is expected to be laid out as follows:
 
 The interpreter is an existing C++ class ('Interp') defined in 'src/emc/rs274ngc'.
 Conceptually all `oword.<function>` and `remap.<function>` Python calls are methods of this Interp class,
-although there is no explicit Python definition of this class (it's a 'Boost.Python' wrapper instance)
+although there is no explicit Python definition of this class (it is a 'Boost.Python' wrapper instance)
 and hence receive the as the first parameter `self` which can be used to access internals.
 
 === The Interpreter `__init__` and `__delete__` functions
@@ -1215,7 +1217,7 @@ If there are setup or cleanup actions which are to happen only in the milltask I
 (as opposed to the interpreter instance which sits in the `gcode` Python module and serves preview/progress display purposes but nothing else),
 this can be tested for by <<remap:axis-preview-and-remapped-code-execution,evaluating 'self.task'>>.
 
-An example use of `__init__` and `__delete__` can be found in `configs/sim/axis/remap/cycle/python/toplevel.py` initialising attributes
+An example use of `__init__` and `__delete__` can be found in `configs/sim/axis/remap/cycle/python/toplevel.py` initialising attributes,
 needed to handle cycles in `ncfiles/remap_lib/python-stdglue/stdglue.py` (and imported into `configs/sim/axis/remap/cycle/python/remap.py`).
 
 === Calling conventions: NGC to Python
@@ -1231,11 +1233,9 @@ Python code is called from NGC in the following situations:
 
 Arguments:
 
-`self`::
-  The interpreter instance
+`self`:: The interpreter instance.
 
-`*args`::
-  The list of actual positional parameters.
+`*args`:: The list of actual positional parameters.
   Since the number of actual parameters may vary, it is best to use this style of declaration:
 
 [source,python]
@@ -1273,11 +1273,9 @@ See also `tests/interp/value-returned` for an example.
 
 Arguments are:
 
-`self`::
-  The interpreter instance
+`self`:: The interpreter instance.
 
-`words`::
-  Keyword parameter dictionary.
+`words`:: Keyword parameter dictionary.
   If an argspec was present, words are collected from the current block accordingly and passed in the dictionary for convenience
   (the words could as well be retrieved directly from the calling block, but this requires more knowledge of interpreter internals).
   If no argspec was passed, or only optional values were specified and none of these was present in the calling block, this dict is empty.
@@ -1298,21 +1296,17 @@ def minimal_prolog(self, **words): # in remap module
 
 Return values:
 
-`INTERP_OK`::
-  Return this on success. You need to import this from `interpreter`.
+`INTERP_OK`:: Return this on success. You need to import this from `interpreter`.
 
-`"a message text"`::
-  Returning a string from a handler means 'this is an error message, abort the program'. Works like `(abort,` __<msg>__ `)`.
+_a message text_:: Returning a string from a handler means 'this is an error message, abort the program'. Works like `(abort,` __<msg>__ `)`.
 
 .Calling conventions for 'python=' subroutines
 
 Arguments are:
 
-`self`::
-  The interpreter instance
+`self`:: The interpreter instance.
 
-`words`::
-  Keyword parameter dictionary. the same  kwargs dictionary as prologs and epilogs (see above).
+`words`:: Keyword parameter dictionary. The same  kwargs dictionary as prologs and epilogs (see above).
 
 The minimum `python=` function example:
 
@@ -1327,12 +1321,11 @@ Return values:
 `INTERP_OK`::
   Return this on success
 
-`"a message text"`::
+_a message text_::
   Returning a string from a handler means 'this is an error message, abort the program'.
   Works like `(abort,` __<msg>__ `)`.
 
-If the handler needs to execute a 'queuebuster operation' (tool change, probe, HAL pin reading)
-it is supposed to suspend execution with the following statement:
+If the handler needs to execute a 'queuebuster operation' (tool change, probe, HAL pin reading) then it is supposed to suspend execution with the following statement:
 
 `yield INTERP_EXECUTE_FINISH`::
   This signals `task` to stop read ahead, execute all queued operations, execute the 'queue-buster' operation,
@@ -1465,12 +1458,9 @@ The recursive call feature is fragile.
 if `interpreter.throw_exceptions` is nonzero (default 1), and self.execute() returns an error, the exception `InterpreterException` is raised.
 InterpreterException has the following attributes:
 
-`line_number`::
-  where the error occurred
-`line_text`::
-  the NGC statement causing the error
-`error_message`::
-  the interpreter's error message
+`line_number`:: where the error occurred
+`line_text`:: the NGC statement causing the error
+`error_message`:: the interpreter's error message
 
 Errors can be trapped in the following Pythonic way:
 
@@ -1561,8 +1551,7 @@ If a string is returned, this sets the interpreter error message and aborts exec
 It is possible to redefine an existing predefined parameter by adding a Python function of the same name to the `namedparams` module.
 In this case, a warning is generated during startup.
 
-While the above example isn't terribly useful, note that pretty much all of the interpreter internal state is accessible from Python,
-so arbitrary predicates may be defined this way.
+While the above example isn't terribly useful, note that pretty much all of the interpreter internal state is accessible from Python, so arbitrary predicates may be defined this way.
 For a slightly more advanced example, see `tests/remap/predefined-named-params`.
 
 [[remap:standard-glue]]
@@ -1589,8 +1578,7 @@ It is an error if:
 - No tool number is given as T parameter,
 - the tool cannot be found in the tool table.
 
-Note that unless you set the `[EMCIO] RANDOM_TOOLCHANGER=1` parameter, tool and pocket number are identical,
-and the pocket number from the tool table is ignored.
+Note that unless you set the `[EMCIO] RANDOM_TOOLCHANGER=1` parameter, tool and pocket number are identical, and the pocket number from the tool table is ignored.
 This is currently a restriction.
 
 .Actions of +prepare_epilog+
@@ -1624,16 +1612,14 @@ Then, the following parameters are exported to the NGC procedure:
 
 .Actions of +change_epilog
 
-* The NGC procedure is expected to return a positive value,
-  otherwise an error message containing the return value is given and the interpreter aborts.
+* The NGC procedure is expected to return a positive value, otherwise an error message containing the return value is given and the interpreter aborts.
 * If parameter 5600 (fault indicator) is greater than zero, this indicates a Toolchanger fault, which is handled as follows (`iocontrol-v2`-only):
 ** If parameter 5601 (error code) is negative, this indicates a hard fault and the epilog aborts with an error message.
 ** If parameter 5601 (error code) is greater equal zero, this indicates a soft fault.
    An informational message is displayed and the epilog continues.
 * In case the NGC procedure executed the M6 command (which then refers to the built in M6 behavior), no further action is taken.
   This can be used for instance to minimally adjust the built in behavior be preceding or following it with some other statements.
-* Otherwise, the `#<selected_pocket>` parameter is extracted from the subroutine's parameter space,
-  and used to set the interpreter's `current_pocket` variable.
+* Otherwise, the `#<selected_pocket>` parameter is extracted from the subroutine's parameter space, and used to set the interpreter's `current_pocket` variable.
   Again, the procedure could change this value, and the epilog takes the changed value in account.
 * Then, the Canon command `CHANGE_TOOL(#<selected_pocket>)` is executed.
 * The new tool parameters (offsets, diameter etc) are set.
@@ -1739,7 +1725,7 @@ To use this approach:
 - Setup the LinuxCNC source tree as an Eclipse project.
 - Start the Pydev Debug Server in Eclipse.
 - Make sure the embedded Python code can find the `pydevd.py` module which comes with that plug in -
-  it's buried somewhere deep under the Eclipse install directory.
+  it is buried somewhere deep under the Eclipse install directory.
   Set the the `pydevd` variable in `util.py` to reflect this directory location.
 - Add `import pydevd` to your Python module - see example `util.py` and `remap.py`.
 - Call `pydevd.settrace()` in your module at some point to connect to the Eclipse Python debug server -
@@ -1772,7 +1758,7 @@ Now assume that your remap procedure contains a G38 probe operation, for example
 If the probe fails, that would clearly be an error, so you'd display a message and abort the program.
 
 Now, what about preview of this procedure?
-At preview time, of course it's not known whether the probe succeeds or fails -
+At preview time, of course it is not known whether the probe succeeds or fails -
 but you would likely want to see what the maximum depth of the probe is,
 and assume it succeeds and continues execution to preview further movements.
 Also, there is no point in displaying a 'probe failed' message and aborting *during preview*.
@@ -2113,7 +2099,7 @@ N95 M2
 ----
 
 To pre-compute the move in N90, the interpreter would need to know where the machine is after line N80 -
-and that depends on whether the probe command succeeded or not, which is not known until it's actually executed.
+and that depends on whether the probe command succeeded or not, which is not known until it is actually executed.
 
 So, some operations are incompatible with further read-ahead.
 These are called _queue busters_, and they are:
@@ -2175,7 +2161,7 @@ Task makes sure to synchronize the world model, and continue parsing and executi
 [[remap:how-tool-change-currently-works]]
 === How tool change currently works
 
-The actions happening in LinuxCNC are a bit involved, but it's necessary to get the overall idea what currently happens,
+The actions happening in LinuxCNC are a bit involved, but it is necessary to get the overall idea what currently happens,
 before you set out to adapt those workings to your own needs.
 
 Note that remapping an existing code completely disables all internal processing for that code.
@@ -2213,10 +2199,10 @@ To see fields in the global emcStatus structure, try this:
 
 You need to have LinuxCNC started from a terminal window to see the results.
 
-=== How Tx (Prepare Tool) works
+=== How `T`__x__ (Prepare Tool) works
 
 [[remap:interpreter-action-on-t]]
-.Interpreter action on a Tx command
+.Interpreter action on a `T`__x__ command
 All the interpreter does is evaluate the toolnumber parameter, looks up its corresponding tooldata index,
 remembers it in the `selected_pocket` variable for later, and queues a canon command (SELECT_TOOL).
 See 'Interp::convert_tool_select' in 'src/emc/rs274/interp_execute.cc'.
@@ -2237,7 +2223,7 @@ raises the "tool-prepare" pin, and waits for the "tool-prepared" pin to go high.
 When the changer responds by asserting "tool-prepared", it considers the prepare phase to be completed and signals `task` to continue.
 Again, this 'wait' is not strictly necessary IMO.
 
-.Building the prolog and epilog for Tx
+.Building the prolog and epilog for `Tx`
 See the Python functions `prepare_prolog` and `prepare_epilog` in `configs/sim/axis/remap/toolchange/python/toolchange.py`.
 
 === How M6 (Change tool) works
@@ -2254,8 +2240,8 @@ Even if you are not familiar with C, I suggest you look at the 'Interp::convert_
 When the interpreter sees an M6, it:
 
 [[remap:send-tool-load-msg]]
-. checks whether a T command has already been executed (test 'settings->selected_pocket' to be >= 0)
-  and fail with 'Need tool prepared -Txx- for toolchange' message if not.
+. checks whether a `T` command has already been executed (test 'settings->selected_pocket' to be >= 0)
+  and fail with 'Need tool prepared -`Txx`- for toolchange' message if not.
 . check for cutter compensation being active, and fail with 'Cannot change tools with cutter radius compensation on' if so.
 . stop the spindle except if the "TOOL_CHANGE_WITH_SPINDLE_ON" INI option is set.
 . generate a rapid 'Z up' move if if the "TOOL_CHANGE_QUILL_UP" INI option is set.
@@ -2292,22 +2278,21 @@ When that has happened:
 
 From there on, the interpreter has complete knowledge of the world model and continues with read ahead.
 
-.Building the prolog and epilog for M6
+.Building the prolog and epilog for `M6`
 See the Python functions `change_prolog` and `change_epilog` in `configs/sim/axis/remap/toolchange/python/toolchange.py`.
 
-=== How M61 (Change tool number) works
+=== How `M61` (Change tool number) works
 
-M61 requires a non-negative `Q`parameter (tool number).
+`M61` requires a non-negative `Q`parameter (tool number).
 If zero, this means 'unload tool', else 'set current tool number to Q'.
 
-.Building the replacement for M61
-An example Python redefinition for M61 can be found in the `set_tool_number` function in `configs/sim/axis/remap/toolchange/python/toolchange.py`.
+.Building the replacement for `M61`
+An example Python redefinition for `M61` can be found in the `set_tool_number` function in `configs/sim/axis/remap/toolchange/python/toolchange.py`.
 
 
 ==  Status
 
-. The RELOAD_ON_CHANGE feature is fairly broken.
-  Restart after changing a Python file.
+. The RELOAD_ON_CHANGE feature is fairly broken. Restart after changing a Python file.
 . M61 (remapped or not) is broken in `iocontrol` and requires `iocontrol-v2` to actually work.
 
 // A short survey of LinuxCNC execution

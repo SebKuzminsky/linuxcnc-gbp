@@ -81,6 +81,11 @@ class  GCodeGraphics(Lcnc_3dGraphics, _HalWidgetBase):
 
         self._mouseMode = 0
 
+        if INFO.MACHINE_IS_METRIC:
+            self.mach_units = 'Metric'
+        else:
+            self.mach_units = 'Imperial'
+
     def addTimer(self):
         self.timer = QTimer()
         self.timer.timeout.connect(self.poll)
@@ -197,6 +202,10 @@ class  GCodeGraphics(Lcnc_3dGraphics, _HalWidgetBase):
             self.recordCurrentViewSettings()
         elif v == 'set-recorded-view':
             self.setRecordedView()
+        elif v == 'set-large-dro':
+            self.set_font(True)
+        elif v == 'set-small-dro':
+            self.set_font(False)
         else:
             self.set_view(v)
 

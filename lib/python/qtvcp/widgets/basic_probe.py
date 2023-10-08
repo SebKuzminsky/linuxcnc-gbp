@@ -18,10 +18,12 @@
 import sys
 import os
 import json
-from PyQt5.QtCore import QProcess, QRegExp
-from PyQt5 import QtGui, QtWidgets, uic
+from PyQt5.QtCore import QProcess, QRegExp, QFile, Qt
+from PyQt5 import QtGui, QtWidgets, uic, QtCore
+from PyQt5.QtWidgets import QDialogButtonBox, QAbstractSlider
 from qtvcp.widgets.widget_baseclass import _HalWidgetBase
 from qtvcp.core import Action, Status, Info, Path
+from qtvcp.widgets.dialogMixin import GeometryMixin
 from qtvcp import logger
 
 ACTION = Action()
@@ -35,6 +37,9 @@ LOG = logger.getLogger(__name__)
 current_dir =  os.path.dirname(__file__)
 SUBPROGRAM = os.path.abspath(os.path.join(current_dir, 'probe_subprog.py'))
 CONFIG_DIR = os.getcwd()
+
+# can use/favours local image and help files
+HELP = PATH.find_widget_path()
 
 class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
     def __init__(self, parent=None):
@@ -67,6 +72,7 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
         # these parameters are sent to the subprogram
         self.parm_list = ['probe_diam',
                           'max_travel',
+                          'max_z_travel',
                           'xy_clearance',
                           'z_clearance',
                           'extra_depth',
@@ -95,9 +101,6 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
         self.cal_buttonGroup.buttonClicked.connect(self.cal_btn_clicked)
         self.clear_buttonGroup.buttonClicked.connect(self.clear_results_clicked)
         self.btn_probe_help.clicked.connect(self.probe_help_clicked)
-        self.dialog.probe_help_close.clicked.connect(self.help_close_clicked)
-        self.dialog.probe_help_prev.clicked.connect(self.help_prev_clicked)
-        self.dialog.probe_help_next.clicked.connect(self.help_next_clicked)
 
         self.cmb_probe_select.clear()
         self.cmb_probe_select.addItems(self.probe_list)
@@ -117,6 +120,10 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
 
         # must directly initialize
         self.statuslabel_motiontype.hal_init()
+        self.led_probe.hal_init()
+        self.statelabel_machineUnits.hal_init()
+        self.help = HelpDialog(self.QTVCP_INSTANCE_)
+        self.help.hal_init(HAL_NAME='_basic_help')
 
         if self.PREFS_:
             self.lineEdit_probe_tool.setText(self.PREFS_.getpref('Probe tool', '0', str, 'PROBE OPTIONS'))
@@ -125,7 +132,7 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
             self.lineEdit_probe_vel.setText(self.PREFS_.getpref('Probe feed', '10', str, 'PROBE OPTIONS'))
             self.lineEdit_search_vel.setText(self.PREFS_.getpref('Probe search', '10', str, 'PROBE OPTIONS'))
             self.lineEdit_max_travel.setText(self.PREFS_.getpref('Probe max travel', '10', str, 'PROBE OPTIONS'))
-            self.lineEdit_max_z.setText(self.PREFS_.getpref('Probe max z', '2', str, 'PROBE OPTIONS'))
+            self.lineEdit_max_z_travel.setText(self.PREFS_.getpref('Probe max z', '2', str, 'PROBE OPTIONS'))
             self.lineEdit_extra_depth.setText(self.PREFS_.getpref('Probe extra depth', '0', str, 'PROBE OPTIONS'))
             self.lineEdit_latch_return_dist.setText(self.PREFS_.getpref('Probe step off', '10', str, 'PROBE OPTIONS'))
             self.lineEdit_xy_clearance.setText(self.PREFS_.getpref('Probe xy clearance', '10', str, 'PROBE OPTIONS'))
@@ -145,7 +152,7 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
             self.PREFS_.putpref('Probe feed', self.lineEdit_probe_vel.text(), str, 'PROBE OPTIONS')
             self.PREFS_.putpref('Probe search', self.lineEdit_search_vel.text(), str, 'PROBE OPTIONS')
             self.PREFS_.putpref('Probe max travel', self.lineEdit_max_travel.text(), str, 'PROBE OPTIONS')
-            self.PREFS_.putpref('Probe max z', self.lineEdit_max_z.text(), str, 'PROBE OPTIONS')
+            self.PREFS_.putpref('Probe max z', self.lineEdit_max_z_travel.text(), str, 'PROBE OPTIONS')
             self.PREFS_.putpref('Probe extra depth', self.lineEdit_extra_depth.text(), str, 'PROBE OPTIONS')
             self.PREFS_.putpref('Probe step off', self.lineEdit_latch_return_dist.text(), str, 'PROBE OPTIONS')
             self.PREFS_.putpref('Probe xy clearance', self.lineEdit_xy_clearance.text(), str, 'PROBE OPTIONS')
@@ -174,8 +181,12 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
             LOG.info("Probe Routine processor is busy")
             return
         if int(self.lineEdit_probe_tool.text()) != STATUS.get_current_tool():
-            LOG.error("Probe tool not mounted in spindle")
+            msg = "Probe tool not mounted in spindle"
+            if not self.set_statusbar(msg):
+                STATUS.emit('update-machine-log', msg, 'TIME')
+                ACTION.SET_ERROR_MESSAGE(msg)
             return
+
         self.start_process()
         string_to_send = cmd + '$' + json.dumps(self.send_dict) + '\n'
         #print("String to send ", string_to_send)
@@ -202,14 +213,17 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
 
     def parse_input(self, line):
         line = line.decode("utf-8")
-        if "INFO" in line:
-            print(line)
+        if "ERROR INFO" in line:
+            ACTION.SET_ERROR_MESSAGE(line)
         elif "ERROR" in line:
             #print(line)
             STATUS.unblock_error_polling()
             ACTION.SET_ERROR_MESSAGE('Basic Probe process finished  in error')
-        elif "DEBUG" in line:
-            print(line)
+        elif "INFO" in line:
+            pass
+        elif "PROBE_ROUTINES" in line:
+            if LOG.getEffectiveLevel() < logger.INFO:
+                print(line)
         elif "COMPLETE" in line:
             STATUS.unblock_error_polling()
             LOG.info("Basic Probing routine completed without errors")
@@ -217,45 +231,32 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
             data = json.loads(return_data[1])
             self.show_results(data)
         elif "HISTORY" in line:
-            temp = line.strip('HISTORY$')
-            STATUS.emit('update-machine-log', temp, 'TIME')
-            LOG.info("Probe history updated to machine log")
+            if not self.set_statusbar(line,1):
+                STATUS.emit('update-machine-log', line, 'TIME')
+        elif "DEBUG" in line:
+            pass
         else:
             LOG.error("Error parsing return data from sub_processor. Line={}".format(line))
 
+    # return false if failed so other ways of reporting can be used.
+    # there might not be a statusbar in main screen.
+    def set_statusbar(self, msg, priority = 2):
+        try:
+            self.QTVCP_INSTANCE_.add_status(msg, priority)
+            return True
+        except:
+            return False
+
 # Main button handler routines
     def probe_help_clicked(self):
-        self.dialog.show()
-
-    def help_close_clicked(self):
-        self.dialog.hide()
-
-    def help_prev_clicked(self):
-        i = self.dialog.probe_help_widget.currentIndex()
-        if i > 0:
-            self.dialog.probe_help_widget.setCurrentIndex(i - 1)
-
-    def help_next_clicked(self):
-        i = self.dialog.probe_help_widget.currentIndex()
-        if i < 5:
-            self.dialog.probe_help_widget.setCurrentIndex(i + 1)
+        self.help.showDialog()
 
     def cmb_probe_select_changed(self, index):
         self.stackedWidget_probe_buttons.setCurrentIndex(index)
 
-    def probe_help_prev_clicked(self):
-        i = self.probe_help_widget.currentIndex()
-        if i > 0:
-            self.probe_help_widget.setCurrentIndex(i - 1)
-
-    def probe_help_next_clicked(self):
-        i = self.probe_help_widget.currentIndex()
-        if i < 5:
-            self.probe_help_widget.setCurrentIndex(i + 1)
-
     def probe_btn_clicked(self, button):
         cmd = button.property('probe')
-#        print("Button clicked ", cmd)
+        #print("Button clicked ", cmd)
         self.get_parms()
         self.start_probe(cmd)
 
@@ -307,13 +308,17 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
 # Helper functions
     def get_parms(self):
         self.send_dict = {key: self['lineEdit_' + key].text() for key in (self.parm_list)}
+        #print(self.send_dict)
         for key in ['allow_auto_zero', 'allow_auto_skew', 'cal_avg_error', 'cal_x_error', 'cal_y_error']:
             val = '1' if self[key].isChecked() else '0'
             self.send_dict.update( {key: val} )
 
     def show_results(self, line):
         for key in self.status_list:
-            self['status_' + key].setText(line[key])
+            if line[key] != 'None':
+                self['status_' + key].setText(line[key])
+            else:
+                self['status_' + key].setText('')
 
     ##############################
     # required class boiler code #
@@ -323,6 +328,129 @@ class BasicProbe(QtWidgets.QWidget, _HalWidgetBase):
 
     def __setitem__(self, item, value):
         return setattr(self, item, value)
+
+class HelpDialog(QtWidgets.QDialog, GeometryMixin):
+    def __init__(self, parent=None):
+        super(HelpDialog, self).__init__(parent)
+        self._title = 'Basic Probe Help'
+        self.setWindowFlags(self.windowFlags() | Qt.Tool |
+                            Qt.Dialog | Qt.WindowStaysOnTopHint |
+                            Qt.WindowSystemMenuHint)
+        self.currentHelpPage=-1
+        self.setMinimumWidth(600)
+        self.setMinimumHeight(600)
+        self.helpPages = ['basic_help.html','basic_help1.html','basic_help2.html',
+                        'basic_help3.html','basic_help4.html','basic_help5.html',
+                        'basic_help6.html','basic_help7.html','basic_help8.html']
+
+    def _hal_init(self):
+        self.buildWidget()
+        self.set_default_geometry()
+        self.read_preference_geometry('basicProbeHelpDialog-geometry')
+
+    def buildWidget(self):
+
+        l = QtWidgets.QVBoxLayout()
+        t = QtWidgets.QTextEdit('Basic Probe Help')
+        t.setReadOnly(True)
+        l.addWidget(t)
+
+        buttons = QDialogButtonBox()
+
+        closebutton = QtWidgets.QPushButton()
+        closebutton.setIconSize(QtCore.QSize(38, 38))
+        closebutton.setIcon(QtGui.QIcon(':/qt-project.org/styles/commonstyle/images/standardbutton-cancel-128.png'))
+        closebutton.clicked.connect(lambda : self.close())
+
+        nextbutton = QtWidgets.QPushButton()
+        nextbutton.setIconSize(QtCore.QSize(38, 38))
+        nextbutton.setIcon(QtGui.QIcon(':/qt-project.org/styles/commonstyle/images/right-32.png'))
+        nextbutton.clicked.connect(lambda : self.next(t,True))
+
+        previousbutton = QtWidgets.QPushButton()
+        previousbutton.setIconSize(QtCore.QSize(38, 38))
+        previousbutton.setIcon(QtGui.QIcon(':/qt-project.org/styles/commonstyle/images/left-32.png'))
+        previousbutton.clicked.connect(lambda : self.next(t,False))
+
+        self.pageStepUpbutton = QtWidgets.QPushButton()
+        self.pageStepUpbutton.setIconSize(QtCore.QSize(38, 38))
+        self.pageStepUpbutton.setIcon(QtGui.QIcon(':/qt-project.org/styles/commonstyle/images/up-32.png'))
+        self.pageStepUpbutton.clicked.connect(lambda : self.pageStep(t,False))
+
+        self.pageStepDwnbutton = QtWidgets.QPushButton()
+        self.pageStepDwnbutton.setIconSize(QtCore.QSize(38, 38))
+        self.pageStepDwnbutton.setIcon(QtGui.QIcon(':/qt-project.org/styles/commonstyle/images/down-32.png'))
+        self.pageStepDwnbutton.clicked.connect(lambda : self.pageStep(t,True))
+
+        bBox = QDialogButtonBox(buttons)
+        bBox.addButton(self.pageStepUpbutton, QDialogButtonBox.ActionRole)
+        bBox.addButton(self.pageStepDwnbutton, QDialogButtonBox.ActionRole)
+        bBox.addButton(previousbutton, QDialogButtonBox.ActionRole)
+        bBox.addButton(nextbutton, QDialogButtonBox.ActionRole)
+        bBox.addButton(closebutton, QDialogButtonBox.DestructiveRole)
+        bBox.rejected.connect(self.reject)
+
+        l.addWidget(bBox)
+        self.setLayout(l)
+
+        try:
+            self.next(t)
+        except Exception as e:
+                t.setText('Basic Probe Help file Unavailable:\n\n{}'.format(e))
+
+    def next(self,t,direction=None):
+            if direction is None:
+                self.currentHelpPage = 0
+            elif direction:
+                self.currentHelpPage +=1
+                if self.currentHelpPage > len(self.helpPages)-1:
+                    self.currentHelpPage = len(self.helpPages)-1
+            else:
+                self.currentHelpPage -=1
+                if self.currentHelpPage < 0:
+                    self.currentHelpPage = 0
+            try:
+                pagePath = os.path.join(HELP, self.helpPages[self.currentHelpPage])
+                file = QtCore.QFile(pagePath)
+                file.open(QtCore.QFile.ReadOnly)
+                html = file.readAll()
+                html = str(html, encoding='utf8')
+                html = html.replace("../images/widgets/","{}/widgets/".format(INFO.IMAGE_PATH))
+                t.setHtml(html)
+                if t.verticalScrollBar().isVisible():
+                    t.verticalScrollBar().setPageStep(100)
+                    self.pageStepDwnbutton.show()
+                    self.pageStepUpbutton.show()
+                else:
+                    self.pageStepDwnbutton.hide()
+                    self.pageStepUpbutton.hide()
+
+            except Exception as e:
+                t.setHtml('''
+<h1 style=" margin-top:18px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><span style=" font-size:xx-large; font-weight:600;">Basic Probe Help not available</span> </h1>
+{}
+'''.format(e))
+            if direction is None:
+                return
+            self.show()
+
+    def pageStep(self, t, state):
+        if state:
+            t.verticalScrollBar().triggerAction (QAbstractSlider.SliderPageStepAdd)
+        else:
+            t.verticalScrollBar().triggerAction (QAbstractSlider.SliderPageStepSub)
+
+    # accept button applies presets and if line number given starts linuxcnc
+    def close(self):
+        self.record_geometry()
+        super(HelpDialog, self).close()
+
+    def showDialog(self):
+        self.setWindowTitle(self._title);
+        self.set_geometry()
+        retval = self.exec_()
+        LOG.debug('Value of pressed button: {}'.format(retval))
+
 
     #############################
     # Testing                   #

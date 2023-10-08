@@ -1269,7 +1269,10 @@ def open_file_guts(f, filtered=False, addrecent=True):
                 # will appear at s.gcodes[2] which caused issue #269
                 if i in (0, 1, 2): continue
                 if g == -1: continue
-                initcodes.append("G%.1f" % (g * .1))
+                if g == 960: # Issue #1232
+                    initcodes.append("G96 S%.0f" % s.settings[2])
+                else:
+                    initcodes.append("G%.1f" % (g * .1))
             tool_offset = "G43.1"
             for i in range(9):
                 if s.axis_mask & (1<<i):
@@ -1359,7 +1362,7 @@ widget_list=[
 
        ("ajogspeed", Entry, pane_top + ".ajogspeed"),
 
-       ("lubel", Label, tabs_manual + ".coolant"),
+       ("coolant", Label, tabs_manual + ".coolant"),
        ("flood", Checkbutton, tabs_manual + ".flood"),
        ("mist", Checkbutton, tabs_manual + ".mist"),
 
@@ -1864,6 +1867,7 @@ def get_max_jog_speed(a):
         else:
             return vars.max_aspeed.get()
 def get_max_jog_speed_map(a):
+    if a >= len(jog_order): return 0
     if not get_jog_mode():
         axis_letter = jog_order[a]
         a = "XYZABCUVW".index(axis_letter)
@@ -1875,10 +1879,10 @@ def run_warn():
         machine_limit_min, machine_limit_max = soft_limits()
         for i in range(3): # Does not enforce angle limits
             if not(s.axis_mask & (1<<i)): continue
-            if o.canon.min_extents_notool[i] + to_internal_linear_unit(o.last_tool_offset[i]) < machine_limit_min[i]:
+            if o.canon.min_extents_notool[i] < machine_limit_min[i]:
                 warnings.append(_("Program exceeds machine minimum on axis %s")
                     % "XYZABCUVW"[i])
-            if o.canon.max_extents_notool[i] + to_internal_linear_unit(o.last_tool_offset[i]) > machine_limit_max[i]:
+            if o.canon.max_extents_notool[i] > machine_limit_max[i]:
                 warnings.append(_("Program exceeds machine maximum on axis %s")
                     % "XYZABCUVW"[i])
     if warnings:
@@ -1887,7 +1891,7 @@ def run_warn():
             _("Program exceeds machine limits"),
             text,
             "warning",
-            1, _("Run Anyway"), _("Cancel")))
+            1, _("Re-Check"), _("Run Anyway"), _("Cancel"))) + 1
     return 0
 
 def reload_file(refilter=True):
@@ -2333,7 +2337,13 @@ class TclCommands(nf.TclCommands):
             root_window.tk.call("exec", *e)
 
     def task_run(*event):
-        if run_warn(): return
+        res = 1
+        while res == 1:
+            res = run_warn()
+            if res == 2: break
+            if res == 3: return
+            print("reload file")
+            reload_file()
 
         global program_start_line, program_start_line_last
         program_start_line_last = program_start_line;
@@ -4198,7 +4208,7 @@ if not has_limit_switch:
 
 forget(widgets.mist, "iocontrol.0.coolant-mist")
 forget(widgets.flood, "iocontrol.0.coolant-flood")
-forget(widgets.lubel, "iocontrol.0.coolant-flood", "iocontrol.0.coolant-mist")
+forget(widgets.coolant, "iocontrol.0.coolant-flood", "iocontrol.0.coolant-mist")
 
 rcfile = "~/.axisrc"
 user_command_file = inifile.find("DISPLAY", "USER_COMMAND_FILE") or ""
