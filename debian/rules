@@ -63,6 +63,12 @@ override_dh_auto_clean:
 	rm -f Makefile.inc
 	rm -f src/config.log src/config.status
 	rm -f $(for i in $(find . -name "*.in"); do basename $i .in; done)
+
+	rm -f scripts/halcmd_twopass scripts/halrun scripts/haltcl scripts/linuxcnc scripts/linuxcnc-checklink scripts/linuxcnc_info scripts/linuxcnc_var scripts/linuxcncmkdesktop scripts/realtime scripts/rip-environment scripts/runtests src/config.guess src/config.sub src/configure src/install-sh lib/libpyplugin.so docs/src/hal/components_gen.adoc
+
+	rm -f lib/python/nf.py scripts/rtapi.conf scripts/setup_designer share/applications/linuxcnc-latency-histogram.desktop share/applications/linuxcnc-latency.desktop share/applications/linuxcnc-pncconf.desktop share/applications/linuxcnc-stepconf.desktop share/applications/linuxcnc.desktop share/desktop-directories/linuxcnc-cnc.directory share/desktop-directories/linuxcnc-doc.directory share/desktop-directories/linuxcnc-ref.directory share/menus/CNC.menu src/Makefile.inc src/Makefile.modinc src/config.h src/config.h.in tcl/linuxcnc.tcl
+
+	rm -f docs/po/cs.po docs/po/da.po docs/po/de.po
 	dh_clean
 
 
