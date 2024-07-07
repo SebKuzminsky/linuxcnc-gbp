@@ -9,6 +9,7 @@
       lathes, 3D printers, laser cutters, plasma cutters, robot arms,
       hexapods, and more.</p>
   </description>
+  <url type="homepage">https://linuxcnc.org/</url>
   <launchable type="desktop-id">linuxcnc.desktop</launchable>
   <provides>
     <modalias>usb:v05F3p0240d*</modalias>
