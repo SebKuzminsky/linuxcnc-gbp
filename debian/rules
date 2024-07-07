@@ -69,6 +69,7 @@ override_dh_auto_clean:
 	rm -f lib/python/nf.py scripts/rtapi.conf scripts/setup_designer share/applications/linuxcnc-latency-histogram.desktop share/applications/linuxcnc-latency.desktop share/applications/linuxcnc-pncconf.desktop share/applications/linuxcnc-stepconf.desktop share/applications/linuxcnc.desktop share/desktop-directories/linuxcnc-cnc.directory share/desktop-directories/linuxcnc-doc.directory share/desktop-directories/linuxcnc-ref.directory share/menus/CNC.menu src/Makefile.inc src/Makefile.modinc src/config.h src/config.h.in tcl/linuxcnc.tcl
 
 	rm -f docs/po/cs.po docs/po/da.po docs/po/de.po
+	$(RM) docs/man/index.db
 	dh_clean
 
 
