@@ -1,3 +1,14 @@
+linuxcnc (2.9.0~pre1+git20230208.f1270d6ed7-1+deb12u1) UNRELEASED; urgency=medium
+
+  [ CMorley ]
+  * qtvcp -mdi_line: fix multi axes movement on single axis G0 MDI call
+    (Closes: #1053251).
+
+  [ Petter Reinholdtsen ]
+  * Added d/gbp.conf documenting branches used.
+
+ -- Petter Reinholdtsen <pere@debian.org>  Sun, 07 Jul 2024 16:08:51 +0200
+
 linuxcnc (2.9.0~pre1+git20230208.f1270d6ed7-1) unstable; urgency=medium
 
   * New upstream version 2.9.0~pre1+git20230208.f1270d6ed7 (Closes: #1023651).
