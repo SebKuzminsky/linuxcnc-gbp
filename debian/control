@@ -68,7 +68,7 @@ Build-Depends-Indep:
     w3c-linkchecker,
     xsltproc,
     texlive-xetex,
-Standards-Version: 4.6.1
+Standards-Version: 4.7.0
 Homepage: https://linuxcnc.org/
 Vcs-Browser: https://github.com/LinuxCNC/linuxcnc-gbp
 Vcs-Git: https://github.com/LinuxCNC/linuxcnc-gbp.git
