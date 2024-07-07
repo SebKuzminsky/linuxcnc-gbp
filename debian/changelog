@@ -281,7 +281,7 @@ linuxcnc (2.9.0) unstable; urgency=medium
 
  -- andypugh <andy@bodgesoc.org>  Wed, 4 Oct 2023 12:07:00 +0100
 
-linuxcnc (1:2.9.0~pre1) UNRELEASED; urgency=medium
+linuxcnc (2.9.0~pre1+git20230208.f1270d6ed7-1) unstable; urgency=medium
 
   * New upstream version 2.9.0~pre1+git20230208.f1270d6ed7 (Closes: #1023651).
   * Fix motion error for some full-circle spirals.
