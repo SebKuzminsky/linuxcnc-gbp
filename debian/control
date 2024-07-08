@@ -11,7 +11,7 @@ Uploaders:
 Build-Depends:
     debhelper-compat (= 13),
     dh-python,
-    libudev-dev,
+    libudev-dev [linux-any],
     docbook-xsl,
     asciidoc,
     ghostscript,
@@ -81,7 +81,7 @@ Depends: ${misc:Depends},
          ${python3:Depends},
          python3-serial,
          linuxcnc-uspace (= ${binary:Version}),
-         udev,
+         udev [linux-any],
          python3-yapps
 Section: devel
 Description: PC based motion controller for real-time Linux
@@ -145,7 +145,7 @@ Depends:
     ${misc:Depends},
     ${python3:Depends},
     ${shlibs:Depends},
-    libudev-dev,iptables,
+    libudev-dev [linux-any],iptables,
     blt,
     mesa-utils,
     python3-tk,
@@ -162,7 +162,7 @@ Depends:
     tclreadline,
     tclx,
     procps, psmisc,
-    udev
+    udev [linux-any]
 Recommends:
     linuxcnc-doc-en | linuxcnc-doc,
     librsvg2-dev,
